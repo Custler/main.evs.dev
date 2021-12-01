@@ -31,7 +31,7 @@ export CONFIGS_DIR=${NODE_TOP_DIR}/configs
 export NETWORK_TYPE="main.ton.dev"      # can be main.* / net.* / fld.* / rustnet.* / rfld.*
 export NODE_TYPE="RUST"                 # Can be CPP / RUST. Also defines network to build DApp fullnode with or w/o compression
 export ELECTOR_TYPE="fift"
-# export NODE_WC=0                      # Node WorkChain (for rust network)
+export NODE_WC=0                        # Node WorkChain (for rust network)
 
 export FORCE_USE_DAPP=false             # For offnode works or to use DApp Server instead of use node's console to operate
 export STAKE_MODE="depool"              # can be 'msig' or 'depool'
