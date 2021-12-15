@@ -850,11 +850,6 @@ function Elector_ADNL_Search() {
                     exit 1
                 fi
                 Elector_Parts_List="$($CALL_TC -j runget --boc ${elector_addr##*:}.boc participant_list_extended)"
-                Elections_Open=`echo $Elector_Parts_List | jq -r '.value0'`
-                if [[ $Elections_Open -eq 0 ]];then
-                    echo "null"
-                    return
-                fi
                 case "${ELECTOR_TYPE}" in
                     fift)
                         local Elector_Parts_List="$($CALL_TC runget --boc ${elector_addr##*:}.boc participant_list_extended | grep -i 'result:' | tr "]]" "\n" | tr '[' '\n' | awk 'NF > 0'| tr '","' ' ')"
