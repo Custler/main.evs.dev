@@ -52,7 +52,7 @@ export RFLD_DApp_URL="https://rfld.custler.net"
 export RFLD_DApp_List="https://rfld-dapp01.ds1.itgold.io"
 
 export RustNet_DApp_URL="rustnet.ton.dev"
-export RustNet_DApp_List="https://rustnet1.ton.dev,https://rustnet2.ton.dev"
+export RustNet_DApp_List="https://rustnet1.ton.dev"
 
 #=====================================================
 # Depool deploy defaults
