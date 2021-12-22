@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eE
 
-# (C) Sergey Tyurin  2021-10-19 10:00:00
+# (C) Sergey Tyurin  2021-12-22 23:00:00
 
 # Disclaimer
 ##################################################################################################################
@@ -21,7 +21,6 @@ set -eE
 
 # All generated executables will be placed in the $NODE_BIN_DIR folder.
 # Options:
-#  cpp  - build cpp node with utils
 #  rust - build rust node with utils
 #  dapp - build rust node with utils for DApp server. If NODE_TYPE="CPP" in env.sh, node will be build w/o compressions for CPP network
 
@@ -38,11 +37,6 @@ echo "INFO from env: Network: $NETWORK_TYPE; Node: $NODE_TYPE; WC: $NODE_WC; Ele
 BackUP_Time="$(date  +'%F_%T'|tr ':' '-')"
 
 case "${@}" in
-    cpp)
-        CPP_NODE_BUILD=true
-        RUST_NODE_BUILD=false
-        DAPP_NODE_BUILD=false
-        ;;
     rust)
         CPP_NODE_BUILD=false
         RUST_NODE_BUILD=true
@@ -54,7 +48,7 @@ case "${@}" in
         DAPP_NODE_BUILD=true
         ;;
     *)
-        CPP_NODE_BUILD=true
+        CPP_NODE_BUILD=false
         RUST_NODE_BUILD=true
         DAPP_NODE_BUILD=false
         ;;

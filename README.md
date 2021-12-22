@@ -1,5 +1,5 @@
 # Universal scripts set 
-#### - Support both Rust and C++ nodes
+#### - Support Rust node. C++ - deprecated
 #### - Support both DePool and msig validations  
 #### - Support both fift and solidity electors
 #### - Works on Ubuntu 20.04, CentOS 8.3, Oracle Linux 8.4, FreeBSD 13 (for Linux - latest kernel preferable)
@@ -86,9 +86,9 @@ And much more settings can be tuned in `env.sh`
 To build node run **./Nodes_Build.sh** from $HOME/main.evs.dev/scripts/ folder. 
 This script will build all binaries needed and has 3 options:  
 ```bash
-./Nodes_Build.sh        # build both C++ and Rust nodes and all utilites
+./Nodes_Build.sh        # build Rust node and all utilites
 ./Nodes_Build.sh rust   # build Rust node and tools and all it utilites
-./Nodes_Build.sh cpp    # build C++ node and tools and all it utilites
+./Nodes_Build.sh dapp   # build Rust node for use in DApp server
 ```  
 This script will build node, node console, utilites, tonos-cli, from the respective repositories from branches defined in `env.sh`. You can set repo & commit number in "# GIT addresses & commits " section in 'env.sh'
 
