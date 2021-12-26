@@ -36,7 +36,7 @@ mkdir -p ~/.ssh
 echo "your ssh-rsa key" >> ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
 ```
-Install **git**, **sudo** and **bash** if it not installed (FreeBSD)
+Install **git**, **sudo**, **curl** and **bash** if it not installed (FreeBSD)
 
 For FreeBSD make a link 
 ```bash  
