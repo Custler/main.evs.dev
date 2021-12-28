@@ -246,7 +246,7 @@ if ${CPP_NODE_BUILD};then
     cp -f $TON_BUILD_DIR/lite-client/lite-client $NODE_BIN_DIR/
     cp -f $TON_BUILD_DIR/validator-engine/validator-engine $NODE_BIN_DIR/
     cp -f $TON_BUILD_DIR/validator-engine-console/validator-engine-console $NODE_BIN_DIR/
-    cp -f $TON_BUILD_DIR//crypto/fift $NODE_BIN_DIR/
+    cp -f $TON_BUILD_DIR/crypto/fift $NODE_BIN_DIR/
 
     #=====================================================
     echo "---INFO: build utils (convert_address)..."
