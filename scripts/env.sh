@@ -28,13 +28,13 @@ export CONFIGS_DIR=${NODE_TOP_DIR}/configs
 
 #=====================================================
 # Network related variables
-export NETWORK_TYPE="rfld.ton.dev"      # can be main.* / net.* / fld.* / rustnet.* / rfld.*
+export NETWORK_TYPE="main.ton.dev"      # can be main.* / net.* / fld.* / rustnet.* / rfld.*
 export NODE_TYPE="RUST"                 # Can be CPP / RUST. Also defines network to build DApp fullnode with or w/o compression
 export ELECTOR_TYPE="fift"
 export NODE_WC=0                        # Node WorkChain (for rust network)
 
 export FORCE_USE_DAPP=false             # For offnode works or to use DApp Server instead of use node's console to operate
-export STAKE_MODE="msig"                # can be 'msig' or 'depool'
+export STAKE_MODE="depool"              # can be 'msig' or 'depool'
 export MAX_FACTOR=3
 
 #=====================================================
@@ -56,10 +56,10 @@ export RustNet_DApp_List="https://rustnet1.ton.dev"
 
 #=====================================================
 # Depool deploy defaults
-export ValidatorAssuranceT=10000        # Assurance in tokens
+export ValidatorAssuranceT=100000       # Assurance in tokens
 export MinStakeT=10                     # Min DePool assepted stake in tokens
 export ParticipantRewardFraction=85     # In % participant share from reward
-export BalanceThresholdT=20             # Min depool self balance to operate
+export BalanceThresholdT=30             # Min depool self balance to operate
 export TIK_REPLANISH_AMOUNT=10          # If Tik acc balance less 2 tokens, It will be auto topup with this amount
 
 #=====================================================
@@ -75,6 +75,7 @@ export LC_Send_MSG_Timeout=10           # time after Lite-Client send message to
 #=====================================================
 # FLD & RFLD free giver to grant 100k tokens
 export Marvin_Addr="0:deda155da7c518f57cb664be70b9042ed54a92542769735dfb73d3eef85acdaf" 
+[[ "${NETWORK_TYPE}" == "rfld.ton.dev" ]] && export Marvin_Addr="-1:deda155da7c518f57cb664be70b9042ed54a92542769735dfb73d3eef85acdaf"
 
 #=====================================================
 # Nets zeroblock IDs - first 16 syms of zeroblock hash
@@ -107,7 +108,7 @@ done
 export NODE_IP_ADDR
 
 export ServiceName="tonnode"
-export ADNL_PORT="48888"
+export ADNL_PORT="49999"
 export NODE_ADDRESS="${NODE_IP_ADDR}:${ADNL_PORT}"
 export LITESERVER_IP="127.0.0.1"
 export LITESERVER_PORT="3031"
@@ -118,23 +119,20 @@ export C_ENGINE_ADDITIONAL_PARAMS=""
 
 #=====================================================
 # GIT addresses & commits
-export RUST_VERSION="1.57.0"
+export RUST_VERSION="1.56.1"
 export BOOST_VERSION="1.76.0"
 export MIN_TC_VERSION="0.22.12"
 
 export CNODE_GIT_REPO="https://github.com/Everscale-Network/Everscale-Node.git"
 export CNODE_GIT_COMMIT="mainnet"
-if [[ "$NETWORK_TYPE" == "fld.ton.dev" ]];then
-    export CNODE_GIT_REPO="https://github.com/NilFoundation/cpp-ton.git"
-    export CNODE_GIT_COMMIT="nil"
-fi
+[[ "$NETWORK_TYPE" == "fld.ton.dev" ]] && export CNODE_GIT_COMMIT="GROTH16"
 
 export RNODE_GIT_REPO="https://github.com/tonlabs/ton-labs-node.git"
 export RNODE_GIT_COMMIT="master"
-if [[ "$NETWORK_TYPE" == "rfld.ton.dev" ]];then
-    export RNODE_GIT_REPO="https://github.com/NilFoundation/rust-ton.git"
-    export RNODE_GIT_COMMIT="master"
-fi
+# if [[ "$NETWORK_TYPE" == "rfld.ton.dev" ]] || [[ "$NETWORK_TYPE" == "fld.ton.dev" ]];then
+#     export RNODE_GIT_REPO="https://github.com/NilFoundation/rust-ton.git"
+#     export RNODE_GIT_COMMIT="1-nil-dependencies"
+# fi
 
 export RCONS_GIT_REPO="https://github.com/tonlabs/ton-labs-node-tools.git"
 export RCONS_GIT_COMMIT="master"

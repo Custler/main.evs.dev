@@ -484,7 +484,7 @@ function Send_Tik(){
 
         local Curr_Trans_lt=$(Get_Account_Info ${Depool_addr} | awk '{print $3}')
         if [[ $Curr_Trans_lt == $Last_Trans_lt ]];then
-            echoerr "+++-WARNING(line $LINENO): DePool does not receve message .. Repeat sending.."| tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
+            echoerr "+++-WARNING(line $LINENO): DePool does not crank up .. Repeat sending.."| tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
             Attempts_to_send=$((Attempts_to_send - 1))
         else
             break
