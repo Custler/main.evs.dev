@@ -244,7 +244,7 @@ if [[ "$ADNL_Found" != "absent" ]];then
     Your_ADNL=$Next_ADNL_Key
     echo "-!-!-INFO: Your stake: $Your_Stake with ADNL: $(echo "$Next_ADNL_Key" | tr "[:upper:]" "[:lower:]")"
     echo
-    exit 0
+    exit 1
 fi
 
 ########################################################################################
