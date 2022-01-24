@@ -213,9 +213,9 @@ fi
 
 [[ "$1" == "show" ]] && echo "$CRONT_JOBS"&& exit 0
 
-echo "$CRONT_JOBS" | sudo crontab -u $SCRPT_USER -
+echo "$CRONT_JOBS" | crontab -u $SCRPT_USER -
 
-sudo crontab -l -u $SCRPT_USER | tail -n 8
+crontab -l -u $SCRPT_USER | tail -n 8
 
 #=================================================
 # for icinga

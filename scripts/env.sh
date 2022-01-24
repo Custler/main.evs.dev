@@ -250,10 +250,10 @@ export Tg_Warn_sign=$(echo -e "\U000026A0")
 
 #=================================================
 # var for icinga monitoring
-export prepElections="${TON_LOG_DIR}/prepForElections"
-export partInElections="${TON_LOG_DIR}/partInElections"
-export nextElections="${TON_LOG_DIR}/nextElections"
-export nodeStats="${TON_LOG_DIR}/nodeStats"
+export prepElections="${TON_LOG_DIR:-$R_LOG_DIR}/prepForElections"
+export partInElections="${TON_LOG_DIR:-$R_LOG_DIR}/partInElections"
+export nextElections="${TON_LOG_DIR:-$R_LOG_DIR}/nextElections"
+export nodeStats="${TON_LOG_DIR:-$R_LOG_DIR}/nodeStats"
 
 #=================================================
 # File to keep changes of default variables from this file 
