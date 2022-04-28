@@ -26,6 +26,11 @@ OS_SYSTEM=`uname -s`
 # All nets configs folder
 export CONFIGS_DIR=${NODE_TOP_DIR}/configs
 
+# SECURITY messages
+# if you use only Custler's scripts and nothing more, set it true for messages about new releases!
+newReleaseSndMsg=true
+
+# SECURITY updates
 Enable_Node_Autoupdate=true             # will automatically update rnode, rconsole, tonos-cli etc..
 Enable_Scripts_Autoupdate=false         # Updating scripts. NB! Change it to true if you fully trust me ONLY!!  
 #=====================================================
@@ -42,10 +47,10 @@ export MAX_FACTOR=3
 #=====================================================
 # Networks endpoints
 export Main_DApp_URL="https://main.ton.dev"
-export MainNet_DApp_List="https://eri01.main.everos.dev,https://gra01.main.everos.dev,https://gra02.main.everos.dev,https://lim01.main.everos.dev,https://rbx01.main.everos.dev,https://main2.ton.dev,https://main3.ton.dev,https://main4.ton.dev"
+export MainNet_DApp_List="https://eri01.main.everos.dev,https://gra01.main.everos.dev,https://gra02.main.everos.dev,https://lim01.main.everos.dev,https://rbx01.main.everos.dev"
 
 export DevNet_DApp_URL="https://net.ton.dev"
-export DevNet_DApp_List="https://eri01.net.everos.dev,https://rbx01.net.everos.dev,https://gra01.net.everos.dev,https://net1.ton.dev,https://net5.ton.dev"
+export DevNet_DApp_List="https://eri01.net.everos.dev,https://rbx01.net.everos.dev,https://gra01.net.everos.dev"
 
 export FLD_DApp_URL="https://gql.custler.net"
 export FLD_DApp_List="https://gql.custler.net"
@@ -120,7 +125,7 @@ export C_ENGINE_ADDITIONAL_PARAMS=""
 
 #=====================================================
 # GIT addresses & commits
-export RUST_VERSION="1.58.0"
+export RUST_VERSION="1.58.1"
 export BOOST_VERSION="1.76.0"
 export MIN_TC_VERSION="0.24.11"
 export MIN_RC_VERSION="0.1.255"
