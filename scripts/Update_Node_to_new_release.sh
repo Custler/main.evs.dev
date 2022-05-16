@@ -22,10 +22,11 @@ echo
 echo "################################### Update RNODE Script ########################################"
 echo "INFO: $(basename "$0") BEGIN $(date +%s) / $(date  +'%F %T %Z')"
 
+${SCRIPT_DIR}/Update_ENV.sh
+
 SCRIPT_DIR=`cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P`
 source "${SCRIPT_DIR}/env.sh"
 
-${SCRIPT_DIR}/Update_ENV.sh
 #===========================================================
 # Check github for new node release
 Node_local_commit="$(git --git-dir="$RNODE_SRC_DIR/.git" rev-parse HEAD 2>/dev/null)"
