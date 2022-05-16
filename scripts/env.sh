@@ -114,7 +114,7 @@ done
 export NODE_IP_ADDR
 
 export ServiceName="tonnode"
-export ADNL_PORT="49999"
+export ADNL_PORT="48888"
 export NODE_ADDRESS="${NODE_IP_ADDR}:${ADNL_PORT}"
 export LITESERVER_IP="127.0.0.1"
 export LITESERVER_PORT="3031"
@@ -138,7 +138,7 @@ if [[ "$NETWORK_TYPE" == "fld.ton.dev" ]];then
 fi
 
 export RNODE_GIT_REPO="https://github.com/tonlabs/ton-labs-node.git"
-export RNODE_GIT_COMMIT="8135f586aa1a536393496c21cb1acba510c3f9a9"
+export RNODE_GIT_COMMIT="master"
 if [[ "$NETWORK_TYPE" == "rfld.ton.dev" ]];then
     export RNODE_GIT_REPO="https://github.com/NilFoundation/rust-ton.git"
     export RNODE_GIT_COMMIT="master"
