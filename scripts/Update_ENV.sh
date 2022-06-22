@@ -27,14 +27,17 @@ source "${SCRIPT_DIR}/env.sh"
 
 #################################################################
 # This section update env.sh to satisfy new changes in scripts
-
 # Add LINC address to env.sh if not present
 if [[ -z "${LNIC_ADDRESS}" ]];then
     echo "+++ Add LNIC address"
-    sed -i.bak '/Enable_Scripts_Autoupdate=/p; s/Enable_Scripts_Autoupdate=.*/export LNIC_ADDRESS="0:bdcefecaae5d07d926f1fa881ea5b61d81ea748bd02136c0dbe76604323fc347"/' ${SCRIPT_DIR}/env.sh
-    sed -i.bak '/Enable_Scripts_Autoupdate=/p; s/Enable_Scripts_Autoupdate=.*/# Last Node Info Contract for safe node update/' ${SCRIPT_DIR}/env.sh
+    if [[ -z "$(cat ${SCRIPT_DIR}/env.sh | grep 'export Enable_Node_Autoupdate')" ]];then
+        sed -i.bak '/Enable_Scripts_Autoupdate=/p; s/Enable_Scripts_Autoupdate=.*/export LNIC_ADDRESS="0:bdcefecaae5d07d926f1fa881ea5b61d81ea748bd02136c0dbe76604323fc347"/' ${SCRIPT_DIR}/env.sh
+        sed -i.bak '/Enable_Scripts_Autoupdate=/p; s/Enable_Scripts_Autoupdate=.*/# Last Node Info Contract for safe node update/' ${SCRIPT_DIR}/env.sh
+    else
+        sed -i.bak '/export Enable_Scripts_Autoupdate=/p; s/export Enable_Scripts_Autoupdate=.*/export LNIC_ADDRESS="0:bdcefecaae5d07d926f1fa881ea5b61d81ea748bd02136c0dbe76604323fc347"/' ${SCRIPT_DIR}/env.sh
+        sed -i.bak '/export Enable_Scripts_Autoupdate=/p; s/export Enable_Scripts_Autoupdate=.*/# Last Node Info Contract for safe node update/' ${SCRIPT_DIR}/env.sh
+    fi
 fi
-
 #################################################################
 
 echo "+++INFO: $(basename "$0") FINISHED $(date +%s) / $(date  +'%F %T %Z')"
