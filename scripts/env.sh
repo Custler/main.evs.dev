@@ -119,7 +119,7 @@ done
 export NODE_IP_ADDR
 
 export ServiceName="tonnode"
-export ADNL_PORT="48888"
+export ADNL_PORT="49999"
 export NODE_ADDRESS="${NODE_IP_ADDR}:${ADNL_PORT}"
 export LITESERVER_IP="127.0.0.1"
 export LITESERVER_PORT="3031"
