@@ -22,6 +22,20 @@ SCRIPT_DIR=`cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P`
 export NODE_TOP_DIR=$(cd "${SCRIPT_DIR}/../" && pwd -P)
 
 OS_SYSTEM=`uname -s`
+#=================================================
+# File to keep changes of default variables from this file
+# to avoid reconfig after "git pull "
+# you have to create this file by yourself and keep changes in it
+# you can choose from presets
+Net_Default_File="env_local.sh"
+#Net_Default_File="env_main.sh"
+#Net_Default_File="env_devnet.sh"
+#Net_Default_File="env_fld.sh"
+#Net_Default_File="env_rfld.sh"
+
+if [[ -f "${SCRIPT_DIR}/${Net_Default_File}" ]]; then
+    source "${SCRIPT_DIR}/${Net_Default_File}"
+fi
 #=====================================================
 # All nets configs folder
 export CONFIGS_DIR=${NODE_TOP_DIR}/configs
@@ -118,6 +132,8 @@ until [[ "$(echo "${NODE_IP_ADDR}" | grep "\." -o | wc -l)" -eq 3 ]]; do
 done
 export NODE_IP_ADDR
 
+[[ -f "${SCRIPT_DIR}/${Net_Default_File}" ]] && source "${SCRIPT_DIR}/${Net_Default_File}"
+
 export ServiceName="tonnode"
 export ADNL_PORT="49999"
 export NODE_ADDRESS="${NODE_IP_ADDR}:${ADNL_PORT}"
@@ -172,6 +188,8 @@ export CONTRACTS_GIT_COMMIT="master"
 export RustCup_El_ABI_URL="https://raw.githubusercontent.com/tonlabs/rustnet.ton.dev/main/docker-compose/ton-node/configs/Elector.abi.json"
 export Surf_GIT_Commit="multisig-surf-v2"
 
+[[ -f "${SCRIPT_DIR}/${Net_Default_File}" ]] && source "${SCRIPT_DIR}/${Net_Default_File}"
+
 #=====================================================
 # Source code folders
 export TON_SRC_DIR="${NODE_TOP_DIR}/cnode"
@@ -205,6 +223,9 @@ export R_CFG_DIR="$RNODE_WORK_DIR/configs"
 export RNODE_LOG_FILE="rnode.log"
 # addresses, keys and elections folders
 export KEYS_DIR="$HOME/ton-keys"
+
+[[ -f "${SCRIPT_DIR}/${Net_Default_File}" ]] && source "${SCRIPT_DIR}/${Net_Default_File}"
+
 export ELECTIONS_WORK_DIR="${KEYS_DIR}/elections"
 export ELECTIONS_HISTORY_DIR="${KEYS_DIR}/elections_hist"
 
@@ -213,6 +234,8 @@ export CRYPTO_DIR=$TON_SRC_DIR/crypto
 #=====================================================
 # Smart contracts paths
 export ContractsDIR="${NODE_TOP_DIR}/ton-labs-contracts"
+
+[[ -f "${SCRIPT_DIR}/${Net_Default_File}" ]] && source "${SCRIPT_DIR}/${Net_Default_File}"
 
 export DSCs_DIR="${ContractsDIR}/solidity/depool"
 # [[ "$NETWORK_TYPE" == "rfld.ton.dev" ]] && export DSCs_DIR="${CONFIGS_DIR}/depool_RFLD"
@@ -227,12 +250,13 @@ export SetSCs_DIR="${ContractsDIR}/solidity/setcodemultisig"
 export SetC_Wallet_ABI="${ContractsDIR}/solidity/setcodemultisig/SetcodeMultisigWallet.abi.json"
 # export SURF_ABI="${ContractsDIR}/Surf-contracts/solidity/setcodemultisig/SetcodeMultisigWallet.abi.json"
 # export SURF_TVC="${ContractsDIR}/Surf-contracts/solidity/setcodemultisig/SetcodeMultisigWallet2.tvc"
-export SURF_ABI="$NODE_SRC_TOP_DIR/Surf-contracts/solidity/surfmultisig/SurfMultisigWallet.abi.json"
-export SURF_TVC="$NODE_SRC_TOP_DIR/Surf-contracts/solidity/surfmultisig/SurfMultisigWallet.tvc"
+export SURF_ABI="$ContractsDIR/Surf-contracts/solidity/surfmultisig/SurfMultisigWallet.abi.json"
+export SURF_TVC="$ContractsDIR/Surf-contracts/solidity/surfmultisig/SurfMultisigWallet.tvc"
 
 export Marvin_ABI="${CONFIGS_DIR}/Marvin.abi.json"
 export Elector_ABI="${CONFIGS_DIR}/Elector.abi.json"
 
+[[ -f "${SCRIPT_DIR}/${Net_Default_File}" ]] && source "${SCRIPT_DIR}/${Net_Default_File}"
 #=====================================================
 # Executables
 export CALL_RN="${NODE_BIN_DIR}/rnode --configs ${R_CFG_DIR}"
@@ -250,6 +274,7 @@ else
     export CALL_BC="bc -l"
 fi
 
+[[ -f "${SCRIPT_DIR}/${Net_Default_File}" ]] && source "${SCRIPT_DIR}/${Net_Default_File}"
 #=================================================
 # Text modifiers & signs
 export NormText="\e[0m"
@@ -269,17 +294,5 @@ export prepElections="${TON_LOG_DIR:-$R_LOG_DIR}/prepForElections"
 export partInElections="${TON_LOG_DIR:-$R_LOG_DIR}/partInElections"
 export nextElections="${TON_LOG_DIR:-$R_LOG_DIR}/nextElections"
 export nodeStats="${TON_LOG_DIR:-$R_LOG_DIR}/nodeStats"
-#=================================================
-# File to keep changes of default variables from this file 
-# to avoid reconfig after "git pull "
-# you have to create this file by yourself and keep changes in it
-# you can choose from presets
-Net_Default_File="env_local.sh"
-#Net_Default_File="env_main.sh"
-#Net_Default_File="env_devnet.sh"
-#Net_Default_File="env_fld.sh"
-#Net_Default_File="env_rfld.sh"
 
-if [[ -f "${SCRIPT_DIR}/${Net_Default_File}" ]]; then
-    source "${SCRIPT_DIR}/${Net_Default_File}"
-fi
+[[ -f "${SCRIPT_DIR}/${Net_Default_File}" ]] && source "${SCRIPT_DIR}/${Net_Default_File}"
