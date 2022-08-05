@@ -208,6 +208,8 @@ export NODE_BIN_DIR=$HOME/bin
 #WRK_DIR=/dev/shm   # ramdisk in linux only for fast initial sync
 WRK_DIR=/var
 
+[[ -f "${SCRIPT_DIR}/${Net_Default_File}" ]] && source "${SCRIPT_DIR}/${Net_Default_File}"
+
 # Keep node log files after logrotate in separate folder for X days
 export NODE_LOGS_ARCH="$HOME/NodeLogs"
 export NODE_LOGs_ARCH_KEEP_DAYS=5
