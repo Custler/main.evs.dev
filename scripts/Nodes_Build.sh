@@ -191,7 +191,7 @@ if ${RUST_NODE_BUILD};then
     echo -e "${BoldText}${BlueBack}---INFO: RNODE git repo:   ${RNODE_GIT_REPO} ${NormText}"
     echo -e "${BoldText}${BlueBack}---INFO: RNODE git commit: ${RNODE_GIT_COMMIT} ${NormText}"
     
-    eval $(ssh-agent -k; ssh-agent -s)
+    # eval $(ssh-agent -k; ssh-agent -s)
 
     [[ -d ${RNODE_SRC_DIR} ]] && rm -rf "${RNODE_SRC_DIR}"
     # git clone --recurse-submodules "${RNODE_GIT_REPO}" $RNODE_SRC_DIR
@@ -213,13 +213,10 @@ if ${RUST_NODE_BUILD};then
 
     cargo update
 
-    # sed -i.bak 's/format!("{:?}", engine.validation_status()));/format!("\\\"{:?}\\\"", engine.validation_status()));/' $RNODE_SRC_DIR/src/network/control.rs
-    sed -i.bak 's/^release = { debug = true }/release = { lto = "fat", codegen-units = 1, panic = "abort" }/' $RNODE_SRC_DIR/Cargo.toml
-    sed -i.bak 's/^#release = { debug = true }/release = { lto = "fat", codegen-units = 1, panic = "abort" }/' $RNODE_SRC_DIR/Cargo.toml
-    if ! grep -Fxq '^\[profile\]' "$RNODE_SRC_DIR/Cargo.toml"; then
-        echo '[profile]' >> $RNODE_SRC_DIR/Cargo.toml
-        echo 'release = { lto = "fat", codegen-units = 1, panic = "abort" }' >> $RNODE_SRC_DIR/Cargo.toml
-    fi
+    sed -i.bak '/\[profile\]/,/^$/d' Cargo.toml
+    echo -e "\n\n" >> Cargo.toml
+    echo '[profile]' >> Cargo.toml
+    echo 'release = { lto = "fat", codegen-units = 1, panic = "abort" }' >> Cargo.toml
 
     # node git commit
     export GC_TON_NODE="$(git --git-dir="$RNODE_SRC_DIR/.git" rev-parse HEAD 2>/dev/null)"

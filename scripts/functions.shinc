@@ -125,7 +125,7 @@ case "$NetName" in
         ;;
     *)
         echo "###-ERROR(line $LINENO in echo ${0##*/}): Unknown NETWORK_TYPE (${NETWORK_TYPE})"
-        exit 1
+        return 1
         ;;
 esac
 
