@@ -388,8 +388,6 @@ if [[ $Tik_Bal -lt 2000000000 ]];then
         ${SCRIPT_DIR}/Sign_Trans.sh ${VALIDATOR_NAME} $Last_Trans_ID | tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
     fi
 fi
-#=================================================
-
 
 #=================================================
 # Check DePool has enough balance to operate, and replenish if no
@@ -433,6 +431,50 @@ if [[ $Depool_Bal -lt $DP_balanceThreshold ]];then
     # Required_Signs=`Get_Account_Custodians_Info $Validator_addr | awk '{print $2}'`
     ./Sign_Trans.sh &>/dev/null
 fi
+
+#=================================================
+# Check both proxies has enough balance to operate, and replenish if no
+dp_proxy0=$(echo "$Current_Depool_Info"  | jq -r "[.proxies[]]|.[0]")
+dp_proxy1=$(echo "$Current_Depool_Info"  | jq -r "[.proxies[]]|.[1]")
+
+Proxy0_Info="$(Get_Account_Info $dp_proxy0)"
+Proxy1_Info="$(Get_Account_Info $dp_proxy1)"
+
+Proxy0_Bal=$(( $(echo "$Proxy0_Info" |awk '{print $2}') ))      # nanotokens
+Proxy1_Bal=$(( $(echo "$Proxy1_Info" |awk '{print $2}') ))      # nanotokens
+
+# topup Proxy0 if needed
+if [[ $Proxy0_Bal -lt 2000000000 ]];then
+    echo "+++-WARNING(line $LINENO): Proxy0 has balance less 2 tokens!! I will topup it with 5 tokens from ${VALIDATOR_NAME} account" | tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
+    "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server: DePool Tik:" \
+        "${Tg_Warn_sign} WARNING(line $LINENO): Proxy0 has balance less 2 tokens!! I will topup it with 5 tokens from ${VALIDATOR_NAME} account" 2>&1 > /dev/null
+    rm -f "${TA_BOC_File}" &>/dev/null
+    TC_OUTPUT="$($CALL_TC message --raw --output ${TA_BOC_File} \
+    --sign "${KEYS_DIR}/${VALIDATOR_NAME}.keys.json" \
+    --abi "${SafeC_Wallet_ABI}" \
+    ${Validator_addr} submitTransaction \
+    "{\"dest\":\"${dp_proxy0}\",\"value\":$((5 * 1000000000)),\"bounce\":true,\"allBalance\":false,\"payload\":\"\"}" \
+    --lifetime 600 | grep -i 'Message saved to file')"
+    Send_File_To_BC "${TA_BOC_File}"
+    ./Sign_Trans.sh &>/dev/null
+fi
+
+# topup Proxy1 if needed
+if [[ $Proxy1_Bal -lt 2000000000 ]];then
+    echo "+++-WARNING(line $LINENO): Proxy1 has balance less 2 tokens!! I will topup it with 5 tokens from ${VALIDATOR_NAME} account" | tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
+    "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server: DePool Tik:" \
+        "${Tg_Warn_sign} WARNING(line $LINENO): Proxy1 has balance less 2 tokens!! I will topup it with 5 tokens from ${VALIDATOR_NAME} account" 2>&1 > /dev/null
+    rm -f "${TA_BOC_File}" &>/dev/null
+    TC_OUTPUT="$($CALL_TC message --raw --output ${TA_BOC_File} \
+    --sign "${KEYS_DIR}/${VALIDATOR_NAME}.keys.json" \
+    --abi "${SafeC_Wallet_ABI}" \
+    ${Validator_addr} submitTransaction \
+    "{\"dest\":\"${dp_proxy1}\",\"value\":$((5 * 1000000000)),\"bounce\":true,\"allBalance\":false,\"payload\":\"\"}" \
+    --lifetime 600 | grep -i 'Message saved to file')"
+    Send_File_To_BC "${TA_BOC_File}"
+    ./Sign_Trans.sh &>/dev/null
+fi
+
 
 #=================================================
 # make boc file 

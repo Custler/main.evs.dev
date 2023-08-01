@@ -132,6 +132,13 @@ fi
 #===========================================================
 # Update Node, node console, tonos-cli and contracts
 
+# Update node service to increase stop timeout to 600 sec
+# for Linux only
+if [[ "$(uname -s)" == "Linux" ]];then
+    sudo sed -i 's/TimeoutStopSec=.*/TimeoutStopSec=600/' /etc/systemd/system/tonnode.service
+    sudo systemctl daemon-reload
+fi
+
 #################################
 ${SCRIPT_DIR}/Nodes_Build.sh rust
 #################################

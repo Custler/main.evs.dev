@@ -59,7 +59,7 @@ StartLimitIntervalSec=0
 Type=simple
 Restart=always
 RestartSec=1
-TimeoutStopSec=180
+TimeoutStopSec=600
 User=$USER
 LimitNOFILE=2048000
 ExecStart=$CALL_RN
@@ -88,49 +88,6 @@ echo "sudo systemctl disable ${ServiceName}"
 echo "sudo systemctl daemon-reload"
 echo "sudo systemctl enable ${ServiceName}"
 echo "sudo service ${ServiceName} restart"
-
-# ************************************************************
-# ************** Setup watchdog service **********************
-# SERVICE_FILE="/etc/systemd/system/nodewd.service"
-# SVC_FILE_CONTENTS=$(cat <<-_ENDCNT_
-# [Unit]
-# Description=Everscale Validator watchdog for node
-# After=network.target
-# StartLimitIntervalSec=0
-# [Service]
-# Type=simple
-# PIDFile=${TON_LOG_DIR}/nodewd.pid
-# Restart=always
-# RestartSec=3
-# User=$USER
-# Group=$SETUP_GROUP
-# LimitNOFILE=2048000
-# Environment="HOME=$HOME"
-# WorkingDirectory=${SCRIPT_DIR}
-# ExecStart=/bin/bash -c "exec script --return --quiet --append --command  \"${SCRIPT_DIR}/watchdog.sh 2>&1 >> ${TON_LOG_DIR}/time_diff.log\""
-# [Install]
-# WantedBy=multi-user.target
-# _ENDCNT_
-# )
-# echo "${SVC_FILE_CONTENTS}" > ${SCRIPT_DIR}/tmp.txt
-# sudo mv -f ${SCRIPT_DIR}/tmp.txt ${SERVICE_FILE}
-# sudo chown root:root ${SERVICE_FILE}
-# sudo chmod 644 ${SERVICE_FILE}
-# Lunux_Distrib="$(hostnamectl |grep 'Operating System'|awk '{print $3}')"
-# if [[ "${Lunux_Distrib}" == "CentOS" ]] || [[ "${Lunux_Distrib}" == "Oracle" ]];then
-#     sudo chcon system_u:object_r:etc_t:s0 ${SERVICE_FILE}
-# fi
-# sudo systemctl daemon-reload
-# sudo systemctl enable nodewd
-
-# echo
-# echo -e "To start WATCHDOG service run ${BoldText}${GreeBack}sudo service nodewd start${NormText}"
-# echo "To restart updated node or service - run all follow commands:"
-# echo
-# echo "sudo systemctl disable nodewd"
-# echo "sudo systemctl daemon-reload"
-# echo "sudo systemctl enable nodewd"
-# echo "sudo service nodewd restart"
 
 else   #  -------------------- OS select
 # Next  for FreeBSD

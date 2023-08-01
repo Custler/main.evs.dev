@@ -340,7 +340,7 @@ function Get_TimeDiff() {
         echo "db_broken"
         return
     fi
-    if [[ ! -z $(echo "${RC_OUTPUT}" | grep 'timediff') ]];then
+    if [[ -n $(echo "${RC_OUTPUT}" | grep 'timediff') ]];then
     #    TIME_DIFF=$(echo "${RC_OUTPUT}" | sed -e '1,/GIT_BRANCH/d' | jq .timediff)
         MC_TIME_DIFF=$(echo "${RC_OUTPUT}" | jq -r '.timediff')
         SH_TIME_DIFF=$(echo "${RC_OUTPUT}" | jq -r '.shards_timediff')
@@ -950,8 +950,8 @@ function Get_DP_Part_Info() {
     if $FORCE_USE_DAPP ;then
         Result="$($CALL_TC -j run ${Depool_addr} getParticipantInfo "{\"addr\":\"${Part_addr}\"}" --abi $DePool_ABI)"
     else
-        local LC_OUTPUT="$(Get_SC_current_state "$Depool_addr")"
-        local res=`echo $LC_OUTPUT | grep "written StateInit of account"`
+       # local LC_OUTPUT="$(Get_SC_current_state "$Depool_addr")"
+        local res="ok" #`echo $LC_OUTPUT | grep "written StateInit of account"`
         if [[ -z  $res ]];then
             echoerr "###-ERROR(${FUNCNAME[0]} line $LINENO): Cannot get DePool state!! $Depool_addr"
             exit 1

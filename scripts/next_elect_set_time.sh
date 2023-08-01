@@ -218,7 +218,7 @@ CRONT_JOBS=$(cat <<-_ENDCRN_
 SHELL=/bin/bash
 PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:$NODE_BIN_DIR
 HOME=$USER_HOME
-@reboot cd ${SCRIPT_DIR} && ./wait_for_sync.sh; ./prepare_elections.sh; ./take_part_in_elections.sh; ./part_check.sh; ./next_elect_set_time.sh
+@reboot cd ${SCRIPT_DIR} && ./wait_for_sync.sh && ./prepare_elections.sh; ./take_part_in_elections.sh; ./part_check.sh; ./next_elect_set_time.sh
 $NXT_ELECT_1 * * *    cd ${SCRIPT_DIR} && ./prepare_elections.sh &>> ${TON_LOG_DIR}/validator.log
 $NXT_ELECT_2 * * *    cd ${SCRIPT_DIR} && ./take_part_in_elections.sh &>> ${TON_LOG_DIR}/validator.log
 $NXT_ELECT_3 * * *    cd ${SCRIPT_DIR} && ./next_elect_set_time.sh &>> ${TON_LOG_DIR}/validator.log && ./part_check.sh &>> ${TON_LOG_DIR}/validator.log
@@ -233,7 +233,7 @@ CRONT_JOBS=$(cat <<-_ENDCRN_
 SHELL=/bin/bash
 PATH=$NODE_BIN_DIR:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
 HOME=$USER_HOME
-@reboot cd ${SCRIPT_DIR} && ./wait_for_sync.sh; ./prepare_elections.sh; ./take_part_in_elections.sh; ./part_check.sh; ./next_elect_set_time.sh
+@reboot cd ${SCRIPT_DIR} && ./wait_for_sync.sh && ./prepare_elections.sh; ./take_part_in_elections.sh; ./part_check.sh; ./next_elect_set_time.sh
 $NXT_ELECT_1 * * *    cd ${SCRIPT_DIR} && ./prepare_elections.sh &>> ${TON_LOG_DIR}/validator.log
 $NXT_ELECT_2 * * *    cd ${SCRIPT_DIR} && ./take_part_in_elections.sh &>> ${TON_LOG_DIR}/validator.log
 $NXT_ELECT_3 * * *    cd ${SCRIPT_DIR} && ./next_elect_set_time.sh &>> ${TON_LOG_DIR}/validator.log && ./part_check.sh &>> ${TON_LOG_DIR}/validator.log

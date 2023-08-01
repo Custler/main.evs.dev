@@ -1,1 +1,1 @@
----INFO: Update for new node stat info and native build.
+---INFO: New node commit. Update for new node stat info and native build. Fix prefill_cells_counters in node config.

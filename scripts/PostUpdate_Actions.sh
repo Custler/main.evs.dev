@@ -49,31 +49,31 @@ fi
 
 #===========================================================
 # For node ver < 0.51.25 and will not set GC 
-if [[ $Node_bin_ver_NUM -lt $DB_reset_ver ]] && \
-   [[ $Node_bin_ver_NUM -ne $Node_SVC_ver_NUM ]];then
-    echo "${Tg_SOS_sign} DANGER: Your node version is less $DB_reset_ver and contains bugs!"
-    "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_SOS_sign DANGER: Your node version is less $DB_reset_ver and contains bugs!" 2>&1 > /dev/null
+# if [[ $Node_bin_ver_NUM -lt $DB_reset_ver ]] && \
+#    [[ $Node_bin_ver_NUM -ne $Node_SVC_ver_NUM ]];then
+#     echo "${Tg_SOS_sign} DANGER: Your node version is less $DB_reset_ver and contains bugs!"
+#     "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_SOS_sign DANGER: Your node version is less $DB_reset_ver and contains bugs!" 2>&1 > /dev/null
 
-    sudo service $ServiceName restart
-    sleep 2
-    if [[ -z "$(pgrep rnode)" ]];then
-        echo "###-ERROR(line $LINENO): Node process not started!"
-        "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_SOS_sign ###-ERROR(line $LINENO): Node process not started!" 2>&1 > /dev/null
-        exit 1
-    fi
-    ${SCRIPT_DIR}/wait_for_sync.sh
-    #===========================================================
-    # Check and show the Node version
-    Node_bin_commit="$(rnode -V | grep 'NODE git commit:' | awk '{print $5}')"
-    EverNode_Version="$(${NODE_BIN_DIR}/rnode -V | grep -i 'TON Node, version' | awk '{print $4}')"
-    NodeSupBlkVer="$(rnode -V | grep 'BLOCK_VERSION:' | awk '{print $2}')"
-    Console_Version="$(${NODE_BIN_DIR}/console -V | awk '{print $2}')"
-    TonosCLI_Version="$(${NODE_BIN_DIR}/tonos-cli -V | grep -i 'tonos_cli' | awk '{print $2}')"
-    echo "INFO: Node updated. Service restarted. Current versions: node ver: ${EverNode_Version} SupBlock: ${NodeSupBlkVer} node commit: ${Node_bin_commit}, console - ${Console_Version}, tonos-cli - ${TonosCLI_Version}"
-    "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_CheckMark INFO: Node updated. Service restarted. Current versions: node ver: ${EverNode_Version} node commit: ${Node_bin_commit}, console - ${Console_Version}, tonos-cli - ${TonosCLI_Version}" 2>&1 > /dev/null
-    "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_SOS_sign DANGER: Your node version is less $DB_reset_ver and contains bugs!" 2>&1 > /dev/null
-    return 0
-fi
+#     sudo service $ServiceName restart
+#     sleep 2
+#     if [[ -z "$(pgrep rnode)" ]];then
+#         echo "###-ERROR(line $LINENO): Node process not started!"
+#         "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_SOS_sign ###-ERROR(line $LINENO): Node process not started!" 2>&1 > /dev/null
+#         exit 1
+#     fi
+#     ${SCRIPT_DIR}/wait_for_sync.sh
+#     #===========================================================
+#     # Check and show the Node version
+#     Node_bin_commit="$(rnode -V | grep 'NODE git commit:' | awk '{print $5}')"
+#     EverNode_Version="$(${NODE_BIN_DIR}/rnode -V | grep -i 'TON Node, version' | awk '{print $4}')"
+#     NodeSupBlkVer="$(rnode -V | grep 'BLOCK_VERSION:' | awk '{print $2}')"
+#     Console_Version="$(${NODE_BIN_DIR}/console -V | awk '{print $2}')"
+#     TonosCLI_Version="$(${NODE_BIN_DIR}/tonos-cli -V | grep -i 'tonos_cli' | awk '{print $2}')"
+#     echo "INFO: Node updated. Service restarted. Current versions: node ver: ${EverNode_Version} SupBlock: ${NodeSupBlkVer} node commit: ${Node_bin_commit}, console - ${Console_Version}, tonos-cli - ${TonosCLI_Version}"
+#     "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_CheckMark INFO: Node updated. Service restarted. Current versions: node ver: ${EverNode_Version} node commit: ${Node_bin_commit}, console - ${Console_Version}, tonos-cli - ${TonosCLI_Version}" 2>&1 > /dev/null
+#     "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_SOS_sign DANGER: Your node version is less $DB_reset_ver and contains bugs!" 2>&1 > /dev/null
+#     return 0
+# fi
 
 #===========================================================
 # For node ver >= 0.51.25  
@@ -81,11 +81,15 @@ if [[ $Node_bin_ver_NUM -ge $DB_reset_ver ]] && \
    [[ $Node_bin_ver_NUM -ne $Node_SVC_ver_NUM ]];then
     GC_in_config=$(cat ${R_CFG_DIR}/config.json | jq '.gc' 2>/dev/null|cat)
     if [[ $GC_in_config == "null" ]];then
-        cat /var/ton-work/rnode/configs/config.json | \
+        cat $R_CFG_DIR/config.json | \
         jq '.gc = {"enable_for_archives":  true, "enable_for_shard_state_persistent": true}' > \
-        /var/ton-work/rnode/configs/config.json.tmp && \
-        cp -f /var/ton-work/rnode/configs/config.json.tmp /var/ton-work/rnode/configs/config.json
+        $R_CFG_DIR/config.json.tmp && \
+        cp -f $R_CFG_DIR/config.json.tmp $R_CFG_DIR/config.json
     fi
+    
+    # Fix orphographic error in config.json
+    sed -i.bak 's/prefill_cells_cunters/prefill_cells_counters/' $R_CFG_DIR/config.json
+
     echo "${Tg_Warn_sign} ATTENTION: The node going to restart and may be out of sync for a few hours if DB needs repair! "
     "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "${Tg_Warn_sign} ATTENTION: The node going to restart and may be out of sync for a few hours if DB needs repair!" 2>&1 > /dev/null
 

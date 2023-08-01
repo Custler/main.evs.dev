@@ -40,7 +40,7 @@ export LNIC_ADDRESS="0:bdcefecaae5d07d926f1fa881ea5b61d81ea748bd02136c0dbe766043
 #=====================================================
 # Network related variables
 export NETWORK_TYPE="main.ton.dev"      # can be main.* / net.* / fld.* / rfld.* / rustnet.*
-export Node_Blk_Min_Ver=39
+export Node_Blk_Min_Ver=41
 export ELECTOR_TYPE="fift"
 export NODE_WC=0                        # Node WorkChain 
 
@@ -126,21 +126,13 @@ export RCONSOLE_PORT="5031"
 
 #=====================================================
 # GIT addresses & commits
-export RUST_VERSION="1.69.0"
+export RUST_VERSION="1.70.0"
 export MIN_TC_VERSION="0.35.00"
-export MIN_RC_VERSION="0.1.300"
-# for corect work automatic update 
-# GIT_COMMIT should be "master" or certain commit only
-# not a branch name!
+export MIN_RC_VERSION="0.1.302"
 
 export RNODE_GIT_REPO="https://github.com/tonlabs/ever-node.git"
 export RNODE_GIT_COMMIT="master"
 export RNODE_FEATURES=""
-if [[ "${NETWORK_TYPE%%.*}" == "fld" ]];then
-    export RNODE_GIT_REPO="https://github.com/tonlabs/ever-node.git"
-    export RNODE_GIT_COMMIT="master"
-    export RNODE_FEATURES=""
-fi
 
 export RCONS_GIT_REPO="https://github.com/tonlabs/ever-node-tools.git"
 export RCONS_GIT_COMMIT="master"

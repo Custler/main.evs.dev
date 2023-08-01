@@ -2,7 +2,7 @@
 
 DINFO_STRT_TIME=$(date +%s)
 
-# (C) Sergey Tyurin  2022-01-08 19:00:00
+# (C) Sergey Tyurin  2023-07-27 19:00:00
 
 # Disclaimer
 ##################################################################################################################
@@ -178,6 +178,11 @@ fi
 #============================================
 # get info from DePool contract state
 Current_Depool_Info="$(Get_DP_Info $Depool_addr)"
+Current_Depool_State=$(Get_SC_current_state "$Depool_addr")
+if [[ "$Current_Depool_State" != "written StateInit of account" ]];then
+    echo -e "${BoldText}${RedBack}###-ERROR(line $LINENO): Depool Account state does not received.${NormText}"
+    echo
+fi
 
 PoolClosed=$(echo  "$Current_Depool_Info"|jq -r '.poolClosed')
 if [[ "$PoolClosed" == "false" ]];then
@@ -201,10 +206,10 @@ dp_proxy1=$(echo "$Current_Depool_Info"  | jq -r "[.proxies[]]|.[1]")
 [[ ! -f ${KEYS_DIR}/proxy0.addr ]] && echo "$dp_proxy0" > ${KEYS_DIR}/proxy0.addr
 [[ ! -f ${KEYS_DIR}/proxy1.addr ]] && echo "$dp_proxy1" > ${KEYS_DIR}/proxy1.addr
 
-#============================================
+#============================================  
 # Get balances
 Depool_Bal=`echo "$(Get_Account_Info "$Depool_addr")"| awk '{print $2}'`
-Depool_Self_Balance=
+Depool_Self_Balance=$($CALL_TC -j run --boc "${Depool_addr##*:}.boc" --abi $DePool_ABI getDePoolBalance '{}'|jq -r '.value0')
 Val_Bal=`echo "$(Get_Account_Info "$DP_Owner_Addr")"| awk '{print $2}'`
 prx0_Bal=`echo "$(Get_Account_Info "$dp_proxy0")"| awk '{print $2}'`
 prx1_Bal=`echo "$(Get_Account_Info "$dp_proxy1")"| awk '{print $2}'`
@@ -250,7 +255,8 @@ Next_Round_Stake_nT=$(echo  "$Curr_Rounds_Info"| jq -r ".[2].stake"            |
 Next_Round_Stake=$(printf '%12.3f' "$(echo $Next_Round_Stake_nT / 1000000000 | jq -nf /dev/stdin)")
 # Next_Round_Reward=$(printf '%12.3f' "$(echo $Next_Round_Reward / 1000000000 | jq -nf /dev/stdin)")
 
-echo "Depool contract address:     $Depool_addr  Balance: $(echo "scale=3; $((Depool_Bal - Next_Round_Stake_nT)) / 1000000000" | $CALL_BC)"
+echo "Depool contract address:     $Depool_addr  Balance: $(echo "scale=3; $((Depool_Bal)) / 1000000000" | $CALL_BC)"
+echo "Depool self balance:         $(echo "scale=3; $((Depool_Self_Balance)) / 1000000000" | $CALL_BC)"
 echo "Depool Owner/validator addr: $DP_Owner_Addr  Balance: $(echo "scale=3; $((Val_Bal)) / 1000000000" | $CALL_BC)"
 echo "Depool proxy #0:            $dp_proxy0  Balance: $(echo "scale=3; $((prx0_Bal)) / 1000000000" | $CALL_BC)"
 echo "Depool proxy #1:            $dp_proxy1  Balance: $(echo "scale=3; $((prx1_Bal)) / 1000000000" | $CALL_BC)"

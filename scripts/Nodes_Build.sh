@@ -213,6 +213,7 @@ if ${RUST_NODE_BUILD};then
 
     cargo update
 
+    # Set Link Time Optimization (LTO) for release build
     sed -i.bak '/\[profile\]/,/^$/d' Cargo.toml
     echo -e "\n\n" >> Cargo.toml
     echo '[profile]' >> Cargo.toml
@@ -226,8 +227,13 @@ if ${RUST_NODE_BUILD};then
     echo -e "${BoldText}${BlueBack}---INFO: RNODE build flags: ${RNODE_FEATURES} commit: ${GC_TON_NODE} Block version: ${NODE_BLK_VER}${NormText}"
     RUSTFLAGS="-C target-cpu=native" cargo build --release --features "${RNODE_FEATURES}"
 
-    # cp $NODE_BIN_DIR/rnode $NODE_BIN_DIR/rnode_${BackUP_Time}|cat
-    cp -f ${RNODE_SRC_DIR}/target/release/ton_node $NODE_BIN_DIR/rnode
+    cp -f $NODE_BIN_DIR/rnode $NODE_BIN_DIR/rnode-${GC_TON_NODE}|cat
+    
+    if $DAPP_NODE_BUILD;then
+        cp -f ${RNODE_SRC_DIR}/target/release/ton_node $NODE_BIN_DIR/ton_node_kafka
+    else
+        cp -f ${RNODE_SRC_DIR}/target/release/ton_node $NODE_BIN_DIR/rnode
+    fi
 
     #=====================================================
     # Build rust node console

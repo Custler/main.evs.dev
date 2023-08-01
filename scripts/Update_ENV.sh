@@ -27,12 +27,15 @@ source "${SCRIPT_DIR}/env.sh"
 
 #################################################################
 # Set versions
-sed -i.bak "s|export RUST_VERSION=.*|export RUST_VERSION=\"1.66.1\"|; \
-            s|export MIN_RC_VERSION=.*|export MIN_RC_VERSION=\"0.1.300\"|; \
-            s|export MIN_TC_VERSION=.*|export MIN_TC_VERSION=\"0.32.00\"|; \
+sed -i.bak "s|export RUST_VERSION=.*|export RUST_VERSION=\"1.70.0\"|; \
+            s|export MIN_RC_VERSION=.*|export MIN_RC_VERSION=\"0.1.302\"|; \
+            s|export MIN_TC_VERSION=.*|export MIN_TC_VERSION=\"0.35.00\"|; \
             s|export RNODE_GIT_REPO=.*|export RNODE_GIT_REPO=\"https://github.com/tonlabs/ever-node.git\"|g; \
             s|export RCONS_GIT_REPO=.*|export RCONS_GIT_REPO=\"https://github.com/tonlabs/ever-node-tools.git\"|g; \
-            s|export Node_Blk_Min_Ver=.*|export Node_Blk_Min_Ver=35|" "${SCRIPT_DIR}/env.sh"
+            s|export Node_Blk_Min_Ver=.*|export Node_Blk_Min_Ver=41|" "${SCRIPT_DIR}/env.sh"
+
+# Remove unused fld block
+sed -i.bak '/if \[\[ "\${NETWORK_TYPE%%\.\*}" == "fld" \]\];then/,/fi/d' "${SCRIPT_DIR}/env.sh"
 
 #################################################################
 # Add DAPP_Project_id & DAPP_access_key variables 

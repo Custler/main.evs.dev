@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# (C) Sergey Tyurin  2022-01-08 19:00:00
+# (C) Sergey Tyurin  2023-07-22 19:00:00
 
 # Disclaimer
 ##################################################################################################################
@@ -44,21 +44,33 @@ do
         sleep $SLEEP_TIMEOUT
         continue
     fi
-
-    if [[ "$TIME_DIFF" == "No TimeDiff Info" ]];then
-        echo "${Current_Net} Time: $(date +'%F %T %Z') --- No masterchain blocks received yet." | tee -a ${NODE_LOGS_ARCH}/time-diff.log
+    if [[ "$TIME_DIFF" == "Error" ]];then
+        echo "${Current_Net}:${NODE_WC} Time: $(date +'%F %T %Z') ###-ALARM! NODE return ERROR." | tee -a ${NODE_LOGS_ARCH}/time-diff.log
+        # "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "ALARM! NODE return ERROR." 2>&1 > /dev/null
         sleep $SLEEP_TIMEOUT
         continue
+    fi
+
+    if [[ "$TIME_DIFF" == "db_broken" ]];then
+        echo "${Current_Net} Time: $(date +'%F %T %Z') ###-ALARM! node DB is BROKEN!" | tee -a ${NODE_LOGS_ARCH}/time-diff.log
+        "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "ALARM! node DB is BROKEN!" 2>&1 > /dev/null
+        exit 1
+    fi
+
+    STATUS=$(echo $TIME_DIFF|awk '{print $3}')
+    if [[ "$STATUS" != "synchronization_by_blocks" ]] && [[ "$STATUS" != "synchronization_finished" ]];then
+        echo "${Current_Net}:${NODE_WC} Time: $(date +'%F %T %Z') --- Current node status: $TIME_DIFF" | tee -a ${NODE_LOGS_ARCH}/time-diff.log
     else
         MC_TIME_DIFF=$(echo $TIME_DIFF|awk '{print $1}')
         SH_TIME_DIFF=$(echo $TIME_DIFF|awk '{print $2}')
         echo "${Current_Net} Time: $(date +'%F %T %Z') TimeDiffs: MC - $MC_TIME_DIFF ; WC - $SH_TIME_DIFF" | tee -a ${NODE_LOGS_ARCH}/time-diff.log
         if [[ $MC_TIME_DIFF -le $MAX_TIME_DIFF ]] && [[ $SH_TIME_DIFF -le $MAX_TIME_DIFF ]];then
-            [[ second_sync ]] && exit 0
+            if $second_sync;then
+                exit 0
+            fi
             second_sync=true
         fi
     fi
-
     sleep $SLEEP_TIMEOUT
 done
 
