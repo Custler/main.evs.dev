@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# (C) Sergey Tyurin  2022-07-16 13:00:00
+# (C) Sergey Tyurin  2023-08-12 13:00:00
 
 # Disclaimer
 ##################################################################################################################
@@ -73,37 +73,39 @@ echo "INFO: Elector Address: $elector_addr"
 elections_id=$(Get_Current_Elections_ID)
 elections_id=$((elections_id))
 echo "INFO:      Election ID: $elections_id"
+
+#=================================================
+# Load addresses and set variables
+Validator_addr=`cat ${KEYS_DIR}/${VALIDATOR_NAME}.addr`
+Work_Chain=${Validator_addr%%:*}
+if [[ -z $Validator_addr ]];then
+    echo "###-ERROR(line $LINENO): Can't find validator address! ${KEYS_DIR}/${VALIDATOR_NAME}.addr"
+    exit 1
+fi
+if [[ ! -f ${SafeC_Wallet_ABI} ]];then
+    echo "###-ERROR(line $LINENO): ${SafeC_Wallet_ABI} NOT FOUND! Can't continue"
+    exit 1
+fi
+Validator_Acc_Info="$(Get_Account_Info ${Validator_addr})"
+declare -i Validator_Acc_LT=`echo "$Validator_Acc_Info" | awk '{print $3}'`
+Val_Adrr_HEX=${Validator_addr##*:}
+    
 #===========================================================
 # Check staking mode
 ################################################################################################
 ############### Recovery stake for msig staking mode ###########################################
 ################################################################################################
 if [[ "$STAKE_MODE" == "msig" ]];then
+    if [[ "$Work_Chain" != "-1" ]];then
+        echo "###-ERROR(line $LINENO): Staking mode: $STAKE_MODE; Validator address has to be in masterchain (-1:xx) !!!"
+        exit 1
+    fi
+
     echo "+++-WARNING(line $LINENO): Staking mode is set to $STAKE_MODE. Preparation is recover stake only. Depool will not be ticked."
     if [[ $elections_id -eq 0 ]];then
         echo "###-ERROR(line $LINENO):There is no elections now! Nothing to do!"
         exit 1
     fi
-    
-    #=================================================
-    # Load addresses and set variables
-    Validator_addr=`cat ${KEYS_DIR}/${VALIDATOR_NAME}.addr`
-    Work_Chain=${Validator_addr%%:*}
-    if [[ -z $Validator_addr ]];then
-        echo "###-ERROR(line $LINENO): Can't find validator address! ${KEYS_DIR}/${VALIDATOR_NAME}.addr"
-        exit 1
-    fi
-    if [[ ! -f ${SafeC_Wallet_ABI} ]];then
-        echo "###-ERROR(line $LINENO): ${SafeC_Wallet_ABI} NOT FOUND! Can't continue"
-        exit 1
-    fi
-    if [[ "$Work_Chain" != "-1" ]];then
-        echo "###-ERROR(line $LINENO): Staking mode: $STAKE_MODE; Validator address has to be in masterchain (-1:xx) !!!"
-        exit 1
-    fi
-    Validator_Acc_Info="$(Get_Account_Info ${Validator_addr})"
-    declare -i Validator_Acc_LT=`echo "$Validator_Acc_Info" | awk '{print $3}'`
-    Val_Adrr_HEX=${Validator_addr##*:}
     
     #=================================================
     # check availabylity to recover amount
@@ -324,18 +326,22 @@ if [[ $Tik_Bal -lt 2000000000 ]];then
     # TopUp_Result="$(${SCRIPT_DIR}/transfer_amount.sh ${VALIDATOR_NAME} Tik 10 | tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log")"
     #================================================================
     # Make BOC file to send
-    Validator_addr="$(cat ${KEYS_DIR}/${VALIDATOR_NAME}.addr)"
     Custodians="$(Get_Account_Custodians_Info "$Validator_addr")"
     Val_Confirm_QTY=$(echo $Custodians|awk '{print $2}')
 
-    TA_BOC_File="${KEYS_DIR}/Transfer_Amount.boc"
-    rm -f "${TA_BOC_File}" &>/dev/null
+    TA_BOC_File="${ELECTIONS_WORK_DIR}/${elections_id}_Tik_topup.boc"
+    rm -f "${TA_BOC_File}"
     TC_OUTPUT="$($CALL_TC message --raw --output ${TA_BOC_File} \
     --sign "${KEYS_DIR}/${VALIDATOR_NAME}.keys.json" \
     --abi "${SafeC_Wallet_ABI}" \
     ${Validator_addr} submitTransaction \
     "{\"dest\":\"${Tik_addr}\",\"value\":$((10 * 1000000000)),\"bounce\":true,\"allBalance\":false,\"payload\":\"\"}" \
-    --lifetime 600 | grep -i 'Message saved to file')"
+    --lifetime 600)"
+    if [[ "$(echo $TC_OUTPUT | grep -i 'error')" ]];then
+        echo "###-ERROR(line $LINENO): Error while make tik topup message boc : ${TC_OUTPUT}"
+        "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server: DePool Tik:" \
+            "${Tg_SOS_sign}###-ERROR(line $LINENO): Error while make tik topup message boc : ${TC_OUTPUT}"
+    fi
 
     if [[ ! -f ${TA_BOC_File} ]];then
         echo "###-ERROR(line $LINENO): Failed to make BOC file ${TA_BOC_File}."
@@ -419,14 +425,21 @@ if [[ $Depool_Bal -lt $DP_balanceThreshold ]];then
         "${Tg_Warn_sign} WARNING(line $LINENO): DePool has balance less $((DP_balanceThreshold / 1000000000)) tokens!! I will topup it with $((Replanish_Amount / 1000000000)) tokens from ${VALIDATOR_NAME} account" 2>&1 > /dev/null
     Replenish_Payload='te6ccgEBAQEABgAACGhEx+s='
 
-    rm -f replanish.boc
-    TC_OUTPUT="$($CALL_TC message --raw --output replanish.boc \
+    ReplanishFile="${ELECTIONS_WORK_DIR}/${elections_id}_depool_replanish.boc"
+    rm -f "${ReplanishFile}"
+    TC_OUTPUT="$($CALL_TC message --raw --output "${ReplanishFile}" \
     --sign ${KEYS_DIR}/${VALIDATOR_NAME}.keys.json \
     --abi $SafeC_Wallet_ABI \
     "$(cat ${KEYS_DIR}/${VALIDATOR_NAME}.addr)" submitTransaction \
-    "{\"dest\":\"$(cat ${KEYS_DIR}/depool.addr)\",\"value\":$Replanish_Amount,\"bounce\":true,\"allBalance\":false,\"payload\":\"$Replenish_Payload\"}" \
-    | grep -i 'Message saved to file')"
-    Send_File_To_BC replanish.boc 
+    "{\"dest\":\"$(cat ${KEYS_DIR}/depool.addr)\",\"value\":$Replanish_Amount,\"bounce\":true,\"allBalance\":false,\"payload\":\"$Replenish_Payload\"}")"
+    if [[ ! -f "${ReplanishFile}" ]];then
+        echo "###-ERROR(line $LINENO): Cannot create file ${ReplanishFile}"
+        echo "TC_OUTPUT: $TC_OUTPUT"
+        "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server: DePool Tik:" \
+            "${Tg_Error_sign} ERROR(line $LINENO): Cannot create file ${ReplanishFile}" 2>&1 > /dev/null
+    fi
+
+    Send_File_To_BC "${ReplanishFile}" 
     # TODO: Add signing for a few cutodians
     # Required_Signs=`Get_Account_Custodians_Info $Validator_addr | awk '{print $2}'`
     ./Sign_Trans.sh &>/dev/null
@@ -445,36 +458,51 @@ Proxy1_Bal=$(( $(echo "$Proxy1_Info" |awk '{print $2}') ))      # nanotokens
 
 # topup Proxy0 if needed
 if [[ $Proxy0_Bal -lt 2000000000 ]];then
+    P0_TopupFile="${ELECTIONS_WORK_DIR}/${elections_id}_proxy0_topup.boc"
+    rm -f "${P0_TopupFile}"
     echo "+++-WARNING(line $LINENO): Proxy0 has balance less 2 tokens!! I will topup it with 5 tokens from ${VALIDATOR_NAME} account" | tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
     "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server: DePool Tik:" \
         "${Tg_Warn_sign} WARNING(line $LINENO): Proxy0 has balance less 2 tokens!! I will topup it with 5 tokens from ${VALIDATOR_NAME} account" 2>&1 > /dev/null
-    rm -f "${TA_BOC_File}" &>/dev/null
-    TC_OUTPUT="$($CALL_TC message --raw --output ${TA_BOC_File} \
+    
+    TC_OUTPUT="$($CALL_TC message --raw --output ${P0_TopupFile} \
     --sign "${KEYS_DIR}/${VALIDATOR_NAME}.keys.json" \
     --abi "${SafeC_Wallet_ABI}" \
     ${Validator_addr} submitTransaction \
     "{\"dest\":\"${dp_proxy0}\",\"value\":$((5 * 1000000000)),\"bounce\":true,\"allBalance\":false,\"payload\":\"\"}" \
-    --lifetime 600 | grep -i 'Message saved to file')"
-    Send_File_To_BC "${TA_BOC_File}"
+    --lifetime 600)"
+    if [[ ! -f "${P0_TopupFile}" ]];then
+        echo "###-ERROR(line $LINENO): Cannot create file ${P0_TopupFile}"
+        echo "TC_OUTPUT: $TC_OUTPUT"
+        "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server: DePool Tik:" \
+            "${Tg_Error_sign} ERROR(line $LINENO): Cannot create file ${P0_TopupFile}" 2>&1 > /dev/null
+    fi
+    Send_File_To_BC "${P0_TopupFile}"
     ./Sign_Trans.sh &>/dev/null
 fi
 
 # topup Proxy1 if needed
 if [[ $Proxy1_Bal -lt 2000000000 ]];then
+    P1_TopupFile="${ELECTIONS_WORK_DIR}/${elections_id}_proxy1_topup.boc"
+    rm -f "${P1_TopupFile}"
     echo "+++-WARNING(line $LINENO): Proxy1 has balance less 2 tokens!! I will topup it with 5 tokens from ${VALIDATOR_NAME} account" | tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
     "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server: DePool Tik:" \
         "${Tg_Warn_sign} WARNING(line $LINENO): Proxy1 has balance less 2 tokens!! I will topup it with 5 tokens from ${VALIDATOR_NAME} account" 2>&1 > /dev/null
-    rm -f "${TA_BOC_File}" &>/dev/null
-    TC_OUTPUT="$($CALL_TC message --raw --output ${TA_BOC_File} \
+    
+    TC_OUTPUT="$($CALL_TC message --raw --output ${P1_TopupFile} \
     --sign "${KEYS_DIR}/${VALIDATOR_NAME}.keys.json" \
     --abi "${SafeC_Wallet_ABI}" \
     ${Validator_addr} submitTransaction \
     "{\"dest\":\"${dp_proxy1}\",\"value\":$((5 * 1000000000)),\"bounce\":true,\"allBalance\":false,\"payload\":\"\"}" \
-    --lifetime 600 | grep -i 'Message saved to file')"
-    Send_File_To_BC "${TA_BOC_File}"
+    --lifetime 600)"
+    if [[ ! -f "${P1_TopupFile}" ]];then
+        echo "###-ERROR(line $LINENO): Cannot create file ${P1_TopupFile}"
+        echo "TC_OUTPUT: $TC_OUTPUT"
+        "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server: DePool Tik:" \
+            "${Tg_Error_sign} ERROR(line $LINENO): Cannot create file ${P1_TopupFile}" 2>&1 > /dev/null
+    fi
+    Send_File_To_BC "${P1_TopupFile}"
     ./Sign_Trans.sh &>/dev/null
 fi
-
 
 #=================================================
 # make boc file 
@@ -520,7 +548,7 @@ function Send_Tik(){
 
 for (( TryToSetEl=0; TryToSetEl <= 5; TryToSetEl++ ))
 do
-    echo -n "INFO: Make boc for lite-client ..."
+    echo -n "INFO: Make boc message to tik depool ..."
     Make_BOC_file
     echo " DONE"
     echo -n "INFO: Send Tik query to DePool ..."

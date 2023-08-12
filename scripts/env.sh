@@ -39,7 +39,7 @@ export LNIC_ADDRESS="0:bdcefecaae5d07d926f1fa881ea5b61d81ea748bd02136c0dbe766043
 
 #=====================================================
 # Network related variables
-export NETWORK_TYPE="main.ton.dev"      # can be main.* / net.* / fld.* / rfld.* / rustnet.*
+export NETWORK_TYPE="main.ton.dev"      # can be main.* / net.* / fld.* / rfld.* / Not implemented: smft.*
 export Node_Blk_Min_Ver=41
 export ELECTOR_TYPE="fift"
 export NODE_WC=0                        # Node WorkChain 
@@ -67,6 +67,9 @@ export FLD_DApp_List="https://gql.custler.net"
 export RFLD_DApp_URL="https://rfld-dapp.itgold.io"
 export RFLD_DApp_List="https://rfld-dapp.itgold.io"
 
+export SMFT_DApp_URL="https://dapp-test.itgold.io" 
+export SMFT_DApp_List="https://dapp-test.itgold.io"
+
 #=====================================================
 # Depool deploy defaults
 export ValidatorAssuranceT=50000       # Assurance in tokens
@@ -86,7 +89,7 @@ export TIME_SHIFT=300                   # Time between sequential scripts
 export LC_Send_MSG_Timeout=10           # time after Lite-Client send message to BC in seconds
 
 #=====================================================
-# FLD & RFLD free giver to grant 100k tokens
+# FLD & RFLD & SMFT free giver to grant 100k tokens
 export Marvin_Addr="0:deda155da7c518f57cb664be70b9042ed54a92542769735dfb73d3eef85acdaf" 
 
 #=====================================================
@@ -95,7 +98,7 @@ export MAIN_NET_ID="58FFCA1A178DAFF7"
 export  DEV_NET_ID="B2E99A7505EDA599"
 export  FLD_NET_ID="F6176FF8E2CA6E5D"
 export RFLD_NET_ID="AA183E8917635635"
-export  RST_NET_ID="228F05E8BCB11DEF"
+export SMFT_NET_ID="778F05E8BCB11DEF"
 
 #=====================================================
 # Node addresses & ports
@@ -123,6 +126,8 @@ export ServiceName="tonnode"
 export ADNL_PORT="49999"
 export NODE_ADDRESS="${NODE_IP_ADDR}:${ADNL_PORT}"
 export RCONSOLE_PORT="5031"
+export STATSD_DOMAIN=localhost:
+export STATSD_PORT=9125        
 
 #=====================================================
 # GIT addresses & commits
