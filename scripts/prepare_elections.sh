@@ -26,6 +26,7 @@ SEND_ATTEMPTS=3
 
 Tik_Payload="te6ccgEBAQEABgAACCiAmCM="
 NANOSTAKE=$((1 * 1000000000))
+declare -ir TOPUP_THRESHOLD=1900000000
 
 echo
 echo "################################ Prepare elections script ######################################"
@@ -318,7 +319,7 @@ fi
 Tik_Bal=$(echo $Tik_Info | awk '{print $2}')
 Tik_Bal=$((Tik_Bal))
 echo "Tik account balance: $(echo "scale=3; $Tik_Bal / 1000000000" | $CALL_BC)"
-if [[ $Tik_Bal -lt 2000000000 ]];then
+if [[ $Tik_Bal -lt $TOPUP_THRESHOLD ]];then
     echo "+++-WARNING(line $LINENO): Tik account has balance less 2 tokens!! I will topup it with 10 tokens from ${VALIDATOR_NAME} account" | tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
     "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server: DePool Tik:" \
         "${Tg_Warn_sign} WARNING!!! Tik account has balance less 2 tokens!! I will topup it with 10 tokens from ${VALIDATOR_NAME} account" 2>&1 > /dev/null
@@ -457,7 +458,7 @@ Proxy0_Bal=$(( $(echo "$Proxy0_Info" |awk '{print $2}') ))      # nanotokens
 Proxy1_Bal=$(( $(echo "$Proxy1_Info" |awk '{print $2}') ))      # nanotokens
 
 # topup Proxy0 if needed
-if [[ $Proxy0_Bal -lt 2000000000 ]];then
+if [[ $Proxy0_Bal -lt $TOPUP_THRESHOLD ]];then
     P0_TopupFile="${ELECTIONS_WORK_DIR}/${elections_id}_proxy0_topup.boc"
     rm -f "${P0_TopupFile}"
     echo "+++-WARNING(line $LINENO): Proxy0 has balance less 2 tokens!! I will topup it with 5 tokens from ${VALIDATOR_NAME} account" | tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
@@ -481,7 +482,7 @@ if [[ $Proxy0_Bal -lt 2000000000 ]];then
 fi
 
 # topup Proxy1 if needed
-if [[ $Proxy1_Bal -lt 2000000000 ]];then
+if [[ $Proxy1_Bal -lt $TOPUP_THRESHOLD ]];then
     P1_TopupFile="${ELECTIONS_WORK_DIR}/${elections_id}_proxy1_topup.boc"
     rm -f "${P1_TopupFile}"
     echo "+++-WARNING(line $LINENO): Proxy1 has balance less 2 tokens!! I will topup it with 5 tokens from ${VALIDATOR_NAME} account" | tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
