@@ -37,51 +37,58 @@ echo
 #=================================================
 
 DecodeCap=$1
+declare -i NetCaps
 
 if [[ -z "$DecodeCap" ]];then
     if $FORCE_USE_DAPP;then
-        declare -i NetCaps=$($CALL_TC -j getconfig 8|jq -r '.capabilities' | cut -d 'x' -f 2|tr "[:lower:]" "[:upper:]"| echo $(echo $(echo "obase=10; ibase=16; `cat`" | bc)))
+        NetCaps=$(printf "%d" "0x$($CALL_TC -j getconfig 8 | jq -r '.capabilities' | cut -d 'x' -f 2)")
     else
-        declare -i NetCaps=$($CALL_RC -jc 'getconfig 8'|jq -r '.p8.capabilities_dec')
+        if ! [[ "$DecodeCap" =~ ^[0-9]+$ ]]; then
+          echo "###-Error: DecodeCap must be a number"
+          echo "Usage: $(basename "$0") <DecodeCap>"
+          exit 1
+        fi
+        NetCaps=$($CALL_RC -jc 'getconfig 8'|jq -r '.p8.capabilities_dec')
     fi
 else
     NetCaps=$((DecodeCap))
 fi
 
 # from https://github.com/tonlabs/ton-labs-block/blob/master/src/config_params.rs#L350
-#         0 constant CapNone                    = 0x00000000,
-#         1 constant CapIhrEnabled              = 0x00000001,
-#         2 constant CapCreateStatsEnabled      = 0x00000002,
-#         4 constant CapBounceMsgBody           = 0x00000004,
-#         8 constant CapReportVersion           = 0x00000008,
-#        16 constant CapSplitMergeTransactions  = 0x00000010,
-#        32 constant CapShortDequeue            = 0x00000020,
-#        64 constant CapMbppEnabled             = 0x00000040,
-#       128 constant CapFastStorageStat         = 0x00000080,
-#       256 constant CapInitCodeHash            = 0x00000100,
-#       512 constant CapOffHypercube            = 0x00000200,
-#      1024 constant CapMycode                  = 0x00000400,
-#      2048 constant CapSetLibCode              = 0x00000800,
-#      4096 constant CapFixTupleIndexBug        = 0x00001000,
-#      8192 constant CapRemp                    = 0x00002000,
-#     16384 constant CapDelections              = 0x00004000,
-#                    CapReserved
-#     65536 constant CapFullBodyInBounced       = 0x00010000,
-#    131072 constant CapStorageFeeToTvm         = 0x00020000,
-#    262144 constant CapCopyleft                = 0x00040000,
-#    524288 constant CapIndexAccounts           = 0x00080000,
-#   1048576 constant CapDiff                    = 0x00100000, // for GOSH
-#   2097152 constant CapsTvmBugfixes2022        = 0x00200000, // popsave, exception handler, loops
-#   4194304 constant CapWorkchains              = 0x00400000,
-#   8388608 constant CapStcontNewFormat         = 0x00800000, // support old format continuation serialization
-#  16777216 constant CapFastStorageStatBugfix   = 0x01000000, // calc cell datasize using fast storage stat
-#  33554432 constant CapResolveMerkleCell       = 0x02000000,
-#  67108864 constant CapSignatureWithId         = 0x04000000, // use some predefined id during signature check
-# 134217728 constant CapBounceAfterFailedAction = 0x08000000,
-# 268435456 constant CapGroth16                 = 0x10000000,
-# 536870912 constant CapFeeInGasUnits           = 0x20000000, // all fees in config are in gas units
-#1073741824 constant CapBigCells                = 0x40000000,
-#2147483648 constant CapSuspendedList           = 0x80000000,
+#            0 constant CapNone                    = 0x000000000000,
+#            1 constant CapIhrEnabled              = 0x000000000001,
+#            2 constant CapCreateStatsEnabled      = 0x000000000002,
+#            4 constant CapBounceMsgBody           = 0x000000000004,
+#            8 constant CapReportVersion           = 0x000000000008,
+#           16 constant CapSplitMergeTransactions  = 0x000000000010,
+#           32 constant CapShortDequeue            = 0x000000000020,
+#           64 constant CapMbppEnabled             = 0x000000000040,
+#          128 constant CapFastStorageStat         = 0x000000000080,
+#          256 constant CapInitCodeHash            = 0x000000000100,
+#          512 constant CapOffHypercube            = 0x000000000200,
+#         1024 constant CapMycode                  = 0x000000000400,
+#         2048 constant CapSetLibCode              = 0x000000000800,
+#         4096 constant CapFixTupleIndexBug        = 0x000000001000,
+#         8192 constant CapRemp                    = 0x000000002000,
+#        16384 constant CapDelections              = 0x000000004000,
+#                       CapReserved
+#        65536 constant CapFullBodyInBounced       = 0x000000010000,
+#       131072 constant CapStorageFeeToTvm         = 0x000000020000,
+#       262144 constant CapCopyleft                = 0x000000040000,
+#       524288 constant CapIndexAccounts           = 0x000000080000,
+#      1048576 constant CapDiff                    = 0x000000100000, // for GOSH
+#      2097152 constant CapsTvmBugfixes2022        = 0x000000200000, // popsave, exception handler, loops
+#      4194304 constant CapWorkchains              = 0x000000400000,
+#      8388608 constant CapStcontNewFormat         = 0x000000800000, // support old format continuation serialization
+#     16777216 constant CapFastStorageStatBugfix   = 0x000001000000, // calc cell datasize using fast storage stat
+#     33554432 constant CapResolveMerkleCell       = 0x000002000000,
+#     67108864 constant CapSignatureWithId         = 0x000004000000, // use some predefined id during signature check
+#    134217728 constant CapBounceAfterFailedAction = 0x000008000000,
+#    268435456 constant CapGroth16                 = 0x000010000000,
+#    536870912 constant CapFeeInGasUnits           = 0x000020000000, // all fees in config are in gas units
+#   1073741824 constant CapBigCells                = 0x000040000000,
+#   2147483648 constant CapSuspendedList           = 0x000080000000,
+#   4294967296 constant CapFastFinality            = 0x000100000000
 
 CapsList=(CapIhrEnabled    \
 CapCreateStatsEnabled      \
@@ -115,6 +122,7 @@ CapGroth16                 \
 CapFeeInGasUnits           \
 CapBigCells                \
 CapSuspendedList           \
+CapFastFinality            \
 )
 
 # echo ${CapsList[@]}
@@ -152,6 +160,7 @@ declare -A DecCaps=(
 [CapFeeInGasUnits]=536870912            \
 [CapBigCells]=1073741824                \
 [CapSuspendedList]=2147483648           \
+[CapFastFinality]=4294967296            \
 )
 
 declare -A CapsHEX=(
@@ -186,8 +195,9 @@ declare -A CapsHEX=(
 [CapBounceAfterFailedAction]="0x08000000"
 [CapGroth16]="0x10000000"
 [CapFeeInGasUnits]="0x20000000"
-[1073741824]="0x40000000"
+[CapBigCells]="0x40000000"
 [CapSuspendedList]="0x80000000"
+[CapFastFinality]="0x100000000"
 )
 # echo ${DecCaps[@]}
 

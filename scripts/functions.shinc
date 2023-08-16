@@ -1101,12 +1101,14 @@ function top_app_account () {
         echo "###-ERROR(${FUNCNAME[0]} line $LINENO): Error while make topup message boc : ${TC_OUTPUT}"
         "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server: DePool prepare:" \
             "${Tg_SOS_sign}###-ERROR(${FUNCNAME[0]} line $LINENO): Error while make topup message boc : ${TC_OUTPUT}"
+        return 1
     fi
 
     if [[ ! -f ${TOPUP_BOC_File} ]];then
         echo "###-ERROR(${FUNCNAME[0]} line $LINENO): Failed to make BOC file ${TOPUP_BOC_File}."
         "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server: DePool prepare:" \
             "${Tg_SOS_sign}###-ERROR(${FUNCNAME[0]} line $LINENO): Failed to make BOC file ${TOPUP_BOC_File} for topup account."
+        return 1
     fi
     
     # -------------------------------------------
@@ -1120,6 +1122,7 @@ function top_app_account () {
     fi
 
     # -------------------------------------------
+    local Last_Trans_ID=""
     for (( i=1; i <= 5; i++ )); do
         local result=$(Send_File_To_BC "${TOPUP_BOC_File}")
         if [[ "$result" == "failed" ]]; then
@@ -1141,11 +1144,17 @@ function top_app_account () {
         local Trans_QTY=$(echo "$Trans_List" | jq -r ".transactions|length")
         Trans_QTY=$((Trans_QTY))
         if [[ $Trans_QTY -gt $Before_Trans_QTY ]] && [[ $Val_Confirm_QTY -gt 1 ]];then
-            local Last_Trans_ID=$(echo "$Trans_List" | jq -r .transactions[$((Trans_QTY - 1))].id)
+            Last_Trans_ID=$(echo "$Trans_List" | jq -r .transactions[$((Trans_QTY - 1))].id)
             echo -e "INFO: successfully created transaction # $Last_Trans_ID"
             break
        fi
     done
+    if [[ -z $Last_Trans_ID ]] && [[ $Val_Confirm_QTY -gt 1 ]];then
+        echo "###-ERROR(line $LINENO): Cannot create transaction for topup account. Last_Trans_ID is empty."
+        "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server: DePool prepare:" \
+            "${Tg_SOS_sign}###-ERROR(${FUNCNAME[0]} line $LINENO): Cannot create transaction for topup account."
+        return 1
+    fi
     if [[ $Val_Confirm_QTY -gt 1 ]];then
         "${SCRIPT_DIR}/Sign_Trans.sh" ${VALIDATOR_NAME} $Last_Trans_ID | tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
     fi

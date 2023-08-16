@@ -90,7 +90,78 @@ fi
 Validator_Acc_Info="$(Get_Account_Info ${Validator_addr})"
 declare -i Validator_Acc_LT=$(echo "$Validator_Acc_Info" | awk '{print $3}')
 Val_Adrr_HEX=${Validator_addr##*:}
+
+#=================================================
+# Addresses and vars for DePool mode
+if [[ "$STAKE_MODE" == "depool" ]];then
+    Depool_Name=$1
+    if [[ -z $Depool_Name ]];then
+        Depool_Name="depool"
+        Depool_addr=$(cat "${KEYS_DIR}/${Depool_Name}.addr")
+        if [[ -z $Depool_addr ]];then
+            echo "###-ERROR(line $LINENO): Can't find DePool address file! ${KEYS_DIR}/${Depool_Name}.addr"
+            exit 1
+        fi
+    else
+        Depool_addr=$Depool_Name
+        acc_fmt="$(echo "$Depool_addr" |  awk -F ':' '{print $2}')"
+        [[ -z $acc_fmt ]] && Depool_addr=$(cat "${KEYS_DIR}/${Depool_Name}.addr")
+    fi
+    if [[ -z $Depool_addr ]];then
+        echo "###-ERROR(line $LINENO): Can't find DePool address file! ${KEYS_DIR}/${Depool_Name}.addr"
+        exit 1
+    fi
     
+    dpc_addr=${Depool_addr##*:}
+    dpc_wc=${Depool_addr%%:*}
+    if [[ ${#dpc_addr} -ne 64 ]] || [[ ${dpc_wc} -ne 0 ]];then
+        echo "###-ERROR(line $LINENO): Wrong DePool address! ${Depool_addr}"
+        exit 1
+    fi
+    Tik_addr=$(cat ${KEYS_DIR}/Tik.addr)
+        Tik_Keys_File="${KEYS_DIR}/Tik.keys.json"
+        if [[ -z $Tik_addr ]];then
+            echo
+            echo "###-ERROR(line $LINENO): Cannot find Tik acc address in file  ${KEYS_DIR}/Tik.addr"
+            echo
+            exit 1
+    fi
+    Current_Depool_Info="$(Get_DP_Info $Depool_addr)"
+    dp_proxy0=$(echo "$Current_Depool_Info"  | jq -r "[.proxies[]]|.[0]")
+    dp_proxy1=$(echo "$Current_Depool_Info"  | jq -r "[.proxies[]]|.[1]")
+    if [[ -z $dp_proxy0 ]] || [[ -z $dp_proxy1 ]];then
+        echo "###-ERROR(line $LINENO): Cannot find DePool proxies addresses for depool ${KEYS_DIR}/${Depool_Name}.addr"
+        exit 1
+    fi
+fi
+
+# ===============================================================
+# Check unsend transactins in validator contract
+echo -e "\n--- INFO: Check unsend transactions in validator contract..."
+Trans_List="$(Get_MSIG_Trans_List ${Validator_addr})"
+declare -i Trans_QTY=`echo "$Trans_List" | jq -r ".transactions|length"`
+declare -i Exist_El_Trans_Qty=0
+declare -i Exist_DP_Trans_Qty=0
+if [[ $Trans_QTY -gt 0 ]];then
+    Exist_El_Trans_Qty=$(echo "$Trans_List" | jq -r "[.transactions[]|select(.dest == \"$elector_addr\")]|length")
+    if [[ "$STAKE_MODE" == "depool" ]];then
+        Exist_DP_Trans_Qty=$(echo "$Trans_List" | jq -r "[.transactions[]|select(.dest == \"$Depool_addr\")]|length")
+        Exist_Tik_Trans_Qty=$(echo "$Trans_List" | jq -r "[.transactions[]|select(.dest == \"$Tik_addr\")]|length")
+        Exist_Proxy0_Trans_Qty=$(echo "$Trans_List" | jq -r "[.transactions[]|select(.dest == \"$dp_proxy0\")]|length")
+        Exist_Proxy1_Trans_Qty=$(echo "$Trans_List" | jq -r "[.transactions[]|select(.dest == \"$dp_proxy1\")]|length")
+    fi
+    echo "+++WARNING(line $LINENO): You have unsigned transactions on the validator address!! Transactions: to elector: $Exist_El_Trans_Qty; To DePool: $Exist_DP_Trans_Qty"
+    "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" \
+        "${Tg_Warn_sign} WARNING($(basename "$0") line $LINENO): You have unsigned transactions on the validator address!! Transactions: to elector: $Exist_El_Trans_Qty; To DePool: $Exist_DP_Trans_Qty" 2>&1 > /dev/null
+fi
+echo "Total transactions qty:      $Trans_QTY"          | tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
+echo "To DePool transactions qty:  $Exist_DP_Trans_Qty" | tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
+echo "To Elector transactions qty: $Exist_El_Trans_Qty" | tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
+echo "To Tik transactions qty:     $Exist_Tik_Trans_Qty" | tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
+echo "To Proxy0 transactions qty:  $Exist_Proxy0_Trans_Qty" | tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
+echo "To Proxy1 transactions qty:  $Exist_Proxy1_Trans_Qty" | tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
+echo
+
 #===========================================================
 # Check staking mode
 ################################################################################################
@@ -244,7 +315,7 @@ if [[ "$STAKE_MODE" == "msig" ]];then
             fi
         fi
     else
-        echo "INFO: Nothing to recover"
+        echo "--- INFO: Nothing to recover"
     fi
     echo
     echo "+++INFO: $(basename "$0") FINISHED $(date +%s) / $(date  +'%F %T %Z')"
@@ -260,43 +331,9 @@ if [[ $elections_id -eq 0 ]];then
 else
     echo "${elections_id}" >> "${ELECTIONS_WORK_DIR}/${elections_id}.log"
 fi
-#=================================================
-# Addresses and vars
-Depool_Name=$1
-if [[ -z $Depool_Name ]];then
-    Depool_Name="depool"
-    Depool_addr=$(cat "${KEYS_DIR}/${Depool_Name}.addr")
-    if [[ -z $Depool_addr ]];then
-        echo "###-ERROR(line $LINENO): Can't find DePool address file! ${KEYS_DIR}/${Depool_Name}.addr"
-        exit 1
-    fi
-else
-    Depool_addr=$Depool_Name
-    acc_fmt="$(echo "$Depool_addr" |  awk -F ':' '{print $2}')"
-    [[ -z $acc_fmt ]] && Depool_addr=$(cat "${KEYS_DIR}/${Depool_Name}.addr")
-fi
-if [[ -z $Depool_addr ]];then
-    echo "###-ERROR(line $LINENO): Can't find DePool address file! ${KEYS_DIR}/${Depool_Name}.addr"
-    exit 1
-fi
-
-dpc_addr=${Depool_addr##*:}
-dpc_wc=${Depool_addr%%:*}
-if [[ ${#dpc_addr} -ne 64 ]] || [[ ${dpc_wc} -ne 0 ]];then
-    echo "###-ERROR(line $LINENO): Wrong DePool address! ${Depool_addr}"
-    exit 1
-fi
 
 #=================================================
 # Check that the Tik account is ready and there are enough tokens on it
-Tik_addr=$(cat ${KEYS_DIR}/Tik.addr)
-Tik_Keys_File="${KEYS_DIR}/Tik.keys.json"
-if [[ -z $Tik_addr ]];then
-    echo
-    echo "###-ERROR(line $LINENO): Cannot find Tik acc address in file  ${KEYS_DIR}/Tik.addr"
-    echo
-    exit 1
-fi
 echo "Tik address:    ${Tik_addr}"
 tik_public=$(jq -r '.public' $Tik_Keys_File)
 tik_secret=$(jq -r '.secret' $Tik_Keys_File)
@@ -334,9 +371,6 @@ fi
 
 #=================================================
 # Check both proxies has enough balance to operate, and replenish if no
-Current_Depool_Info="$(Get_DP_Info $Depool_addr)"
-dp_proxy0=$(echo "$Current_Depool_Info"  | jq -r "[.proxies[]]|.[0]")
-dp_proxy1=$(echo "$Current_Depool_Info"  | jq -r "[.proxies[]]|.[1]")
 
 Proxy0_Info="$(Get_Account_Info $dp_proxy0)"
 Proxy1_Info="$(Get_Account_Info $dp_proxy1)"
@@ -499,10 +533,10 @@ if [[ $elections_id -ne $Curr_DP_Elec_ID ]] && [[ $elections_id -gt 0 ]]; then
     echo "###-ERROR(line $LINENO): Current elections ID from elector $elections_id ($(TD_unix2human "$elections_id")) is not equal elections ID from DP: $Curr_DP_Elec_ID ($(TD_unix2human "$Curr_DP_Elec_ID"))" \
         | tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
     echo "INFO: $(basename "$0") END $(date +%s) / $(date)"
-    date +"INFO: %F %T %Z Tik DePool FALED!" | tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
+    date +"###-ERROR(line $LINENO): %F %T %Z Tik DePool FALED!" | tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
     "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server: DePool Tik:" \
         "$Tg_SOS_sign ALARM!!! Current elections ID from elector $elections_id ($(TD_unix2human $elections_id)) is not equal elections ID from DePool: $Curr_DP_Elec_ID ($(TD_unix2human $Curr_DP_Elec_ID))" 2>&1 > /dev/null
-    echo "ERORR ELECTION $elections_id DIFFER ELECTION FROM DePOOL $Curr_DP_Elec_ID" > "${prepElections}"
+    echo "###-ERORR ELECTION $elections_id DIFFER ELECTION FROM DePOOL $Curr_DP_Elec_ID" > "${prepElections}"
 else
     echo "INFO:      Election ID: $elections_id" | tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
     echo "Elections ID in DePool: $Curr_DP_Elec_ID" | tee -a "${ELECTIONS_WORK_DIR}/${elections_id}.log"
