@@ -44,13 +44,20 @@ do
 
     if [[ "$TIME_DIFF" == "Node Down" ]];then
         echo "${Current_Net}:${NODE_WC} Time: $(date +'%F %T %Z') ###-ALARM! NODE IS DOWN or UNRESPONSIVE." | tee -a ${NODE_LOGS_ARCH}/time-diff.log
-        # "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "ALARM! NODE IS DOWN." 2>&1 > /dev/null
+        # "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "ALARM! NODE IS DOWN." &> /dev/null
         sleep $SLEEP_TIMEOUT
         continue
     fi
     if [[ "$TIME_DIFF" == "Error" ]];then
         echo "${Current_Net}:${NODE_WC} Time: $(date +'%F %T %Z') ###-ALARM! NODE return ERROR." | tee -a ${NODE_LOGS_ARCH}/time-diff.log
-        # "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "ALARM! NODE return ERROR." 2>&1 > /dev/null
+        # "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "ALARM! NODE return ERROR." &> /dev/null
+        sleep $SLEEP_TIMEOUT
+        continue
+    fi
+
+    if [[ "$TIME_DIFF" == "db_broken" ]];then
+        echo "${Current_Net} Time: $(date +'%F %T %Z') ###-ALARM! node DB is BROKEN!" | tee -a ${NODE_LOGS_ARCH}/time-diff.log
+        "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "ALARM! node DB is BROKEN!" &> /dev/null
         sleep $SLEEP_TIMEOUT
         continue
     fi
@@ -64,7 +71,7 @@ do
         echo "${Current_Net}:${NODE_WC} Time: $(date +'%F %T %Z') TimeDiffs: MC - $MC_TIME_DIFF ; WC - $SH_TIME_DIFF" | tee -a ${NODE_LOGS_ARCH}/time-diff.log
     fi
     # if [[ $MC_TIME_DIFF -gt $ALARM_TIME_DIFF ]] || [[ $SH_TIME_DIFF -gt $ALARM_TIME_DIFF ]];then
-    #     "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "${Tg_Warn_sign} ALARM! NODE out of sync. TimeDiffs: MC - $MC_TIME_DIFF ; WC - $SH_TIME_DIFF" 2>&1 > /dev/null
+    #     "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "${Tg_Warn_sign} ALARM! NODE out of sync. TimeDiffs: MC - $MC_TIME_DIFF ; WC - $SH_TIME_DIFF" &> /dev/null
     # fi
     sleep $SLEEP_TIMEOUT
 done

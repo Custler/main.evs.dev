@@ -40,21 +40,22 @@ do
 
     if [[ "$TIME_DIFF" == "Node Down" ]];then
         echo "${Current_Net} Time: $(date +'%F %T %Z') ###-ALARM! NODE IS DOWN." | tee -a ${NODE_LOGS_ARCH}/time-diff.log
-        # "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "ALARM! NODE IS DOWN." 2>&1 > /dev/null
+        # "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "ALARM! NODE IS DOWN." &> /dev/null
         sleep $SLEEP_TIMEOUT
         continue
     fi
     if [[ "$TIME_DIFF" == "Error" ]];then
         echo "${Current_Net}:${NODE_WC} Time: $(date +'%F %T %Z') ###-ALARM! NODE return ERROR." | tee -a ${NODE_LOGS_ARCH}/time-diff.log
-        # "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "ALARM! NODE return ERROR." 2>&1 > /dev/null
+        # "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "ALARM! NODE return ERROR." &> /dev/null
         sleep $SLEEP_TIMEOUT
         continue
     fi
 
     if [[ "$TIME_DIFF" == "db_broken" ]];then
         echo "${Current_Net} Time: $(date +'%F %T %Z') ###-ALARM! node DB is BROKEN!" | tee -a ${NODE_LOGS_ARCH}/time-diff.log
-        "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "ALARM! node DB is BROKEN!" 2>&1 > /dev/null
-        exit 1
+        "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "ALARM! node DB is BROKEN!" &> /dev/null
+        sleep $SLEEP_TIMEOUT
+        continue
     fi
 
     STATUS=$(echo $TIME_DIFF|awk '{print $3}')

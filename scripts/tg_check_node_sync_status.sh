@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# (C) Sergey Tyurin  2022-07-16 13:00:00
+# (C) Sergey Tyurin  2023-08-16 13:00:00
 
 # Disclaimer
 ##################################################################################################################
@@ -24,44 +24,66 @@ SCRIPT_DIR=`cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P`
 source "${SCRIPT_DIR}/env.sh"
 source "${SCRIPT_DIR}/functions.shinc"
 
-echo
-echo -e "$(Determine_Current_Network)"
-echo
-
 SLEEP_TIMEOUT=$1
 SLEEP_TIMEOUT=${SLEEP_TIMEOUT:="60"}
 ALARM_TIME_DIFF=$2
 ALARM_TIME_DIFF=${ALARM_TIME_DIFF:=100}
-Current_Net="$(echo "${NETWORK_TYPE}" | cut -d '.' -f 1)"
+Current_Net="$(echo "${NETWORK_TYPE%%.*}")"
+RC_OUTPUT=$($CALL_RC -j -c "getstats" 2>&1 | cat)
+NODE_WC="$(echo "${RC_OUTPUT}"| grep 'processed workchain'|awk '{print $3}'|tr -d ',')"
+[[ "${NODE_WC}" == "masterchain" ]] && NODE_WC="-1"
 
 while(true)
 do
     TIME_DIFF=$(Get_TimeDiff)
 
-    case "${TIME_DIFF}" in
-        "Node Down")
-            echo "${Current_Net} Time: $(date +'%F %T %Z') ###-ALARM! NODE IS DOWN or UNRESPONSIVE." | tee -a ${NODE_LOGS_ARCH}/time-diff.log
-            "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "${Tg_SOS_sign} ALARM! NODE IS DOWN !" 2>&1 > /dev/null
-            ;;
-        "db_broken")
-            echo "${Current_Net} Time: $(date +'%F %T %Z') ###-ALARM! THE NODE DATABASE IS BROKEN !!!" | tee -a ${NODE_LOGS_ARCH}/time-diff.log    
-            "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "${Tg_SOS_sign} ALARM! THE NODE DATABASE IS BROKEN !!!" 2>&1 > /dev/null
-            ;;
-        "No TimeDiff Info")
-            echo "${Current_Net} Time: $(date +'%F %T %Z') --- No masterchain blocks received yet." | tee -a ${NODE_LOGS_ARCH}/time-diff.log
-            "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "${Tg_Warn_sign} --- No masterchain blocks received yet." 2>&1 > /dev/null
-            ;;
-        *)
-            MC_TIME_DIFF=$(echo $TIME_DIFF|awk '{print $1}')
-            SH_TIME_DIFF=$(echo $TIME_DIFF|awk '{print $2}')
-            echo "${Current_Net} Time: $(date +'%F %T %Z') TimeDiff: $TIME_DIFF" | tee -a ${NODE_LOGS_ARCH}/time-diff.log
-            if [[ $MC_TIME_DIFF -gt $ALARM_TIME_DIFF ]] || [[ $SH_TIME_DIFF -gt $ALARM_TIME_DIFF ]];then
-            "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "${Tg_Warn_sign} ALARM! NODE out of sync. TimeDiffs: MC - $MC_TIME_DIFF ; WC - $SH_TIME_DIFF" 2>&1 > /dev/null
-            fi
-            ;;
-    esac
+    if [[ "$TIME_DIFF" == "Node Down" ]];then
+        echo "${Current_Net}:${NODE_WC} Time: $(date +'%F %T %Z') ###-ALARM! NODE IS DOWN or UNRESPONSIVE." | tee -a ${NODE_LOGS_ARCH}/time-diff.log
+        "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "ALARM! NODE IS DOWN." &> /dev/null
+        sleep $SLEEP_TIMEOUT
+        continue
+    fi
+    if [[ "$TIME_DIFF" == "Error" ]];then
+        echo "${Current_Net}:${NODE_WC} Time: $(date +'%F %T %Z') ###-ALARM! NODE return ERROR." | tee -a ${NODE_LOGS_ARCH}/time-diff.log
+        "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "ALARM! NODE return ERROR." &> /dev/null
+        sleep $SLEEP_TIMEOUT
+        continue
+    fi
 
+    if [[ "$TIME_DIFF" == "db_broken" ]];then
+        echo "${Current_Net} Time: $(date +'%F %T %Z') ###-ALARM! node DB is BROKEN!" | tee -a ${NODE_LOGS_ARCH}/time-diff.log
+        "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "ALARM! node DB is BROKEN!" &> /dev/null
+        sleep $SLEEP_TIMEOUT
+        continue
+    fi
+
+    STATUS=$(echo $TIME_DIFF|awk '{print $3}')
+    if [[ "$STATUS" != "synchronization_by_blocks" ]] && [[ "$STATUS" != "synchronization_finished" ]];then
+        echo "${Current_Net}:${NODE_WC} Time: $(date +'%F %T %Z') --- Current node status: $TIME_DIFF" | tee -a ${NODE_LOGS_ARCH}/time-diff.log
+        "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "${Tg_Warn_sign} Current node status: $TIME_DIFF" &> /dev/null
+    else
+        MC_TIME_DIFF=$(echo $TIME_DIFF|awk '{print $1}')
+        SH_TIME_DIFF=$(echo $TIME_DIFF|awk '{print $2}')
+        echo "${Current_Net}:${NODE_WC} Time: $(date +'%F %T %Z') TimeDiffs: MC - $MC_TIME_DIFF ; WC - $SH_TIME_DIFF" | tee -a ${NODE_LOGS_ARCH}/time-diff.log
+    fi
+    if [[ $MC_TIME_DIFF -gt $ALARM_TIME_DIFF ]] || [[ $SH_TIME_DIFF -gt $ALARM_TIME_DIFF ]];then
+        "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "${Tg_Warn_sign} ALARM! NODE out of sync. TimeDiffs: MC - $MC_TIME_DIFF ; WC - $SH_TIME_DIFF" &> /dev/null
+    fi
     sleep $SLEEP_TIMEOUT
 done
 
 exit 0
+
+#==========================================
+# https://github.com/tonlabs/ever-node/blob/e1c321bf3aef765554c3caa43e0bd417bb4ba14d/src/network/control.rs#L183
+match sync_status {
+    Engine::SYNC_STATUS_START_BOOT => "start_boot".to_string(),
+    Engine::SYNC_STATUS_LOAD_MASTER_STATE => "load_master_state".to_string(),
+    Engine::SYNC_STATUS_LOAD_SHARD_STATES => "load_shard_states".to_string(),
+    Engine::SYNC_STATUS_FINISH_BOOT => "finish_boot".to_string(),
+    Engine::SYNC_STATUS_SYNC_BLOCKS => "synchronization_by_blocks".to_string(),
+    Engine::SYNC_STATUS_FINISH_SYNC => "synchronization_finished".to_string(),
+    Engine::SYNC_STATUS_CHECKING_DB => "checking_db".to_string(),
+    Engine::SYNC_STATUS_DB_BROKEN => "db_broken".to_string(),
+    _ => "no_set_status".to_string()
+}
