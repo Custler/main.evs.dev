@@ -142,6 +142,9 @@ Trans_List="$(Get_MSIG_Trans_List ${Validator_addr})"
 declare -i Trans_QTY=`echo "$Trans_List" | jq -r ".transactions|length"`
 declare -i Exist_El_Trans_Qty=0
 declare -i Exist_DP_Trans_Qty=0
+declare -i Exist_Tik_Trans_Qty=0
+declare -i Exist_Proxy0_Trans_Qty=0
+declare -i Exist_Proxy1_Trans_Qty=0
 if [[ $Trans_QTY -gt 0 ]];then
     Exist_El_Trans_Qty=$(echo "$Trans_List" | jq -r "[.transactions[]|select(.dest == \"$elector_addr\")]|length")
     if [[ "$STAKE_MODE" == "depool" ]];then
