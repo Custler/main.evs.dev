@@ -68,7 +68,6 @@ First of all you have to set the follow environment variables for certain networ
 
 ```bash
 export NETWORK_TYPE="main.ton.dev"      # can be main.* / net.* / fld.* / rustnet.* / rfld.*
-export NODE_TYPE="RUST"                 # Can be CPP / RUST. Also defines network to build DApp fullnode with or w/o compression
 export NODE_WC=0                        # Node WorkChain (for future rust network)
 
 export FORCE_USE_DAPP=false             # set `true` For offnode works or to use DApp Server instead of use node's console to operate
@@ -136,6 +135,38 @@ To  check full syncronisation run:
 $CALL_RC -j -c "getstats" | jq '.sync_status'
 ```
 When it return **"synchronization finished"** you can be shure that your DB is synced with the blockchain.</i></b>
+If your node is present in validator set you can see status as validator:
+```
+{
+  "sync_status": "synchronization_finished",
+  "masterchainblocktime": 1692524874,
+  "masterchainblocknumber": 30598675,
+  "node_version": "0.55.35",
+  "public_overlay_key_id": "<base64 public key stored in elector>",
+  "timediff": 4,
+  "shards_timediff": 4,
+  "current_vset_p34_adnl_id": "base64 adnl id stored in elector",
+  "in_current_vset_p34": true,
+  "in_next_vset_p36": false,
+  "last_applied_masterchain_block_id": {
+    "shard": "-1:8000000000000000",
+    "seq_no": 30598675,
+    "rh": "429d760ae775662b0ae93b6364c1f8053679f584ef6b2b6d1836fe7f76d8376e",
+    "fh": "ba4f930358e6dbe2c4d141e3d9f3d90cce934021a451c4c013b754e119b5a2b4"
+  },
+  "processed_workchain": "not specified",
+  "validation_stats": {
+    "-1:8000000000000000": "1 sec ago"
+  },
+  "collation_stats": {
+    "-1:8000000000000000": "36 sec ago"
+  },
+  "tps_10": 3,
+  "tps_300": 2,
+  "validation_status": "Active"
+}
+
+```
 
 ## 5. Deploy accounts
 
@@ -228,9 +259,11 @@ After a few minutes from elections start, we have to prepare the DePool by **`pr
 ```bash
 ./prepare_elections.sh
 ```
-In case of depool validation mode, this script checks balance of Tik account and topup it if it less 2 tokens. Then it send tik-tok transaction from Tik to DePool. 
+In the case of depool validation mode, this script checks the balance of the Tik account and tops it up if it falls below 2 tokens. 
+It also checks the depool's self-balance and the balances of both proxy accounts, topping them up if necessary.
+Then, it sends a tik-tok transaction from Tik to DePool.
 
-In case of MSIG validation the scriprt check for stake to return in elector and send request to return it if any.
+In the case of MSIG validation, the script checks for a stake to return in the elector and sends a request to return it if any is found.
 
 ### 7.2 Send stake to elector
 ```bash
@@ -269,8 +302,9 @@ You can setup your Telegram chat to receive alerts and info in file **`TlgChat.j
 For monitoring timediff of your node you can run script **`tg_check_node_sync_status.s`** in tmux, for example:
 ```bash
 cd $HOME/main.evs.dev/scripts
-tmux new -ds tg
-tmux send -t tg.0 './tg_check_node_sync_status.sh &' ENTER
+tmux kill-server  # kill all tmux sessions
+tmux new -ds tg   # make new session named `tg`
+tmux send -t tg.0 './tg_check_node_sync_status.sh &' ENTER  # run script in `tg` session
 ```
 After that, if timediff will be more 100 secs or the node goes down you will receive message to you telegram channel.
 
@@ -293,3 +327,4 @@ To see info and state of DePool contract, use
 ./dinfo.sh <addres or filename w/o extention in ton-keys folder>
 ```
 without parameters the script will show state of validator's DePool.
+You can give other depool address as script parametr in form as adrress (0:xxx) and as filename in `$HOME/ton-keys/` folder without .addr extention
