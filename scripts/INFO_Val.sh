@@ -144,9 +144,3 @@ echo "+++INFO: $(basename "$0") FINISHED $(date +%s) / $(date)"
 echo "================================================================================================"
 
 exit 0
-
-FOR b IN blocks
-SORT b.gen_utime DESC
-FILTER b.gen_utime > 1655613568 && b.gen_software_version < 25
-COLLECT g = b.gen_software_version, c = b.created_by
-RETURN { g, c }

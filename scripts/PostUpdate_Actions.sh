@@ -75,6 +75,9 @@ fi
 #     return 0
 # fi
 
+# Fix orphographic error in config.json
+sed -i.bak 's/prefill_cells_cunters/prefill_cells_counters/' $R_CFG_DIR/config.json
+
 #===========================================================
 # For node ver >= 0.51.25  
 if [[ $Node_bin_ver_NUM -ge $DB_reset_ver ]] && \
@@ -87,9 +90,6 @@ if [[ $Node_bin_ver_NUM -ge $DB_reset_ver ]] && \
         cp -f $R_CFG_DIR/config.json.tmp $R_CFG_DIR/config.json
     fi
     
-    # Fix orphographic error in config.json
-    sed -i.bak 's/prefill_cells_cunters/prefill_cells_counters/' $R_CFG_DIR/config.json
-
     echo "${Tg_Warn_sign} ATTENTION: The node going to restart and may be out of sync for a few hours if DB needs repair! "
     "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "${Tg_Warn_sign} ATTENTION: The node going to restart and may be out of sync for a few hours if DB needs repair!" 2>&1 > /dev/null
 
