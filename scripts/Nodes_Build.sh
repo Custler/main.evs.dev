@@ -227,12 +227,12 @@ if ${RUST_NODE_BUILD};then
     echo -e "${BoldText}${BlueBack}---INFO: RNODE build flags: ${RNODE_FEATURES} commit: ${GC_TON_NODE} Block version: ${NODE_BLK_VER}${NormText}"
     RUSTFLAGS="-C target-cpu=native" cargo build --release --features "${RNODE_FEATURES}"
 
-    cp -f $NODE_BIN_DIR/rnode $NODE_BIN_DIR/rnode-${GC_TON_NODE}|cat
-    
     if $DAPP_NODE_BUILD;then
         cp -f ${RNODE_SRC_DIR}/target/release/ton_node $NODE_BIN_DIR/ton_node_kafka
+        cp -f $NODE_BIN_DIR/ton_node_kafka $NODE_BIN_DIR/ton_node_kafka-${GC_TON_NODE}|cat
     else
         cp -f ${RNODE_SRC_DIR}/target/release/ton_node $NODE_BIN_DIR/rnode
+        cp -f $NODE_BIN_DIR/rnode $NODE_BIN_DIR/rnode-${GC_TON_NODE}|cat
     fi
 
     #=====================================================
@@ -249,7 +249,7 @@ if ${RUST_NODE_BUILD};then
     git submodule init
     git submodule update
     cargo update
-    RUSTFLAGS="-C target-cpu=native" cargo build --release
+    RUSTFLAGS="-C target-cpu=native" cargo build --release --features "${RTOOLS_FEATURES}"
 
     find $RCONS_SRC_DIR/target/release/ -maxdepth 1 -type f ${FEXEC_FLG} -exec cp -f {} $NODE_BIN_DIR/ \;
     echo "---INFO: build RUST NODE ... DONE."

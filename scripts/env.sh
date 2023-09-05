@@ -141,6 +141,7 @@ export RNODE_FEATURES=""
 
 export RCONS_GIT_REPO="https://github.com/tonlabs/ever-node-tools.git"
 export RCONS_GIT_COMMIT="master"
+export RTOOLS_FEATURES=""
 
 export TONOS_CLI_GIT_REPO="https://github.com/tonlabs/tonos-cli.git"
 export TONOS_CLI_GIT_COMMIT="master"
