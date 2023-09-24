@@ -43,14 +43,14 @@ if [[ -z "$DecodeCap" ]];then
     if $FORCE_USE_DAPP;then
         NetCaps=$(printf "%d" "0x$($CALL_TC -j getconfig 8 | jq -r '.capabilities' | cut -d 'x' -f 2)")
     else
-        if ! [[ "$DecodeCap" =~ ^[0-9]+$ ]]; then
-          echo "###-Error: DecodeCap must be a number"
-          echo "Usage: $(basename "$0") <DecodeCap>"
-          exit 1
-        fi
         NetCaps=$($CALL_RC -jc 'getconfig 8'|jq -r '.p8.capabilities_dec')
     fi
 else
+    if ! [[ "$DecodeCap" =~ ^[0-9]+$ ]]; then
+      echo "###-Error: DecodeCap must be a number"
+      echo "Usage: $(basename "$0") <DecodeCap>"
+      exit 1
+    fi
     NetCaps=$((DecodeCap))
 fi
 
