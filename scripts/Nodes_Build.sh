@@ -46,9 +46,9 @@ case "$1" in
         RUST_NODE_BUILD=true
         DAPP_NODE_BUILD=true
         if [[ -z "$RNODE_FEATURES" ]];then
-            RNODE_FEATURES="external_db,metrics"
+            RNODE_FEATURES="external_db,statsd"
         else
-            RNODE_FEATURES="${RNODE_FEATURES},external_db,metrics"
+            RNODE_FEATURES="${RNODE_FEATURES},external_db,statsd"
         fi
         echo "---INFO: Will build node for DApp"
         ;;
@@ -204,11 +204,7 @@ if ${RUST_NODE_BUILD};then
 
     cd $RNODE_SRC_DIR
 
-    # sed -i.bak 's|features = \[\"cmake_build\", \"dynamic_linking\"\]|features = \[\"cmake_build\"\]|g' Cargo.toml
-    #====== Uncomment to disabe node's logs competely
-    # sed -i.bak 's%log = '0.4'%log = { version = "0.4", features = ["release_max_level_off"] }%'  Cargo.toml
-
-    rm -rf ~/.cargo/git/checkouts/ton-labs-*
+    rm -rf ~/.cargo/git/checkouts/ton-*
     rm -rf ~/.cargo/git/checkouts/ever-*
 
     cargo update
