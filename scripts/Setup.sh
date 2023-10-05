@@ -128,7 +128,7 @@ echo " ..DONE"
 #===========================================
 # Generate initial configs
 ./R_gen_init_configs.sh
-rm -rf "${R_DB_DIR}/*"
+rm -rf ${R_DB_DIR}/*
 #===========================================
 # Setup service for Linux
 ./setup_as_service.sh

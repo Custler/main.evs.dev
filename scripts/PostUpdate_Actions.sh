@@ -36,11 +36,13 @@ Node_bin_ver="$(rnode -V | grep 'Node, version' | awk '{print $4}')"
 Node_bin_ver_NUM=$(echo $Node_bin_ver | awk -F'.' '{printf("%d%03d%03d\n", $1,$2,$3)}')
 Node_SVC_ver="$($CALL_RC -jc getstats 2>/dev/null|cat|jq -r '.node_version' 2>/dev/null|cat)"
 Node_SVC_ver_NUM=$(echo $Node_SVC_ver | awk -F'.' '{printf("%d%03d%03d\n", $1,$2,$3)}')
-DB_reset_ver=0051025
+#########################
+Chng_Config_ver=000055063
+#########################
 
 #===========================================================
 # Check Node Updated, GC set and restarted
-if [[ $Node_bin_ver_NUM -ge $DB_reset_ver ]] && \
+if [[ $Node_bin_ver_NUM -ge $Chng_Config_ver ]] && \
    [[ $Node_bin_ver_NUM -eq $Node_SVC_ver_NUM ]] && \
    [[ "$(cat ${R_CFG_DIR}/config.json | jq '.gc.enable_for_archives' 2>/dev/null|cat)" == "true" ]];then
    echo "INFO: Check Node Updated - PASSED"
@@ -49,10 +51,10 @@ fi
 
 #===========================================================
 # For node ver < 0.51.25 and will not set GC 
-# if [[ $Node_bin_ver_NUM -lt $DB_reset_ver ]] && \
+# if [[ $Node_bin_ver_NUM -lt $Chng_Config_ver ]] && \
 #    [[ $Node_bin_ver_NUM -ne $Node_SVC_ver_NUM ]];then
-#     echo "${Tg_SOS_sign} DANGER: Your node version is less $DB_reset_ver and contains bugs!"
-#     "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_SOS_sign DANGER: Your node version is less $DB_reset_ver and contains bugs!" 2>&1 > /dev/null
+#     echo "${Tg_SOS_sign} DANGER: Your node version is less $Chng_Config_ver and contains bugs!"
+#     "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_SOS_sign DANGER: Your node version is less $Chng_Config_ver and contains bugs!" 2>&1 > /dev/null
 
 #     sudo service $ServiceName restart
 #     sleep 2
@@ -71,26 +73,20 @@ fi
 #     TonosCLI_Version="$(${NODE_BIN_DIR}/tonos-cli -V | grep -i 'tonos_cli' | awk '{print $2}')"
 #     echo "INFO: Node updated. Service restarted. Current versions: node ver: ${EverNode_Version} SupBlock: ${NodeSupBlkVer} node commit: ${Node_bin_commit}, console - ${Console_Version}, tonos-cli - ${TonosCLI_Version}"
 #     "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_CheckMark INFO: Node updated. Service restarted. Current versions: node ver: ${EverNode_Version} node commit: ${Node_bin_commit}, console - ${Console_Version}, tonos-cli - ${TonosCLI_Version}" 2>&1 > /dev/null
-#     "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_SOS_sign DANGER: Your node version is less $DB_reset_ver and contains bugs!" 2>&1 > /dev/null
+#     "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_SOS_sign DANGER: Your node version is less $Chng_Config_ver and contains bugs!" 2>&1 > /dev/null
 #     return 0
 # fi
 
-
-
 #===========================================================
-# For node ver >= 0.51.25  
-if [[ $Node_bin_ver_NUM -ge $DB_reset_ver ]] && \
+# For node ver >= 0.55.63 we have to change config.json
+if [[ $Node_bin_ver_NUM -ge $Chng_Config_ver ]] && \
    [[ $Node_bin_ver_NUM -ne $Node_SVC_ver_NUM ]];then
-    GC_in_config=$(cat ${R_CFG_DIR}/config.json | jq '.gc' 2>/dev/null|cat)
-    if [[ $GC_in_config == "null" ]];then
-        cat $R_CFG_DIR/config.json | \
-        jq '.gc = {"enable_for_archives":  true, "enable_for_shard_state_persistent": true}' > \
-        $R_CFG_DIR/config.json.tmp && \
-        cp -f $R_CFG_DIR/config.json.tmp $R_CFG_DIR/config.json
-    fi
-    
     # Fix orphographic error in config.json
-    sed -i.bak 's/prefill_cells_cunters/prefill_cells_counters/' $R_CFG_DIR/config.json
+    sed -i.bak 's/prefill_cells_cunters/prefill_cells_counters/' ${R_CFG_DIR}/config.json
+    # Set new parametrs in config.json
+    yq e -i -o json \
+        '.cells_db_config.prefill_cells_counters = false | .cells_db_config.cache_cells_counters = true | .cells_db_config.cells_lru_size = 1000000 | .states_cache_mode = "Moderate" | .skip_saving_persistent_states =  false' \
+        ${R_CFG_DIR}/config.json
 
     echo "${Tg_Warn_sign} ATTENTION: The node going to restart and may be out of sync for a few hours if DB needs repair! "
     "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "${Tg_Warn_sign} ATTENTION: The node going to restart and may be out of sync for a few hours if DB needs repair!" 2>&1 > /dev/null
