@@ -157,6 +157,8 @@ if [[ "${Node_local_repo_commit}" != "${Node_commit_from_bin}" ]];then
     "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_SOS_sign ###-ERROR(line $LINENO): Build update filed! Repo commit (${Node_local_repo_commit}) not equal commit from binary ${Node_commit_from_bin}." 2>&1 > /dev/null
     exit 1
 fi
+Console_Version="$(${NODE_BIN_DIR}/console -V | awk '{print $2}')"
+TonosCLI_Version="$(${NODE_BIN_DIR}/tonos-cli -V | grep -i 'tonos_cli' | awk '{print $2}')"
 
 echo "INFO: All builded. Current versions: node ver: ${EverNode_Version} SupBlock: ${NodeSupBlkVer} node commit: ${Node_commit_from_bin}, console - ${Console_Version}, tonos-cli - ${TonosCLI_Version}"
 "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_CheckMark INFO: All builded. Current versions: node ver: ${EverNode_Version} node commit: ${Node_commit_from_bin}, console - ${Console_Version}, tonos-cli - ${TonosCLI_Version}" 2>&1 > /dev/null
