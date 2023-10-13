@@ -85,7 +85,7 @@ if [[ $Node_bin_ver_NUM -ge $Chng_Config_ver ]] && \
     sed -i.bak 's/prefill_cells_cunters/prefill_cells_counters/' ${R_CFG_DIR}/config.json
     # Set new parametrs in config.json
     yq e -i -o json \
-        '.low_memory_mode = true | .cells_db_config.prefill_cells_counters = false | .cells_db_config.cache_cells_counters = true | .cells_db_config.cells_lru_size = 1000000 | .states_cache_mode = "Moderate" | .skip_saving_persistent_states =  false' \
+        '.restore_db = true | .low_memory_mode = true | .cells_db_config.prefill_cells_counters = false | .cells_db_config.cache_cells_counters = true | .cells_db_config.cells_lru_size = 1000000 | .states_cache_mode = "Moderate" | .skip_saving_persistent_states =  false' \
         ${R_CFG_DIR}/config.json
 
     echo "${Tg_Warn_sign} ATTENTION: The node going to restart and may be out of sync for a few hours if DB needs repair! "
