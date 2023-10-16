@@ -56,7 +56,7 @@ Description=Everscale Validator RUST Node
 After=network.target
 StartLimitIntervalSec=0
 [Service]
-Environment="STATSD_DOMAIN=127.0.0.1:"
+Environment="STATSD_DOMAIN=127.0.0.1"
 Environment="STATSD_PORT=9125"
 Type=simple
 Restart=always

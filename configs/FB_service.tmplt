@@ -17,7 +17,7 @@ logfile="N_NODE_LOG_FILE"
 command="N_COMMAND"
 command_args="N_ARGUMENTS"
 
-export STATSD_DOMAIN="127.0.0.1:"
+export STATSD_DOMAIN="127.0.0.1"
 export STATSD_PORT=9125
 
 start_cmd="tonnode_start"
