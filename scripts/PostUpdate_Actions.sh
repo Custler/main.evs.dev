@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# (C) Sergey Tyurin  2023-01-17 1:00:00
+# (C) Sergey Tyurin  2023-10-18 10:00:00
 
 # Disclaimer
 ##################################################################################################################
@@ -36,6 +36,7 @@ Node_bin_ver="$(rnode -V | grep 'Node, version' | awk '{print $4}')"
 Node_bin_ver_NUM=$(echo $Node_bin_ver | awk -F'.' '{printf("%d%03d%03d\n", $1,$2,$3)}')
 Node_SVC_ver="$($CALL_RC -jc getstats 2>/dev/null|cat|jq -r '.node_version' 2>/dev/null|cat)"
 Node_SVC_ver_NUM=$(echo $Node_SVC_ver | awk -F'.' '{printf("%d%03d%03d\n", $1,$2,$3)}')
+
 #########################
 Chng_Config_ver=000055063
 #########################
@@ -90,6 +91,11 @@ if [[ $Node_bin_ver_NUM -ge $Chng_Config_ver ]] && \
 
     echo "${Tg_Warn_sign} ATTENTION: The node going to restart and may be out of sync for a few hours if DB needs repair! "
     "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "${Tg_Warn_sign} ATTENTION: The node going to restart and may be out of sync for a few hours if DB needs repair!" 2>&1 > /dev/null
+
+    # Clean catchain's garbage files
+    Catchains_Dir="${R_DB_DIR}/catchains"
+    find ${Catchains_Dir}/ -depth -type f \( -name "candidates*" -o -name "catchainreceiver*" \) -mtime +2 -exec rm -f {} \;
+    find ${Catchains_Dir}/ -depth -type d \( -name "candidates*" -o -name "catchainreceiver*" \) -mtime +2 -exec rm -rf {} \;
 
     sudo service $ServiceName restart
     sleep 2
