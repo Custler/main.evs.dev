@@ -200,12 +200,16 @@ esac
 # Make BOC file to send
 TA_BOC_File="${KEYS_DIR}/Transfer_Amount.boc"
 rm -f "${TA_BOC_File}" &>/dev/null
-TC_OUTPUT="$($CALL_TC message --raw --output ${TA_BOC_File} \
+TC_OUT="$($CALL_TC message --raw --output ${TA_BOC_File} \
 --sign "${SRC_KEY_FILE}" \
 --abi "${Wallet_ABI}" \
 ${SRC_ACCOUNT} submitTransaction \
 "{\"dest\":\"${DST_ACCOUNT}\",\"value\":${NANO_AMOUNT},\"bounce\":$BOUNCE,\"allBalance\":false,\"payload\":\"\"}" \
---lifetime 600 | grep -i 'Message saved to file')"
+--lifetime 600)"
+
+# echo "$TC_OUT"
+
+TC_OUTPUT="$(echo "$TC_OUT" | grep -i 'Message saved to file')"
 
 if [[ -z $TC_OUTPUT ]];then
     echo "###-ERROR(line $LINENO): Failed to make BOC file ${TA_BOC_File}. Can't continue."

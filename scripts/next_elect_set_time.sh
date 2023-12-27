@@ -210,14 +210,19 @@ echo "Next elections time start: $Next_Elect_Time / $(GET_F_T "$Next_Elect_Time"
 echo "-------------------------------------------------------------------"
 
 #===================================================
+TlgStartAtReboot=""
+if [[ -n $(cat TlgChat.json |jq -r '.telegram_bot_token') ]];then
+    TlgStartAtReboot="@reboot cd ${SCRIPT_DIR} && tmux new -ds tg && sleep 3 && tmux send -t tg.0 './tg_check_node_sync_status.sh &' ENTER"
+fi
+
 OS_SYSTEM=`uname -s`
-FB_CT_HEADER=""
 if [[ "$OS_SYSTEM" == "FreeBSD" ]];then
 
 CRONT_JOBS=$(cat <<-_ENDCRN_
 SHELL=/bin/bash
 PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:$NODE_BIN_DIR
 HOME=$USER_HOME
+$TlgStartAtReboot
 @reboot cd ${SCRIPT_DIR} && ./wait_for_sync.sh && ./prepare_elections.sh; ./take_part_in_elections.sh; ./part_check.sh; ./next_elect_set_time.sh
 $NXT_ELECT_1 * * *    cd ${SCRIPT_DIR} && ./prepare_elections.sh &>> ${TON_LOG_DIR}/validator.log
 $NXT_ELECT_2 * * *    cd ${SCRIPT_DIR} && ./take_part_in_elections.sh &>> ${TON_LOG_DIR}/validator.log
@@ -233,6 +238,7 @@ CRONT_JOBS=$(cat <<-_ENDCRN_
 SHELL=/bin/bash
 PATH=$NODE_BIN_DIR:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
 HOME=$USER_HOME
+$TlgStartAtReboot
 @reboot cd ${SCRIPT_DIR} && ./wait_for_sync.sh && ./prepare_elections.sh; ./take_part_in_elections.sh; ./part_check.sh; ./next_elect_set_time.sh
 $NXT_ELECT_1 * * *    cd ${SCRIPT_DIR} && ./prepare_elections.sh &>> ${TON_LOG_DIR}/validator.log
 $NXT_ELECT_2 * * *    cd ${SCRIPT_DIR} && ./take_part_in_elections.sh &>> ${TON_LOG_DIR}/validator.log
