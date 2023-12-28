@@ -40,7 +40,7 @@ export LNIC_ADDRESS="0:bdcefecaae5d07d926f1fa881ea5b61d81ea748bd02136c0dbe766043
 #=====================================================
 # Network related variables
 export NETWORK_TYPE="main.ton.dev"      # can be main.* / net.* / fld.* / rfld.* / Not implemented: smft.*
-export Node_Blk_Min_Ver=41
+export Node_Blk_Min_Ver=46
 export ELECTOR_TYPE="fift"
 export NODE_WC=0                        # Node WorkChain 
 
@@ -132,8 +132,8 @@ export STATSD_PORT=9125
 #=====================================================
 # GIT addresses & commits
 export RUST_VERSION="1.70.0"
-export MIN_TC_VERSION="0.35.00"
-export MIN_RC_VERSION="0.1.302"
+export MIN_TC_VERSION="0.36.3"
+export MIN_RC_VERSION="0.1.315"
 
 export RNODE_GIT_REPO="https://github.com/tonlabs/ever-node.git"
 export RNODE_GIT_COMMIT="master"
