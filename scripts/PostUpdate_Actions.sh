@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# (C) Sergey Tyurin  2023-10-18 10:00:00
+# (C) Sergey Tyurin  2023-12-27 10:00:00
 
 # Disclaimer
 ##################################################################################################################
@@ -59,13 +59,35 @@ if [[ $Node_bin_ver_NUM -ge $Chng_Config_ver ]] && \
    [[ $Node_bin_ver_NUM -ne $Node_SVC_ver_NUM ]];then
     # Fix orphographic error in config.json
     sed -i.bak 's/prefill_cells_cunters/prefill_cells_counters/' ${R_CFG_DIR}/config.json
+
     # Set new parametrs in config.json
+    Remp_Config='{
+        "client_enabled": true,
+        "remp_client_pool": null,
+        "service_enabled": true,
+        "max_incoming_broadcast_delay_millis": 0,
+        "remp.message_queue_max_len": 10000
+    }'
+    Cells_DB_Config='{
+        "states_db_queue_len": 1000,
+        "max_pss_slowdown_mcs": 750,
+        "prefill_cells_counters": false,
+        "cache_cells_counters": true,
+        "cells_lru_size": 1000000
+    }'
+
     yq e -i -o json \
-        '.restore_db = true | .low_memory_mode = true | .cells_db_config.prefill_cells_counters = false | .cells_db_config.cache_cells_counters = true | .cells_db_config.cells_lru_size = 1000000 | .states_cache_mode = "Moderate" | .skip_saving_persistent_states =  false' \
+        ".cells_db_config = $Cells_DB_Config | \
+         .remp = $Remp_Config | \
+         .states_cache_mode = \"Moderate\" | \
+         .skip_saving_persistent_states =  false | \
+         .restore_db = true | \
+         .low_memory_mode = true" \
         ${R_CFG_DIR}/config.json
 
+    # Info messages
     echo "${Tg_Warn_sign} ATTENTION: The node going to restart and may be out of sync for a few hours if DB needs repair! "
-    "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "${Tg_Warn_sign} ATTENTION: The node going to restart and may be out of sync for a few hours if DB needs repair!" 2>&1 > /dev/null
+    "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "${Tg_Warn_sign} ATTENTION: The node going to restart and may be out of sync for a few hours if DB needs repair!" > /dev/null 2>&1
 
     # Clean catchain's garbage files
     Catchains_Dir="${R_DB_DIR}/catchains"
@@ -76,7 +98,7 @@ if [[ $Node_bin_ver_NUM -ge $Chng_Config_ver ]] && \
     sleep 2
     if [[ -z "$(pgrep rnode)" ]];then
         echo "###-ERROR(line $LINENO): Node process not started!"
-        "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_SOS_sign ###-ERROR(line $LINENO): Node process not started!" 2>&1 > /dev/null
+        "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_SOS_sign ###-ERROR(line $LINENO): Node process not started!" > /dev/null 2>&1
         exit 1
     fi
     ${SCRIPT_DIR}/wait_for_sync.sh
@@ -89,7 +111,10 @@ NodeSupBlkVer="$(rnode -V | grep 'BLOCK_VERSION:' | awk '{print $2}')"
 Console_Version="$(${NODE_BIN_DIR}/console -V | awk '{print $2}')"
 TonosCLI_Version="$(${NODE_BIN_DIR}/tonos-cli -V | grep -i 'tonos_cli' | awk '{print $2}')"
 echo "INFO: Node updated. Service restarted. Current versions: node ver: ${EverNode_Version} SupBlock: ${NodeSupBlkVer} node commit: ${Node_bin_commit}, console - ${Console_Version}, tonos-cli - ${TonosCLI_Version}"
-"${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_CheckMark INFO: Node updated. Service restarted. Current versions: node ver: ${EverNode_Version} node commit: ${Node_bin_commit}, console - ${Console_Version}, tonos-cli - ${TonosCLI_Version}" 2>&1 > /dev/null
+"${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_CheckMark INFO: Node updated. Service restarted. Current versions: node ver: ${EverNode_Version} node commit: ${Node_bin_commit}, console - ${Console_Version}, tonos-cli - ${TonosCLI_Version}" > /dev/null 2>&1
+${SCRIPT_DIR}/take_part_in_elections.sh
+${SCRIPT_DIR}/part_check.sh
+${SCRIPT_DIR}/next_elect_set_time.sh
 
 #===========================================================
 #

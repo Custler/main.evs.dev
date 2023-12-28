@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eE
 
-# (C) Sergey Tyurin  2023-06-08 18:00:00
+# (C) Sergey Tyurin  2023-12-27 18:00:00
 
 # Disclaimer
 ##################################################################################################################
@@ -88,7 +88,11 @@ fi
 # Get Latest yq download url
 # curl -sS -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/mikefarah/yq/releases/latest | grep '/yq_linux_amd64' | head -n 1 | awk '{print $2}'
 # curl -sS -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/mikefarah/yq/releases/latest | jq -r '.assets[]|select(.name == "yq_linux_amd64")|.browser_download_url'
-YQ_LATEST_URL="$(curl -sS -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/mikefarah/yq/releases/latest | jq -r '.assets[]|select(.name == "yq_linux_amd64")|.browser_download_url')"
+YQ_API_RESPONCE="$(curl -sS -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/mikefarah/yq/releases/latest)"
+YQ_LATEST_URL=""
+if [[ -z $(echo "$YQ_API_RESPONCE" | jq '.message'|grep 'rate limit exceeded') ]];then
+    YQ_LATEST_URL="$(echo "$YQ_API_RESPONCE" | jq -r '.assets[]|select(.name == "yq_linux_amd64")|.browser_download_url')"
+fi
 #=====================================================
 # Set packages set & manager according to OS
 case "$OS_SYSTEM" in
@@ -99,8 +103,10 @@ case "$OS_SYSTEM" in
         $PKG_MNGR update -f
         $PKG_MNGR upgrade -y
         FEXEC_FLG="-perm +111"
-        YQ_LATEST_URL="$(curl -sS -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/mikefarah/yq/releases/latest | jq -r '.assets[]|select(.name == "yq_freebsd_amd64")|.browser_download_url')"
-        sudo wget "$YQ_LATEST_URL" -O /usr/local/bin/yq && sudo chmod +x /usr/local/bin/yq
+        if [[ -n $YQ_LATEST_URL ]];then
+            YQ_LATEST_URL="$(echo "$YQ_API_RESPONCE" | jq -r '.assets[]|select(.name == "yq_freebsd_amd64")|.browser_download_url')"
+            sudo wget "$YQ_LATEST_URL" -O /usr/local/bin/yq && sudo chmod +x /usr/local/bin/yq
+        fi
         ;;
     CentOS)
         export ZSTD_LIB_DIR=/usr/lib64
@@ -110,7 +116,7 @@ case "$OS_SYSTEM" in
         $PKG_MNGR group install -y "Development Tools"
         $PKG_MNGR config-manager --set-enabled powertools 
         $PKG_MNGR --enablerepo=extras install -y epel-release
-        sudo wget "$YQ_LATEST_URL" -O /usr/local/bin/yq && sudo chmod +x /usr/local/bin/yq
+        [[ -n $YQ_LATEST_URL ]] && sudo wget "$YQ_LATEST_URL" -O /usr/local/bin/yq && sudo chmod +x /usr/local/bin/yq
         sudo systemctl daemon-reload
         ;;
     Oracle)
@@ -127,7 +133,7 @@ case "$OS_SYSTEM" in
             $PKG_MNGR config-manager --set-enabled ol8_codeready_builder
             $PKG_MNGR install -y oracle-epel-release-el8
         fi
-        sudo wget "$YQ_LATEST_URL" -O /usr/local/bin/yq && sudo chmod +x /usr/local/bin/yq
+        [[ -n $YQ_LATEST_URL ]] && sudo wget "$YQ_LATEST_URL" -O /usr/local/bin/yq && sudo chmod +x /usr/local/bin/yq
         sudo systemctl daemon-reload
         ;;
     Fedora)
@@ -136,7 +142,7 @@ case "$OS_SYSTEM" in
         PKG_MNGR=$PKG_MNGR_CentOS
         $PKG_MNGR -y update --allowerasing
         $PKG_MNGR group install -y "Development Tools"
-        sudo wget "$YQ_LATEST_URL" -O /usr/local/bin/yq && sudo chmod +x /usr/local/bin/yq
+        [[ -n $YQ_LATEST_URL ]] && sudo wget "$YQ_LATEST_URL" -O /usr/local/bin/yq && sudo chmod +x /usr/local/bin/yq
         sudo systemctl daemon-reload
         ;;
     Ubuntu|Debian)
@@ -145,7 +151,7 @@ case "$OS_SYSTEM" in
         PKG_MNGR=$PKG_MNGR_Ubuntu
         $PKG_MNGR install -y software-properties-common
         sudo add-apt-repository -y ppa:ubuntu-toolchain-r/ppa
-        sudo wget "$YQ_LATEST_URL" -O /usr/local/bin/yq && sudo chmod +x /usr/local/bin/yq
+        [[ -n $YQ_LATEST_URL ]] && sudo wget "$YQ_LATEST_URL" -O /usr/local/bin/yq && sudo chmod +x /usr/local/bin/yq
         sudo systemctl daemon-reload
         ;;
     *)
@@ -216,9 +222,11 @@ if ${RUST_NODE_BUILD};then
     echo 'release = { lto = "fat", codegen-units = 1, panic = "abort" }' >> Cargo.toml
 
     # node git commit
-    export GC_TON_NODE="$(git --git-dir="$RNODE_SRC_DIR/.git" rev-parse HEAD 2>/dev/null)"
+    GC_TON_NODE="$(git --git-dir="$RNODE_SRC_DIR/.git" rev-parse HEAD 2>/dev/null)"
+    export GC_TON_NODE
     # block version
-    export NODE_BLK_VER=$(cat $RNODE_SRC_DIR/src/validating_utils.rs |grep -A1 'supported_version'|tail -1|tr -d ' ')
+    NODE_BLK_VER=$(cat $RNODE_SRC_DIR/src/validating_utils.rs |grep -A1 'supported_version'|tail -1|tr -d ' ')
+    export NODE_BLK_VER
 
     echo -e "${BoldText}${BlueBack}---INFO: RNODE build flags: ${RNODE_FEATURES} commit: ${GC_TON_NODE} Block version: ${NODE_BLK_VER}${NormText}"
     RUSTFLAGS="-C target-cpu=native" cargo build --release --features "${RNODE_FEATURES}"
