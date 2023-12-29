@@ -181,10 +181,12 @@
   },
   "validator_key_ring": null,
   "remp": {
-    "client_enabled": false,
+    "client_enabled": true,
     "remp_client_pool": null,
-    "service_enabled": false
-  },
+    "service_enabled": true,
+    "max_incoming_broadcast_delay_millis": 0,
+    "remp.message_queue_max_len": 10000
+},
   "restore_db": true,
   "low_memory_mode": true,
   "cells_db_config": {
@@ -193,7 +195,7 @@
     "prefill_cells_counters": false,
     "cache_cells_counters": true,
     "cells_lru_size": 1000000
-  },
+},
   "collator_config": {
     "cutoff_timeout_ms": 1000,
     "stop_timeout_ms": 1500,
