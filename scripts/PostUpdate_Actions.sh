@@ -32,7 +32,7 @@ ${SCRIPT_DIR}/nets_config_update.sh
 
 #===========================================================
 # Check node version for DB reset
-Node_bin_ver="$(rnode -V | grep 'Node, version' | awk '{print $4}')"
+Node_bin_ver="$(${NODE_BIN_DIR}/rnode -V | grep 'Node, version' | awk '{print $4}')"
 Node_bin_ver_NUM=$(echo $Node_bin_ver | awk -F'.' '{printf("%d%03d%03d\n", $1,$2,$3)}')
 Node_SVC_ver="$($CALL_RC -jc getstats 2>/dev/null|cat|jq -r '.node_version' 2>/dev/null|cat)"
 Node_SVC_ver_NUM=$(echo $Node_SVC_ver | awk -F'.' '{printf("%d%03d%03d\n", $1,$2,$3)}')
@@ -105,9 +105,9 @@ if [[ $Node_bin_ver_NUM -ge $Chng_Config_ver ]] && \
 fi
 #===========================================================
 # Check and show the Node version
-Node_bin_commit="$(rnode -V | grep 'NODE git commit:' | awk '{print $5}')"
+Node_bin_commit="$(${NODE_BIN_DIR}/rnode -V | grep 'NODE git commit:' | awk '{print $5}')"
 EverNode_Version="$(${NODE_BIN_DIR}/rnode -V | grep -i 'TON Node, version' | awk '{print $4}')"
-NodeSupBlkVer="$(rnode -V | grep 'BLOCK_VERSION:' | awk '{print $2}')"
+NodeSupBlkVer="$(${NODE_BIN_DIR}/rnode -V | grep 'BLOCK_VERSION:' | awk '{print $2}')"
 Console_Version="$(${NODE_BIN_DIR}/console -V | awk '{print $2}')"
 TonosCLI_Version="$(${NODE_BIN_DIR}/tonos-cli -V | grep -i 'tonos_cli' | awk '{print $2}')"
 echo "INFO: Node updated. Service restarted. Current versions: node ver: ${EverNode_Version} SupBlock: ${NodeSupBlkVer} node commit: ${Node_bin_commit}, console - ${Console_Version}, tonos-cli - ${TonosCLI_Version}"
