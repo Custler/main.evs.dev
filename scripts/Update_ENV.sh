@@ -26,16 +26,18 @@ SCRIPT_DIR=`cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P`
 source "${SCRIPT_DIR}/env.sh"
 
 #################################################################
-# Set versions
+# Set new environment variables in env.sh
 sed -i.bak "s|export RUST_VERSION=.*|export RUST_VERSION=\"1.70.0\"|; \
-            s|export MIN_RC_VERSION=.*|export MIN_RC_VERSION=\"0.1.302\"|; \
+            s|export Main_DApp_URL=.*|export Main_DApp_URL=\"https://mainnet.evercloud.dev\"|; \
+            s|export MainNet_DApp_List=.*|export MainNet_DApp_List=\"https://mainnet.evercloud.dev,https://gra01.main.everos.dev,https://lim01.main.everos.dev\"|; \
+            s|export DevNet_DApp_URL=.*|export DevNet_DApp_URL=\"https://net.evercloud.dev\"|; \
+            s|export DevNet_DApp_List=.*|export DevNet_DApp_List=\"https://net.evercloud.dev,https://eri01.net.everos.dev,https://gra01.net.everos.dev\"|; \
+            s|export MIN_RC_VERSION=.*|export MIN_RC_VERSION=\"0.1.315\"|; \
             s|export MIN_TC_VERSION=.*|export MIN_TC_VERSION=\"0.35.00\"|; \
             s|export RNODE_GIT_REPO=.*|export RNODE_GIT_REPO=\"https://github.com/tonlabs/ever-node.git\"|g; \
             s|export RCONS_GIT_REPO=.*|export RCONS_GIT_REPO=\"https://github.com/tonlabs/ever-node-tools.git\"|g; \
-            s|export Node_Blk_Min_Ver=.*|export Node_Blk_Min_Ver=41|" "${SCRIPT_DIR}/env.sh"
-
-# Remove unused fld block
-sed -i.bak '/if \[\[ "\${NETWORK_TYPE%%\.\*}" == "fld" \]\];then/,/fi/d' "${SCRIPT_DIR}/env.sh"
+            s|export TONOS_CLI_GIT_REPO=.*|export TONOS_CLI_GIT_REPO=\"https://github.com/tonlabs/ever-cli.git\"|; \
+            s|export Node_Blk_Min_Ver=.*|export Node_Blk_Min_Ver=46|" "${SCRIPT_DIR}/env.sh"
 
 #################################################################
 # Add DAPP_Project_id & DAPP_access_key variables 
@@ -51,12 +53,6 @@ sed -i.bak '/if \[\[ "\${NETWORK_TYPE%%\.\*}" == "fld" \]\];then/,/fi/d' "${SCRI
 #     sed -i.bak '/# Networks endpoints/p; s/# Networks endpoints.*/export Auth_key_Head="Authorization: Basic "/' ${SCRIPT_DIR}/env.sh
 # fi
 
-# sed -i.bak 's|export Main_DApp_URL=.*|export Main_DApp_URL="https://mainnet.evercloud.dev"|' "${SCRIPT_DIR}/env.sh"
-# sed -i.bak 's|export MainNet_DApp_List=.*|export MainNet_DApp_List="https://https://mainnet.evercloud.dev,https://eri01.main.everos.dev,https://gra01.main.everos.dev,https://gra02.main.everos.dev,https://lim01.main.everos.dev,https://rbx01.main.everos.dev"|' "${SCRIPT_DIR}/env.sh"
-
-# sed -i.bak 's|export DevNet_DApp_URL=.*|export DevNet_DApp_URL="https://net.evercloud.dev"|' "${SCRIPT_DIR}/env.sh"
-# sed -i.bak 's|export DevNet_DApp_List=.*|export DevNet_DApp_List="https://https://net.evercloud.dev,https://eri01.net.everos.dev,https://rbx01.net.everos.dev,https://gra01.net.everos.dev"|' "${SCRIPT_DIR}/env.sh"
-
 # if [[ -z "$(cat ${SCRIPT_DIR}/env.sh | grep 'export Tg_Exclaim_sign')" ]];then
 #     sed -i.bak '/export Tg_Warn_sign/p; s/export Tg_Warn_sign.*/export Tg_Exclaim_sign=$(echo -e "\\U000203C")/' ${SCRIPT_DIR}/env.sh
 # fi
@@ -69,27 +65,27 @@ fi
 
 #################################################################
 # Fix binaries names for new release 7-zip and old p7zip
-if [[ -z "$(cat env.sh|grep 'CALL_7Z')" ]];then
-    echo "+++INFO: Fix binaries names for new release 7-zip and old p7zip"
-    cp -f env.sh env.sh.bak
-    awk '{
-        if ($0 == "    export\ CALL_BC=\"bc\ -l\"") {
-            print $0;
-            getline;
-            print $0;
-            print "\n# =====================================================";
-            print "# Set binary for 7-zip";
-            print "export CALL_7Z=\"7z\"";
-            print "Distro_Name=\"$(cat /etc/os-release | grep \"PRETTY_NAME=\"|awk -F\x27[\" ]\x27 \x27{print $2}\x27)\"";
-            print "if [[ \"$Distro_Name\" == \"CentOS\" ]] || [[ \"$Distro_Name\" == \"Fedora\" ]] || [[ \"$Distro_Name\" == \"Oracle\" ]];then"
-            print "    export CALL_7Z=\"7za\"";
-            print "fi";
-            next;
-        } else {
-            print $0;
-        }
-    }' env.sh.bak > env.sh
-fi
+# if [[ -z "$(cat env.sh|grep 'CALL_7Z')" ]];then
+#     echo "+++INFO: Fix binaries names for new release 7-zip and old p7zip"
+#     cp -f env.sh env.sh.bak
+#     awk '{
+#         if ($0 == "    export\ CALL_BC=\"bc\ -l\"") {
+#             print $0;
+#             getline;
+#             print $0;
+#             print "\n# =====================================================";
+#             print "# Set binary for 7-zip";
+#             print "export CALL_7Z=\"7z\"";
+#             print "Distro_Name=\"$(cat /etc/os-release | grep \"PRETTY_NAME=\"|awk -F\x27[\" ]\x27 \x27{print $2}\x27)\"";
+#             print "if [[ \"$Distro_Name\" == \"CentOS\" ]] || [[ \"$Distro_Name\" == \"Fedora\" ]] || [[ \"$Distro_Name\" == \"Oracle\" ]];then"
+#             print "    export CALL_7Z=\"7za\"";
+#             print "fi";
+#             next;
+#         } else {
+#             print $0;
+#         }
+#     }' env.sh.bak > env.sh
+# fi
 
 ##########################################################
 

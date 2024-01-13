@@ -207,7 +207,11 @@ ${SRC_ACCOUNT} submitTransaction \
 "{\"dest\":\"${DST_ACCOUNT}\",\"value\":${NANO_AMOUNT},\"bounce\":$BOUNCE,\"allBalance\":false,\"payload\":\"\"}" \
 --lifetime 600)"
 
-# echo "$TC_OUT"
+echo
+echo "-----------------------------------------------------------"
+echo "$TC_OUT"
+echo "-----------------------------------------------------------"
+echo
 
 TC_OUTPUT="$(echo "$TC_OUT" | grep -i 'Message saved to file')"
 

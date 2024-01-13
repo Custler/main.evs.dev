@@ -194,7 +194,7 @@
     "max_pss_slowdown_mcs": 750,
     "prefill_cells_counters": false,
     "cache_cells_counters": true,
-    "cells_lru_size": 1000000
+    "cache_size_bytes": 4294967296
 },
   "collator_config": {
     "cutoff_timeout_ms": 1000,

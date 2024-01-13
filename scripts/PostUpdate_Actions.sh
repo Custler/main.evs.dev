@@ -26,6 +26,7 @@ SCRIPT_DIR=`cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P`
 source "${SCRIPT_DIR}/env.sh"
 source "${SCRIPT_DIR}/functions.shinc"
 
+Timestamp="$(date +%Y-%m-%d_%H-%M-%S)"
 #===========================================================
 #  Update network global config
 ${SCRIPT_DIR}/nets_config_update.sh
@@ -60,6 +61,8 @@ if [[ $Node_bin_ver_NUM -ge $Chng_Config_ver ]] && \
     # Fix orphographic error in config.json
     sed -i.bak 's/prefill_cells_cunters/prefill_cells_counters/' ${R_CFG_DIR}/config.json
 
+    # Backup node config file
+    cp ${R_CFG_DIR}/config.json ${NODE_LOGS_ARCH}/config.json.${Timestamp}
     # Set new parametrs in config.json
     Remp_Config='{
         "client_enabled": true,
@@ -73,11 +76,12 @@ if [[ $Node_bin_ver_NUM -ge $Chng_Config_ver ]] && \
         "max_pss_slowdown_mcs": 750,
         "prefill_cells_counters": false,
         "cache_cells_counters": true,
-        "cells_lru_size": 1000000
+        "cache_size_bytes": 4294967296
     }'
 
     yq e -i -o json \
-        ".cells_db_config = $Cells_DB_Config | \
+        "del(.cells_db_config.cells_lru_size) | \
+         .cells_db_config = $Cells_DB_Config | \
          .remp = $Remp_Config | \
          .states_cache_mode = \"Moderate\" | \
          .skip_saving_persistent_states =  false | \

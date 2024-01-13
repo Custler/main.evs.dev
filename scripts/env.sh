@@ -56,10 +56,10 @@ export Auth_key_Head="Authorization: Basic "    # header for curl: -H "$Auth_key
 export ipi_token=""                     # token for ipinfo.io
 
 export Main_DApp_URL="https://mainnet.evercloud.dev"
-export MainNet_DApp_List="https://https://mainnet.evercloud.dev,https://eri01.main.everos.dev,https://gra01.main.everos.dev,https://gra02.main.everos.dev,https://lim01.main.everos.dev,https://rbx01.main.everos.dev"
+export MainNet_DApp_List="https://mainnet.evercloud.dev,https://gra01.main.everos.dev,https://lim01.main.everos.dev"
 
 export DevNet_DApp_URL="https://net.evercloud.dev"
-export DevNet_DApp_List="https://https://net.evercloud.dev,https://eri01.net.everos.dev,https://rbx01.net.everos.dev,https://gra01.net.everos.dev"
+export DevNet_DApp_List="https://net.evercloud.dev,https://eri01.net.everos.dev,https://gra01.net.everos.dev"
 
 export FLD_DApp_URL="https://gql.custler.net"
 export FLD_DApp_List="https://gql.custler.net"
@@ -143,7 +143,7 @@ export RCONS_GIT_REPO="https://github.com/tonlabs/ever-node-tools.git"
 export RCONS_GIT_COMMIT="master"
 export RTOOLS_FEATURES=""
 
-export TONOS_CLI_GIT_REPO="https://github.com/tonlabs/tonos-cli.git"
+export TONOS_CLI_GIT_REPO="https://github.com/tonlabs/ever-cli.git"
 export TONOS_CLI_GIT_COMMIT="master"
 
 export TVM_LINKER_GIT_REPO="https://github.com/tonlabs/TVM-linker.git"
@@ -159,7 +159,7 @@ export Surf_GIT_Commit="multisig-surf-v2"
 
 #=====================================================
 # Source code folders
-export TONOS_CLI_SRC_DIR="${NODE_TOP_DIR}/tonos-cli"
+export TONOS_CLI_SRC_DIR="${NODE_TOP_DIR}/ever-cli"
 export UTILS_DIR="${TON_BUILD_DIR}/utils"
 export RNODE_SRC_DIR="${NODE_TOP_DIR}/rnode"
 export RCONS_SRC_DIR="${NODE_TOP_DIR}/rcons"
