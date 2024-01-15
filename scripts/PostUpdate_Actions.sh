@@ -69,7 +69,7 @@ if [[ $Node_bin_ver_NUM -ge $Chng_Config_ver ]] && \
         "remp_client_pool": null,
         "service_enabled": true,
         "max_incoming_broadcast_delay_millis": 0,
-        "remp.message_queue_max_len": 10000
+        "message_queue_max_len": 10000
     }'
     Cells_DB_Config='{
         "states_db_queue_len": 1000,
