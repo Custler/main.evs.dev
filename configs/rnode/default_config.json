@@ -185,7 +185,7 @@
     "remp_client_pool": null,
     "service_enabled": true,
     "max_incoming_broadcast_delay_millis": 0,
-    "remp.message_queue_max_len": 10000
+    "message_queue_max_len": 10000
 },
   "restore_db": true,
   "low_memory_mode": true,
