@@ -462,7 +462,7 @@ function get_LastNodeInfo {
 # Return: Net_Min_Sup_Blk NodeGit_Sup_Blk NodeBin_Sup_Blk NodeRun_Version
 #   - Net_Min_Sup_Blk - from network config
 #   - NodeGit_Sup_Blk - from local git repo
-#   - NodeBin_Sup_Blk - from binary file (rnode -V)
+#   - NodeBin_Sup_Blk - from binary file (${NODE_BIN_DIR}/rnode -V)
 #   - NodeRun_Version - Node version received from the running service via the console (in text - "0.51.27")
 function Get_Supported_Blocks_Version() {
     local -i Net_Min_Sup_Blk=0

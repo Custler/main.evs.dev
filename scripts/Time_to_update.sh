@@ -65,7 +65,7 @@ rm -f ${LNIC_ADDRESS##*:}.boc Get_ABI.json LNIC_ABI_7z_hex.txt LNIC_ABI.7z LastN
 Supp_Blocks="$(Get_Supported_Blocks_Version)"
 Node_remote_commit="$(git --git-dir="$RNODE_SRC_DIR/.git" ls-remote 2>/dev/null | grep 'HEAD'|awk '{print $1}')"
 Node_local_commit="$(git --git-dir="$RNODE_SRC_DIR/.git" rev-parse HEAD 2>/dev/null)"
-Node_bin_commit="$(rnode -V | grep 'NODE git commit' | awk '{print $5}')"
+Node_bin_commit="$(${NODE_BIN_DIR}/rnode -V | grep 'NODE git commit' | awk '{print $5}')"
 echo "-------------------------------------------------------------------------------------------"
 echo "Node remote MASTER commit: $Node_remote_commit"
 echo "Node local commit:         $Node_local_commit"
