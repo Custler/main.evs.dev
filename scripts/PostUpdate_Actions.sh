@@ -26,7 +26,6 @@ SCRIPT_DIR=`cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P`
 source "${SCRIPT_DIR}/env.sh"
 source "${SCRIPT_DIR}/functions.shinc"
 
-Timestamp="$(date +%Y-%m-%d_%H-%M-%S)"
 #===========================================================
 #  Update network global config
 ${SCRIPT_DIR}/nets_config_update.sh
@@ -62,14 +61,24 @@ if [[ $Node_bin_ver_NUM -ge $Chng_Config_ver ]] && \
     sed -i.bak 's/prefill_cells_cunters/prefill_cells_counters/' ${R_CFG_DIR}/config.json
 
     # Backup node config file
+    # source ./env.sh
+    Timestamp="$(date +%Y-%m-%d_%H-%M-%S)"
     cp ${R_CFG_DIR}/config.json ${NODE_LOGS_ARCH}/config.json.${Timestamp}
     # Set new parametrs in config.json
+    Garbage_Collector='{
+        "enable_for_archives": true,
+        "archives_life_time_hours": 48,
+        "enable_for_shard_state_persistent": true,
+        "cells_gc_config": {
+          "gc_interval_sec": 900,
+          "cells_lifetime_sec": 1800
+    }'
     Remp_Config='{
         "client_enabled": true,
         "remp_client_pool": null,
         "service_enabled": true,
-        "max_incoming_broadcast_delay_millis": 0,
-        "message_queue_max_len": 10000
+        "message_queue_max_len": 10000,
+        "max_incoming_broadcast_delay_millis": 0
     }'
     Cells_DB_Config='{
         "states_db_queue_len": 1000,
@@ -80,10 +89,11 @@ if [[ $Node_bin_ver_NUM -ge $Chng_Config_ver ]] && \
     }'
 
     yq e -i -o json \
-        "del(.cells_db_config.cells_lru_size) | \
+        ".gc = $Garbage_Collector | \
          .cells_db_config = $Cells_DB_Config | \
          .remp = $Remp_Config | \
          .states_cache_mode = \"Moderate\" | \
+         .states_cache_cleanup_diff: 1000 | \
          .skip_saving_persistent_states =  false | \
          .restore_db = true | \
          .low_memory_mode = true" \

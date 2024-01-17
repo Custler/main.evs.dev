@@ -30,8 +30,8 @@ source "${SCRIPT_DIR}/functions.shinc"
 # Check github for new node release
 Node_local_commit="$(git --git-dir="$RNODE_SRC_DIR/.git" rev-parse HEAD 2>/dev/null)"
 Node_remote_commit="$(git --git-dir="$RNODE_SRC_DIR/.git" ls-remote 2>/dev/null | grep 'HEAD'|awk '{print $1}')"
-Node_bin_commit="$(rnode -V | grep 'NODE git commit:' | awk '{print $5}')"
-Node_bin_ver="$(rnode -V | grep 'Node, version' | awk '{print $4}')"
+Node_bin_commit="$(${NODE_BIN_DIR}/rnode -V | grep 'NODE git commit:' | awk '{print $5}')"
+Node_bin_ver="$(${NODE_BIN_DIR}/rnode -V | grep 'Node, version' | awk '{print $4}')"
 Node_SVC_ver="$($CALL_RC -jc getstats 2>/dev/null|cat|jq -r '.node_version' 2>/dev/null|cat)"
 
 # if settled certain commit (not master) in env.sh 
@@ -150,7 +150,7 @@ if [[ $? -gt 0 ]];then
 fi
 
 Node_local_repo_commit="$(git --git-dir="$RNODE_SRC_DIR/.git" rev-parse HEAD 2>/dev/null)"
-Node_commit_from_bin="$(rnode -V | grep 'TON NODE git commit' | awk '{print $5}')"
+Node_commit_from_bin="$(${NODE_BIN_DIR}/rnode -V | grep 'TON NODE git commit' | awk '{print $5}')"
 EverNode_Version="$(${NODE_BIN_DIR}/rnode -V | grep -i 'TON Node, version' | awk '{print $4}')"
 if [[ "${Node_local_repo_commit}" != "${Node_commit_from_bin}" ]];then
     echo "###-ERROR(line $LINENO): Build update filed! Repo commit (${Node_local_repo_commit}) not equal commit from binary (${Node_commit_from_bin})."

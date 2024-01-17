@@ -172,7 +172,7 @@
   },
   "gc": {
     "enable_for_archives": true,
-    "archives_life_time_hours": null,
+    "archives_life_time_hours": 48,
     "enable_for_shard_state_persistent": true,
     "cells_gc_config": {
       "gc_interval_sec": 900,
@@ -184,9 +184,9 @@
     "client_enabled": true,
     "remp_client_pool": null,
     "service_enabled": true,
-    "max_incoming_broadcast_delay_millis": 0,
-    "message_queue_max_len": 10000
-},
+    "message_queue_max_len": 10000,
+    "max_incoming_broadcast_delay_millis": 0
+  },
   "restore_db": true,
   "low_memory_mode": true,
   "cells_db_config": {
@@ -195,7 +195,7 @@
     "prefill_cells_counters": false,
     "cache_cells_counters": true,
     "cache_size_bytes": 4294967296
-},
+  },
   "collator_config": {
     "cutoff_timeout_ms": 1000,
     "stop_timeout_ms": 1500,
