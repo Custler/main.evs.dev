@@ -63,6 +63,7 @@ if [[ $Node_bin_ver_NUM -ge $Chng_Config_ver ]] && \
         "cells_gc_config": {
           "gc_interval_sec": 900,
           "cells_lifetime_sec": 1800
+        }
     }'
     Remp_Config='{
         "client_enabled": true,
