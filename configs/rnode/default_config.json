@@ -3,7 +3,7 @@
   "ton_global_config_name": "ton-global.config.json",
   "internal_db_path": "node_db",
   "ip_address": "0.0.0.0:30303",
-  "control_server_port": 4925,
+  "control_server_port": 3031,
   "validation_countdown_mode": null,
   "unsafe_catchain_patches_path": null,
   "validator_keys": null,
@@ -15,8 +15,21 @@
     "run_attempt_timeout_ms": 1000
   },
   "external_db_config": {
-    "block_producer": {
-      "enabled": true,
+    "raw_block_producer": {
+      "enabled": false,
+      "brokers": "kafka",
+      "message_timeout_ms": 1000,
+      "topic": "raw_blocks",
+      "sharded_topics": null,
+      "sharding_depth": 0,
+      "attempt_timeout_ms": 100,
+      "message_max_size": 3000000,
+      "big_messages_storage": "/blob-storage",
+      "big_message_max_size": null,
+      "external_message_ref_address_prefix": "http:///ton-node:80/"
+    },
+      "block_producer": {
+      "enabled": false,
       "brokers": "kafka",
       "message_timeout_ms": 100,
       "topic": "blocks",
@@ -28,21 +41,8 @@
       "big_message_max_size": null,
       "external_message_ref_address_prefix": null
     },
-    "raw_block_producer": {
-      "enabled": false,
-      "brokers": "",
-      "message_timeout_ms": 0,
-      "topic": null,
-      "sharded_topics": null,
-      "sharding_depth": 0,
-      "attempt_timeout_ms": 0,
-      "message_max_size": 0,
-      "big_messages_storage": null,
-      "big_message_max_size": null,
-      "external_message_ref_address_prefix": null
-    },
     "message_producer": {
-      "enabled": true,
+      "enabled": false,
       "brokers": "kafka",
       "message_timeout_ms": 1000,
       "topic": "messages",
@@ -55,7 +55,7 @@
       "external_message_ref_address_prefix": null
     },
     "transaction_producer": {
-      "enabled": true,
+      "enabled": false,
       "brokers": "kafka",
       "message_timeout_ms": 1000,
       "topic": "transactions",
@@ -68,7 +68,7 @@
       "external_message_ref_address_prefix": null
     },
     "account_producer": {
-      "enabled": true,
+      "enabled": false,
       "brokers": "kafka",
       "message_timeout_ms": 1000,
       "topic": "accounts",
@@ -76,12 +76,12 @@
       "sharding_depth": 0,
       "attempt_timeout_ms": 100,
       "message_max_size": 3000000,
-      "big_messages_storage": "big-accounts",
-      "big_message_max_size": null,
-      "external_message_ref_address_prefix": null
+      "big_messages_storage": "/blob-storage",
+      "big_message_max_size": 30000000,
+      "external_message_ref_address_prefix": "http:///ton-node:80/"
     },
     "block_proof_producer": {
-      "enabled": true,
+      "enabled": false,
       "brokers": "kafka",
       "message_timeout_ms": 1000,
       "topic": "blocks_signatures",

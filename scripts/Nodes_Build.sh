@@ -34,7 +34,7 @@ echo "################################### Everscale nodes build script #########
 echo "+++INFO: $(basename "$0") BEGIN $(date +%s) / $(date)"
 echo "INFO from env: Network: $NETWORK_TYPE; WC: $NODE_WC; Elector: $ELECTOR_TYPE; Staking mode: $STAKE_MODE; Access method: $(if $FORCE_USE_DAPP;then echo "DApp"; else  echo "console"; fi )"
 
-BackUP_Time="$(date  +'%F_%T'|tr ':' '-')"
+BackUP_Time="$(date +%Y-%m-%d_%H-%M-%S)"
 
 case "$1" in
     rust)
@@ -333,7 +333,7 @@ rm -rf "${NODE_TOP_DIR}/Surf-contracts"
 git clone ${CONTRACTS_GIT_REPO} "${ContractsDIR}"
 cd "${ContractsDIR}"
 git checkout $CONTRACTS_GIT_COMMIT 
-cd ${NODE_TOP_DIR}
+cd "${NODE_TOP_DIR}"
 git clone --single-branch --branch ${Surf_GIT_Commit} ${CONTRACTS_GIT_REPO} "${ContractsDIR}/Surf-contracts"
 
 # curl -o ${Elector_ABI} ${RustCup_El_ABI_URL} &>/dev/null
