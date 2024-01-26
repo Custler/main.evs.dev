@@ -183,7 +183,7 @@ fi
 echo
 echo '################################################'
 echo "---INFO: Install RUST ${RUST_VERSION}"
-cd $HOME
+cd "$HOME"
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain ${RUST_VERSION} -y
 source $HOME/.cargo/env
 cargo install cargo-binutils
@@ -248,7 +248,7 @@ if ${RUST_NODE_BUILD};then
 
     [[ -d ${RCONS_SRC_DIR} ]] && rm -rf "${RCONS_SRC_DIR}"
     git clone --recurse-submodules "${RCONS_GIT_REPO}" $RCONS_SRC_DIR
-    cd $RCONS_SRC_DIR
+    cd "$RCONS_SRC_DIR"
     git checkout "${RCONS_GIT_COMMIT}"
     git submodule init
     git submodule update

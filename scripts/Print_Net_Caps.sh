@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eE
 
-# (C) Sergey Tyurin  2023-03-19 10:00:00
+# (C) Sergey Tyurin  2024-01-26 10:00:00
 
 # Disclaimer
 ##################################################################################################################
@@ -22,39 +22,47 @@ set -eE
 echo
 echo "############################### Print net capabilities script ##################################"
 echo "INFO: $(basename "$0") BEGIN $(date +%s) / $(date  +'%F %T %Z')"
+
 # ===================================================
+# Initialize script directory and source environment and function scripts
 SCRIPT_DIR=`cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P`
 source "${SCRIPT_DIR}/env.sh"
 source "${SCRIPT_DIR}/functions.shinc"
 
 #=================================================
-echo
-echo "${0##*/} Time Now: $(date  +'%F %T %Z')"
-echo -e "$(DispEnvInfo)"
-echo
-echo -e "$(Determine_Current_Network)"
-echo
-#=================================================
+# Print current time, environment info, and current network status
+echo -e "\n${0##*/} Time Now: $(date  +'%F %T %Z')\n"
+echo -e "$(DispEnvInfo)\n"
+echo -e "$(Determine_Current_Network)\n"
 
+#=================================================
+# Get capabilities
 DecodeCap=$1
 declare -i NetCaps
-
 if [[ -z "$DecodeCap" ]];then
+    # Fetch capabilities from the network configuration using Everscale tools
     if $FORCE_USE_DAPP;then
         NetCaps=$(printf "%d" "0x$($CALL_TC -j getconfig 8 | jq -r '.capabilities' | cut -d 'x' -f 2)")
     else
         NetCaps=$($CALL_RC -jc 'getconfig 8'|jq -r '.p8.capabilities_dec')
     fi
 else
-    if ! [[ "$DecodeCap" =~ ^[0-9]+$ ]]; then
-      echo "###-Error: DecodeCap must be a number"
-      echo "Usage: $(basename "$0") <DecodeCap>"
-      exit 1
+    # Process the provided DecodeCap argument to handle both hex and decimal formats
+    if [[ "$DecodeCap" =~ ^0x[0-9a-fA-F]+$ ]]; then
+        # If the value starts with 0x, treat it as hexadecimal
+        NetCaps=$((DecodeCap))
+    elif [[ "$DecodeCap" =~ ^[0-9]+$ ]]; then
+        # If the value consists only of numbers, treat it as decimal
+        NetCaps=$DecodeCap
+    else
+        echo "###-ERROR: DecodeCap must be a number in decimal or hex (prefixed with 0x) format"
+        echo "Usage: $(basename "$0") [DecodeCap]"
+        exit 1
     fi
-    NetCaps=$((DecodeCap))
 fi
 
-# from https://github.com/tonlabs/ton-labs-block/blob/master/src/config_params.rs#L350
+#=================================================
+# from https://github.com/tonlabs/ever-block/blob/593fdf5b1935b57400e1b72deb79c32e630f975c/src/config_params.rs#L354
 #            0 constant CapNone                    = 0x000000000000,
 #            1 constant CapIhrEnabled              = 0x000000000001,
 #            2 constant CapCreateStatsEnabled      = 0x000000000002,
@@ -89,7 +97,13 @@ fi
 #   1073741824 constant CapBigCells                = 0x000040000000,
 #   2147483648 constant CapSuspendedList           = 0x000080000000,
 #   4294967296 constant CapFastFinality            = 0x000100000000
+#   8589934592 constant CapTvmV19                  = 0x000200000000, // TVM v1.9.x improvemements
+#  17179869184 constant CapSmft                    = 0x000400000000,
+#  34359738368 constant CapNoSplitOutQueue         = 0x000800000000, // Don't split out queue on shard splitting
 
+#=================================================
+# List of all capabilities with their decimal and hex values
+# This section contains the declaration of capabilities and their corresponding values
 CapsList=(CapIhrEnabled    \
 CapCreateStatsEnabled      \
 CapBounceMsgBody           \
@@ -123,6 +137,9 @@ CapFeeInGasUnits           \
 CapBigCells                \
 CapSuspendedList           \
 CapFastFinality            \
+CapTvmV19                  \
+CapSmft                    \
+CapNoSplitOutQueue         \
 )
 
 # echo ${CapsList[@]}
@@ -161,6 +178,9 @@ declare -A DecCaps=(
 [CapBigCells]=1073741824                \
 [CapSuspendedList]=2147483648           \
 [CapFastFinality]=4294967296            \
+[CapTvmV19]=8589934592                  \
+[CapSmft]=17179869184                   \
+[CapNoSplitOutQueue]=34359738368        \
 )
 
 declare -A CapsHEX=(
@@ -198,17 +218,31 @@ declare -A CapsHEX=(
 [CapBigCells]="0x40000000"
 [CapSuspendedList]="0x80000000"
 [CapFastFinality]="0x100000000"
+[CapTvmV19]="0x200000000"
+[CapSmft]="0x400000000"
+[CapNoSplitOutQueue]="0x800000000"
 )
 # echo ${DecCaps[@]}
 
+#=================================================
+# Function to print a capability in a formatted manner
+print_capability() {
+    local cap_name=$1
+    local cap_hex=${CapsHEX[$cap_name]}
+    local cap_dec=${DecCaps[$cap_name]}
+    printf '%26s  %8s  %10d\n' "$cap_name" "$cap_hex" "$cap_dec"
+}
+
+#=================================================
+# Iterating through the capabilities list to check and print active capabilities
 declare -i Cups_sum=0
 for CurCup in "${CapsList[@]}"; do
-    #echo "{NetCaps}: ${NetCaps}, DecCaps: ${DecCaps[$CurCup]}"
-    if [[ $((${NetCaps} & ${DecCaps[$CurCup]})) -ne 0 ]];then
-        Cups_sum=$(($Cups_sum + ${DecCaps[$CurCup]}))
-        echo "$(printf '%26s' "$CurCup")  $(printf '%8s' "${CapsHEX[$CurCup]}")  $(printf '%10d' "${DecCaps[$CurCup]}")  "
+    if [[ $((NetCaps & DecCaps[$CurCup])) -ne 0 ]]; then
+        Cups_sum=$((Cups_sum + DecCaps[$CurCup]))
+        print_capability "$CurCup"
     fi
 done
+
 echo "-------------------------------------------"
 echo "Sum from net: $(printf 0x'%X' "$NetCaps") ($NetCaps) , Calc: $(printf 0x'%X' "$Cups_sum") ($Cups_sum)"
 echo
