@@ -93,6 +93,7 @@ YQ_LATEST_URL=""
 if [[ -z $(echo "$YQ_API_RESPONCE" | jq '.message'|grep 'rate limit exceeded') ]];then
     YQ_LATEST_URL="$(echo "$YQ_API_RESPONCE" | jq -r '.assets[]|select(.name == "yq_linux_amd64")|.browser_download_url')"
 fi
+echo -e "\nYQ Latest URL for Linux: ${YQ_LATEST_URL}\n"
 #=====================================================
 # Set packages set & manager according to OS
 case "$OS_SYSTEM" in
