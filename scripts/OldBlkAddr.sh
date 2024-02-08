@@ -26,20 +26,15 @@ SCRIPT_DIR=`cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P`
 source "${SCRIPT_DIR}/env.sh"
 source "${SCRIPT_DIR}/functions.shinc"
 
-#================================================================
-function TD_unix2human() {
-    local OS_SYSTEM=`uname -s`
-    local ival="$(echo ${1}|tr -d '"')"
-    if [[ -z $ival ]]; then
-        printf "###-Error: Zero Time"
-        return
-    fi
-    if [[ "$OS_SYSTEM" == "Linux" ]];then
-        echo "$(date  +'%F %T %Z' -d @$ival)"
-    else
-        echo "$(date -r $ival +'%F %T %Z')"
-    fi
+function show_usage(){
+echo
+echo " Use: $0 <ValAddrList_File> <HistHours>"
+echo " All fields required!"
+echo
+exit 0
 }
+[[ $# -le 1 ]] && show_usage
+
 #================================================================
 
 ValAddrList_File="$1"
@@ -52,10 +47,11 @@ HistHours=$2
 ############################
 
 if [[ ! -f $ValAddrList_File ]];then
-    echo "###-ERROR(line $LINENO): File not found!"
+    echo "###-ERROR(line $LINENO): File with validators info not found!"
     exit 1
 fi
-declare -ai Blk_Ver_List=(32 31 30)
+
+declare -ai Blk_Ver_List=($Node_Blk_Min_Ver $((Node_Blk_Min_Ver -1)) $((Node_Blk_Min_Ver -2)) $((Node_Blk_Min_Ver -3)) $((Node_Blk_Min_Ver -4)) $((Node_Blk_Min_Ver -5)))
 declare -ai Blk_Ver_Cntr=(0 0 0)
 
 ElectionsCycle_ID=${ValAddrList_File%%_*}
@@ -146,13 +142,14 @@ echo "==========================================================================
 
 exit 0
 
+################################################################################################
 FOR b IN blocks
 SORT b.gen_utime DESC
 FILTER b.gen_utime > 1655613568 && b.gen_software_version < 25
 COLLECT g = b.gen_software_version, c = b.created_by
 RETURN { g, c }
 #========================================
-query BLK_ver_by_pubkey{
+query BLK_ver_by_pubkey {
     blocks(
     filter:{
       gen_utime:{gt: }

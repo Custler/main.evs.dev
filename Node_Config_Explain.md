@@ -17,25 +17,31 @@
 * ### `unsafe_catchain_patches_path`
 
 * ### `adnl_node`
-        `ip_address`  - "IP:PORT" of the node
-        `keys`        - ADNL keys of the node
-        `recv_pipeline_pool` - 
-        `recv_priority_pool` -
-        `telemetry_peer_packets` -
-        `throughput` -
-        `timeout_check_packet_processing_mcs` -
-        `timeout_expire_queued_packet_sec` -
+    * #### `ip_address`  - "IP:PORT" of the node
+    * #### `keys`        - ADNL keys of the node
+    * #### `recv_pipeline_pool` - 
+    * #### `recv_priority_pool` -
+    * #### `telemetry_peer_packets` -
+    * #### `throughput` -
+    * #### `timeout_check_packet_processing_mcs` -
+    * #### `timeout_expire_queued_packet_sec` -
 
 * ### `validator_keys`
-        Keys for the current and upcoming election rounds:
-            `election_id`  - election id as unix time
-            `validator_key_id` - pubkey sent to elector
-            `validator_adnl_key_id` - ADNL key sent to elector 
+      Keys for the current and upcoming election rounds:
+    * #### `election_id`
+            election id as unix time
+    * #### `validator_key_id`
+            pubkey sent to elector
+    * #### `validator_adnl_key_id`
+            ADNL key sent to elector 
 
 * ### `control_server`
-        `address`     - "IP:PORT" node listen for console connection
-        `clients`     - list of consoles  pubkeys allowed connection
-        `server_key`  - private key of the node to secure console connection
+    * #### `address`
+          "IP:PORT" node listen for console connection
+    * #### `clients`
+          list of consoles  pubkeys allowed connection
+    * #### `server_key`
+          private key of the node to secure console connection
 ------------
 * ### `kafka_consumer_config:`
     * #### `group_id`
@@ -305,8 +311,10 @@
 
 * ### `states_cache_mode:`
         Possible values:
-        * #### `Off" - states are saved synchronously and not cached.
-        * #### `Moderate" - recommended - states are saved asiynchronously. Number of cached cells (in the state's BOCs) is minimal.
-        * #### `Full" - states saved asynchronously. The number of cells in memory is continuously growing.
+      - `Off" - states are saved synchronously and not cached.
+      - `Moderate" - recommended - states are saved asiynchronously. 
+            Number of cached cells (in the state's BOCs) is minimal.
+      - `Full" - states saved asynchronously. 
+            The number of cells in memory is continuously growing.
 
 * ### `states_cache_cleanup_diff`

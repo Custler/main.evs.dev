@@ -924,6 +924,11 @@ function Get_DP_Info() {
         fi
         Result="$($CALL_TC -j run --boc ${Depool_addr##*:}.boc getDePoolInfo '{}' --abi $DePool_ABI)"
     fi
+    if echo "$Result" | grep -qi 'Failed';then
+        echoerr "###-ERROR(${FUNCNAME[0]} line $LINENO): Cannot get DePool info!!!"
+        echoerr "$Result"
+        echoerr "Do you have right path to  DePool's abi?"
+    fi
     echo "${Result}"
 }
 #=================================================
