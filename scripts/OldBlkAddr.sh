@@ -40,18 +40,25 @@ exit 0
 ValAddrList_File="$1"
 HistHours=$2
 
+if [[ ! -f $ValAddrList_File ]];then
+    echo "###-ERROR(line $LINENO): File with validators info not found!"
+    exit 1
+fi
+
+# Check file with to correspond to the current elections ID
+ElectionsCycle_ID=${ValAddrList_File%%_*}
+CurrElectionsCycle_ID=$($CALL_RC -jc 'getconfig 34'|jq -r .p34.utime_since)
+[[ $ElectionsCycle_ID -ne $CurrElectionsCycle_ID ]] && echo "###-ERROR: File with validators info ($ElectionsCycle_ID) not correspond to the current elections ID($CurrElectionsCycle_ID)!" && exit 1   
+echo "ElectionsCycle_ID: $ElectionsCycle_ID"
+
 ############################
 # token for ipinfo.io should be set in env.sh
 # ipi_token=""
 : ${ipi_token:?"ERROR: token for ipinfo.io should be set here or in env.sh"}
 ############################
 
-if [[ ! -f $ValAddrList_File ]];then
-    echo "###-ERROR(line $LINENO): File with validators info not found!"
-    exit 1
-fi
-
 declare -ai Blk_Ver_List=($Node_Blk_Min_Ver $((Node_Blk_Min_Ver -1)) $((Node_Blk_Min_Ver -2)) $((Node_Blk_Min_Ver -3)) $((Node_Blk_Min_Ver -4)) $((Node_Blk_Min_Ver -5)))
+echo "Block versions to check: ${Blk_Ver_List[*]}"
 declare -ai Blk_Ver_Cntr=(0 0 0)
 
 ElectionsCycle_ID=${ValAddrList_File%%_*}

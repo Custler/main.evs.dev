@@ -108,19 +108,19 @@ if [[ $Node_bin_ver_NUM -ge $Chng_Config_ver ]] && \
         exit 1
     fi
     ${SCRIPT_DIR}/wait_for_sync.sh
+    #===========================================================
+    # Check and show the Node version
+    Node_bin_commit="$(${NODE_BIN_DIR}/rnode -V | grep 'NODE git commit:' | awk '{print $5}')"
+    EverNode_Version="$(${NODE_BIN_DIR}/rnode -V | grep -i 'TON Node, version' | awk '{print $4}')"
+    NodeSupBlkVer="$(${NODE_BIN_DIR}/rnode -V | grep 'BLOCK_VERSION:' | awk '{print $2}')"
+    Console_Version="$(${NODE_BIN_DIR}/console -V | awk '{print $2}')"
+    TonosCLI_Version="$(${NODE_BIN_DIR}/tonos-cli -V | grep -i 'tonos_cli' | awk '{print $2}')"
+    echo "INFO: Node updated. Service restarted. Current versions: node ver: ${EverNode_Version} SupBlock: ${NodeSupBlkVer} node commit: ${Node_bin_commit}, console - ${Console_Version}, tonos-cli - ${TonosCLI_Version}"
+    "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_CheckMark INFO: Node updated. Service restarted. Current versions: node ver: ${EverNode_Version} node commit: ${Node_bin_commit}, console - ${Console_Version}, tonos-cli - ${TonosCLI_Version}" > /dev/null 2>&1
+    ${SCRIPT_DIR}/take_part_in_elections.sh
+    ${SCRIPT_DIR}/part_check.sh
+    ${SCRIPT_DIR}/next_elect_set_time.sh
 fi
-#===========================================================
-# Check and show the Node version
-Node_bin_commit="$(${NODE_BIN_DIR}/rnode -V | grep 'NODE git commit:' | awk '{print $5}')"
-EverNode_Version="$(${NODE_BIN_DIR}/rnode -V | grep -i 'TON Node, version' | awk '{print $4}')"
-NodeSupBlkVer="$(${NODE_BIN_DIR}/rnode -V | grep 'BLOCK_VERSION:' | awk '{print $2}')"
-Console_Version="$(${NODE_BIN_DIR}/console -V | awk '{print $2}')"
-TonosCLI_Version="$(${NODE_BIN_DIR}/tonos-cli -V | grep -i 'tonos_cli' | awk '{print $2}')"
-echo "INFO: Node updated. Service restarted. Current versions: node ver: ${EverNode_Version} SupBlock: ${NodeSupBlkVer} node commit: ${Node_bin_commit}, console - ${Console_Version}, tonos-cli - ${TonosCLI_Version}"
-"${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_CheckMark INFO: Node updated. Service restarted. Current versions: node ver: ${EverNode_Version} node commit: ${Node_bin_commit}, console - ${Console_Version}, tonos-cli - ${TonosCLI_Version}" > /dev/null 2>&1
-${SCRIPT_DIR}/take_part_in_elections.sh
-${SCRIPT_DIR}/part_check.sh
-${SCRIPT_DIR}/next_elect_set_time.sh
 
 #===========================================================
 #
