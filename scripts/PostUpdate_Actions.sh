@@ -80,7 +80,7 @@ if [[ $Node_bin_ver_NUM -ge $Chng_Config_ver ]] && \
         "cache_size_bytes": 4294967296
     }'
 
-    yq e -o json \
+    yq e -i -o json \
         ".gc = $Garbage_Collector | \
          .cells_db_config = $Cells_DB_Config | \
          .remp = $Remp_Config | \
