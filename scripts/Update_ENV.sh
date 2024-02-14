@@ -37,7 +37,7 @@ sed -i.bak "s|export RUST_VERSION=.*|export RUST_VERSION=\"1.75.0\"|; \
             s|export RNODE_GIT_REPO=.*|export RNODE_GIT_REPO=\"https://github.com/tonlabs/ever-node.git\"|g; \
             s|export RCONS_GIT_REPO=.*|export RCONS_GIT_REPO=\"https://github.com/tonlabs/ever-node-tools.git\"|g; \
             s|export TONOS_CLI_GIT_REPO=.*|export TONOS_CLI_GIT_REPO=\"https://github.com/tonlabs/ever-cli.git\"|; \
-            s|export Node_Blk_Min_Ver=.*|export Node_Blk_Min_Ver=47|" "${SCRIPT_DIR}/env.sh"
+            s|export Node_Blk_Min_Ver=.*|export Node_Blk_Min_Ver=48|" "${SCRIPT_DIR}/env.sh"
 
 #################################################################
 # Add DAPP_Project_id & DAPP_access_key variables 
