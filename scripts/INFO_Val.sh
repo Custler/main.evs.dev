@@ -81,6 +81,7 @@ while true; do
     echo "INFO: Found validators in elector: $val_qty"
 
     SafeC_Hash="80d6c47c4a25543c9b397b71716f3fae1e2c5d247174c52e2c19bd896442b105"
+    EverWallet_Hash="3ba6528ab2694c118180aa3bd10dd19ff400b909ab4dcf58fc69925b2c7b12a6"
     Proxy_Hash="c05938cde3cee21141caacc9e88d3b8f2a4a4bc3968cb3d455d83cd0498d4375"
     DepoolHash="14e20e304f53e6da152eb95fffc993dbd28245a775d847eed043f7c78a503885"
     Proxy_V2_hash="481d7f583b458a1672ee602f66e8aa8d2f99d3cd9ece2eaa20e25c7ddf4c7f4a"
@@ -98,7 +99,7 @@ while true; do
         hex_val_addr="$(echo "${Validators_List}" | jq -r "[.[]][$i].addr")"
         Curr_Val_Addr="-1:${hex_val_addr}"
         Curr_Val_Addr_Hash=`curl -sS -X POST -g -H "$Auth_key_Head" -H "Content-Type: application/json" ${DApp_URL}/graphql -d '{"query": "query {accounts(filter:{id: {eq: \"'${Curr_Val_Addr}'\"}}) {code_hash}}"}' 2>/dev/null |jq -r '.data.accounts | .[].code_hash'`
-        if [[ "$Curr_Val_Addr_Hash" == "$SafeC_Hash" ]];then
+        if [[ "$Curr_Val_Addr_Hash" == "$SafeC_Hash" ]] || [[ "$Curr_Val_Addr_Hash" == "$EverWallet_Hash" ]];then
             Val_MSIG_List=$(echo ${Val_MSIG_List}|jq ".\"${hex_val_addr}\".MSIG = \"${Curr_Val_Addr}\" | .\"${hex_val_addr}\".depool = \"0\" | .\"${hex_val_addr}\".proxy0 = \"0\" | .\"${hex_val_addr}\".proxy1 = \"0\"")
             continue
         fi
