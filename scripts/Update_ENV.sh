@@ -27,7 +27,7 @@ source "${SCRIPT_DIR}/env.sh"
 
 #################################################################
 # Set new environment variables in env.sh
-sed -i.bak "s|export RUST_VERSION=.*|export RUST_VERSION=\"1.75.0\"|; \
+sed -i.bak "s|export RUST_VERSION=.*|export RUST_VERSION=\"1.76.0\"|; \
             s|export Main_DApp_URL=.*|export Main_DApp_URL=\"https://mainnet.evercloud.dev\"|; \
             s|export MainNet_DApp_List=.*|export MainNet_DApp_List=\"https://mainnet.evercloud.dev,https://gra01.main.everos.dev,https://lim01.main.everos.dev\"|; \
             s|export DevNet_DApp_URL=.*|export DevNet_DApp_URL=\"https://net.evercloud.dev\"|; \
