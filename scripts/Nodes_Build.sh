@@ -223,40 +223,27 @@ if ${RUST_NODE_BUILD};then
     echo 'release = { lto = "fat", codegen-units = 1, panic = "abort" }' >> Cargo.toml
 
     # node git commit
-    GC_TON_NODE="$(git --git-dir="$RNODE_SRC_DIR/.git" rev-parse HEAD 2>/dev/null)"
+    GC_TON_NODE="$(git --git-dir="${RNODE_SRC_DIR}/.git" rev-parse HEAD 2>/dev/null)"
     export GC_TON_NODE
     # block version
-    NODE_BLK_VER=$(cat $RNODE_SRC_DIR/src/validating_utils.rs |grep -A1 'supported_version'|tail -1|tr -d ' ')
+    NODE_BLK_VER=$(cat ${RNODE_SRC_DIR}/src/validating_utils.rs |grep -A1 'supported_version'|tail -1|tr -d ' ')
     export NODE_BLK_VER
 
     echo -e "${BoldText}${BlueBack}---INFO: RNODE build flags: ${RNODE_FEATURES} commit: ${GC_TON_NODE} Block version: ${NODE_BLK_VER}${NormText}"
     RUSTFLAGS="-C target-cpu=native" cargo build --release --features "${RNODE_FEATURES}"
 
+    find ${RNODE_SRC_DIR}/target/release/ -maxdepth 1 -type f ${FEXEC_FLG} -exec cp -f {} ${NODE_BIN_DIR}/ \;
+
     if $DAPP_NODE_BUILD;then
-        cp -f ${RNODE_SRC_DIR}/target/release/ton_node $NODE_BIN_DIR/ton_node_kafka
-        cp -f $NODE_BIN_DIR/ton_node_kafka $NODE_BIN_DIR/ton_node_kafka-${GC_TON_NODE}|cat
+        mv -f ${NODE_BIN_DIR}/ton_node ${NODE_BIN_DIR}/ton_node_kafka
+        cp -f ${NODE_BIN_DIR}/ton_node_kafka ${NODE_BIN_DIR}/ton_node_kafka-${GC_TON_NODE}|cat
+        ls -1t ${NODE_BIN_DIR}/ton_node_kafka-* | tail -n +5 | xargs rm -f
     else
-        cp -f ${RNODE_SRC_DIR}/target/release/ton_node $NODE_BIN_DIR/rnode
-        cp -f $NODE_BIN_DIR/rnode $NODE_BIN_DIR/rnode-${GC_TON_NODE}|cat
+        mv -f ${NODE_BIN_DIR}/ton_node ${NODE_BIN_DIR}/rnode
+        cp -f ${NODE_BIN_DIR}/rnode ${NODE_BIN_DIR}/rnode-${GC_TON_NODE}|cat
+        ls -1t ${NODE_BIN_DIR}/rnode-* | tail -n +5 | xargs rm -f
     fi
 
-    #=====================================================
-    # Build rust node console
-    echo '################################################'
-    echo "---INFO: Build rust node console ..."
-    echo -e "${BoldText}${BlueBack}---INFO: RCONS git repo:   ${RCONS_GIT_REPO} ${NormText}"
-    echo -e "${BoldText}${BlueBack}---INFO: RCONS git commit: ${RCONS_GIT_COMMIT} ${NormText}"
-
-    [[ -d ${RCONS_SRC_DIR} ]] && rm -rf "${RCONS_SRC_DIR}"
-    git clone --recurse-submodules "${RCONS_GIT_REPO}" $RCONS_SRC_DIR
-    cd "$RCONS_SRC_DIR"
-    git checkout "${RCONS_GIT_COMMIT}"
-    git submodule init
-    git submodule update
-    cargo update
-    RUSTFLAGS="-C target-cpu=native" cargo build --release --features "${RTOOLS_FEATURES}"
-
-    find $RCONS_SRC_DIR/target/release/ -maxdepth 1 -type f ${FEXEC_FLG} -exec cp -f {} $NODE_BIN_DIR/ \;
     echo "---INFO: build RUST NODE ... DONE."
 fi
 if [[ "$1" == "nodeonly" ]] || [[ "$2" == "nodeonly" ]];then

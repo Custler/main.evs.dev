@@ -1,8 +1,7 @@
 # Universal scripts set 
-#### - Support Rust node. C++ - deprecated
 #### - Support both DePool and msig validations  
 #### - Support both fift and solidity electors
-#### - Works on Ubuntu 20.04, CentOS 8.3, Oracle Linux 8.4, FreeBSD 13 (for Linux - latest kernel preferable)
+#### - Tested on Ubuntu 22.04, CentOS Stream, Oracle Linux 9.x, FreeBSD 14 (for Linux - latest kernel preferable)
 
 ## Table of Contents
   - [0. System settings](#0-system-settings)
