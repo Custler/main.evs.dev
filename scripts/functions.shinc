@@ -325,7 +325,7 @@ function Get_SC_current_state() {
 #=================================================
 # Get current Time Diff
 function Get_TimeDiff() { 
-    RC_OUTPUT=$($CALL_RC -jc "getstats" 2>&1 | cat)
+    RC_OUTPUT=$($CALL_RC -jc "getstatsnew" 2>&1 | cat)
     NODE_DOWN=$(echo "${RC_OUTPUT}" | grep 'Connection refused' | cat)
     if [[ -n "$NODE_DOWN" ]] || [[ -n "$(echo $RC_OUTPUT  | grep 'panicked at' | cat)" ]];then
         echo "Node Down"
@@ -347,11 +347,11 @@ function Get_TimeDiff() {
         echo "db_broken"
         return
     fi
-    if [[ -n $(echo "${RC_OUTPUT}" | grep 'timediff') ]];then
-    #    TIME_DIFF=$(echo "${RC_OUTPUT}" | sed -e '1,/GIT_BRANCH/d' | jq .timediff)
+    if echo "${RC_OUTPUT}" | grep -q 'timediff';then
         MC_TIME_DIFF=$(echo "${RC_OUTPUT}" | jq -r '.timediff')
         SH_TIME_DIFF=$(echo "${RC_OUTPUT}" | jq -r '.shards_timediff')
-        echo "$MC_TIME_DIFF $SH_TIME_DIFF $STATUS"
+        VALIDATION=$(echo "${RC_OUTPUT}" | jq -r '.validation_status')
+        echo "$MC_TIME_DIFF $SH_TIME_DIFF $STATUS $VALIDATION"
     else
         echo "$STATUS"
     fi

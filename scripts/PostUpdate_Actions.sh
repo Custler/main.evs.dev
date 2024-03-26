@@ -55,6 +55,7 @@ if [[ $Node_bin_ver_NUM -ge $Chng_Config_ver ]] && \
     # source ./env.sh
     Timestamp="$(date +%Y-%m-%d_%H-%M-%S)"
     cp ${R_CFG_DIR}/config.json ${NODE_LOGS_ARCH}/config.json.${Timestamp}
+    
     # Set new parametrs in config.json
     Garbage_Collector='{
         "enable_for_archives": true,

@@ -98,7 +98,7 @@ fi
 #   2147483648 constant CapSuspendedList           = 0x000080000000,
 #   4294967296 constant CapFastFinality            = 0x000100000000
 #   8589934592 constant CapTvmV19                  = 0x000200000000, // TVM v1.9.x improvemements
-#  17179869184 constant CapSmft                    = 0x000400000000,
+#  17179869184 constant CapSmft                    = 0x000400000000, // is SMFT enabled
 #  34359738368 constant CapNoSplitOutQueue         = 0x000800000000, // Don't split out queue on shard splitting
 
 #=================================================

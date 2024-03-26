@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# (C) Sergey Tyurin  2023-07-22 19:00:00
+# (C) Sergey Tyurin  2024-03-19 19:00:00
 
 # Disclaimer
 ##################################################################################################################
@@ -31,6 +31,7 @@ echo
 SLEEP_TIMEOUT=$1
 SLEEP_TIMEOUT=${SLEEP_TIMEOUT:="10"}
 MAX_TIME_DIFF=10
+Current_Net="${NETWORK_TYPE%%.*}"
 
 second_sync=false
 
@@ -64,7 +65,8 @@ do
     else
         MC_TIME_DIFF=$(echo $TIME_DIFF|awk '{print $1}')
         SH_TIME_DIFF=$(echo $TIME_DIFF|awk '{print $2}')
-        echo "${Current_Net} Time: $(date +'%F %T %Z') TimeDiffs: MC - $MC_TIME_DIFF ; WC - $SH_TIME_DIFF" | tee -a ${NODE_LOGS_ARCH}/time-diff.log
+        VALIDATION=$(echo $TIME_DIFF|awk '{print $4}')
+        echo "${Current_Net} Time: $(date +'%F %T %Z') TimeDiffs: MC - $MC_TIME_DIFF ; WC - $SH_TIME_DIFF ; VAL - $VALIDATION" | tee -a ${NODE_LOGS_ARCH}/time-diff.log
         if [[ $MC_TIME_DIFF -le $MAX_TIME_DIFF ]] && [[ $SH_TIME_DIFF -le $MAX_TIME_DIFF ]];then
             if $second_sync;then
                 exit 0

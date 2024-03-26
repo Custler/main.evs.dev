@@ -40,7 +40,7 @@ export LNIC_ADDRESS="0:bdcefecaae5d07d926f1fa881ea5b61d81ea748bd02136c0dbe766043
 #=====================================================
 # Network related variables
 export NETWORK_TYPE="main.ton.dev"      # can be main.* / net.* / fld.* / rfld.* / Not implemented: smft.*
-export Node_Blk_Min_Ver=48
+export Node_Blk_Min_Ver=49
 export ELECTOR_TYPE="fift"
 export NODE_WC=0                        # Node WorkChain 
 

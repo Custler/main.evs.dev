@@ -31,20 +31,11 @@ echo "Current network is $NETWORK_TYPE"
 GLB_CFG_FNAME="ton-global.config.json"
 TLC_CFG_FNAME="ton-lite-client.config.json"
 
-RustCup_El_ABI_URL="https://raw.githubusercontent.com/tonlabs/rustnet.ton.dev/main/docker-compose/ton-node/configs/Elector.abi.json"
-curl -o ${Elector_ABI} ${RustCup_El_ABI_URL} &>/dev/null
-
 MAIN_GLB_URL="https://raw.githubusercontent.com/tonlabs/main.ton.dev/master/configs/ton-global.config.json"
 NET_GLB_URL="https://raw.githubusercontent.com/tonlabs/net.ton.dev/master/configs/ton-global.config.json"
 FLD_GLB_URL="https://raw.githubusercontent.com/Everscale-Network/custler.uninode/main/configs/fld.ton.dev/ton-global.config.json"
 RFLD_GLB_URL="https://raw.githubusercontent.com/FreeTON-Network/custler.uninode/main/configs/rfld.ton.dev/ton-global.config.json"
 RST_GLB_URL="https://raw.githubusercontent.com/tonlabs/rustnet.ton.dev/main/configs/ton-global.config.json"
-
-MAIN_TLC_URL="https://raw.githubusercontent.com/tonlabs/main.ton.dev/master/configs/ton-lite-client.config.json"
-NET_TLC_URL="xxx"
-FLD_TLC_URL="https://raw.githubusercontent.com/FreeTON-Network/fld.ton.dev/main/configs/fld.ton.dev/ton-lite-client.config.json"
-RFLD_TLC_URL="xxx"
-RST_TLC_URL="xxx"
 
 MAIN_CFG_DIR="$CONFIGS_DIR/main.ton.dev"
 NET_CFG_DIR="$CONFIGS_DIR/net.ton.dev"

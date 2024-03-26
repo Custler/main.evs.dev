@@ -81,7 +81,7 @@ if [[ "$OS_SYSTEM" == "Linux" ]];then
 
 elif [[ ! "$OS_SYSTEM" == "FreeBSD" ]];then
     echo
-    echo "###-ERROR: Unknown or unsupported OS. Can't continue."
+    echo "###-ERROR(line $LINENO): Unknown or unsupported OS. Can't continue."
     echo
     exit 1
 fi
@@ -157,7 +157,7 @@ case "$OS_SYSTEM" in
         ;;
     *)
         echo
-        echo "###-ERROR: Unknown or unsupported OS. Can't continue."
+        echo "###-ERROR(line $LINENO): Unknown or unsupported OS. Can't continue."
         echo
         exit 1
         ;;
@@ -218,9 +218,7 @@ if ${RUST_NODE_BUILD};then
 
     # Set Link Time Optimization (LTO) for release build
     sed -i.bak '/\[profile\]/,/^$/d' Cargo.toml
-    echo -e "\n\n" >> Cargo.toml
-    echo '[profile]' >> Cargo.toml
-    echo 'release = { lto = "fat", codegen-units = 1, panic = "abort" }' >> Cargo.toml
+    printf '\n[profile.release]\nopt-level = 3\nlto = "fat"\ncodegen-units = 1\npanic = "abort"\n' >> Cargo.toml
 
     # node git commit
     GC_TON_NODE="$(git --git-dir="${RNODE_SRC_DIR}/.git" rev-parse HEAD 2>/dev/null)"
@@ -236,11 +234,11 @@ if ${RUST_NODE_BUILD};then
 
     if $DAPP_NODE_BUILD;then
         mv -f ${NODE_BIN_DIR}/ton_node ${NODE_BIN_DIR}/ton_node_kafka
-        cp -f ${NODE_BIN_DIR}/ton_node_kafka ${NODE_BIN_DIR}/ton_node_kafka-${GC_TON_NODE}|cat
+        cp -f ${NODE_BIN_DIR}/ton_node_kafka ${NODE_BIN_DIR}/ton_node_kafka-${GC_TON_NODE}_${BackUP_Time}|cat
         ls -1t ${NODE_BIN_DIR}/ton_node_kafka-* | tail -n +5 | xargs rm -f
     else
         mv -f ${NODE_BIN_DIR}/ton_node ${NODE_BIN_DIR}/rnode
-        cp -f ${NODE_BIN_DIR}/rnode ${NODE_BIN_DIR}/rnode-${GC_TON_NODE}|cat
+        cp -f ${NODE_BIN_DIR}/rnode ${NODE_BIN_DIR}/rnode-${GC_TON_NODE}_${BackUP_Time}|cat
         ls -1t ${NODE_BIN_DIR}/rnode-* | tail -n +5 | xargs rm -f
     fi
 
