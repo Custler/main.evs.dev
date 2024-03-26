@@ -338,9 +338,9 @@ function Get_TimeDiff() {
 
     # statuses:
     # https://github.com/tonlabs/ever-node/blob/e1c321bf3aef765554c3caa43e0bd417bb4ba14d/src/network/control.rs#L183
-    StatusKey="sync_status"
+    StatusKey="node_status"
     STATUS="$(echo "$RC_OUTPUT" |jq -r ".$StatusKey"|cat)"
-    [[ "$STATUS" == "none" ]] && StatusKey="node_status"
+    [[ "$STATUS" == "null" ]] && StatusKey="node_status"
     STATUS="$(echo "$RC_OUTPUT" |jq -r ".$StatusKey"|cat)"
 
     if [[ "$(echo "$RC_OUTPUT" |jq -r ".$StatusKey")" == "db_broken" ]];then
