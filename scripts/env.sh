@@ -18,10 +18,10 @@
 # Author(s) retain the right to alter this disclaimer at any time.
 ##################################################################################################################
 
-SCRIPT_DIR=`cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P`
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)
 export NODE_TOP_DIR=$(cd "${SCRIPT_DIR}/../" && pwd -P)
 
-OS_SYSTEM=`uname -s`
+OS_SYSTEM=$(uname -s)
 #=====================================================
 # All nets configs folder
 export CONFIGS_DIR=${NODE_TOP_DIR}/configs

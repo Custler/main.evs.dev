@@ -134,7 +134,7 @@ esac
 #
 function Determine_Current_Network() {
     # get current network zerostate
-    local OS_SYSTEM=`uname -s`
+    local OS_SYSTEM=$(uname -s)
     if [[ "$OS_SYSTEM" == "Linux" ]];then
         local CALL_256=sha256sum
     else 
@@ -338,7 +338,7 @@ function Get_TimeDiff() {
 
     # statuses:
     # https://github.com/tonlabs/ever-node/blob/e1c321bf3aef765554c3caa43e0bd417bb4ba14d/src/network/control.rs#L183
-    StatusKey="node_status"
+    StatusKey="sync_status"
     STATUS="$(echo "$RC_OUTPUT" |jq -r ".$StatusKey"|cat)"
     [[ "$STATUS" == "null" ]] && StatusKey="node_status"
     STATUS="$(echo "$RC_OUTPUT" |jq -r ".$StatusKey"|cat)"
@@ -433,18 +433,18 @@ function get_LastNodeInfo {
         
     local ABI="LastNodeInfo.abi.json"
     local GetABI='{"ABI version":2,"version":"2.2","header":["time","expire"],"functions":[{"name":"getABI","inputs":[],"outputs":[{"name":"ABI_7z_hex","type":"string"}]},{"name":"ABI","inputs":[],"outputs":[{"name":"ABI_7z_hex","type":"string"}]}],"data":[],"events":[],"fields":[{"name":"ABI_7z_hex","type":"string"}]}'
-    echo $GetABI > Get_ABI.json
-    $CALL_TC -j run --boc ${LNIC_ADDRESS##*:}.boc --abi Get_ABI.json ABI {} | jq -r '.ABI_7z_hex' > LNIC_ABI_7z_hex.txt
+    echo "$GetABI "> Get_ABI.json
+    $CALL_TC -j run --boc "${LNIC_ADDRESS##*:}.boc" --abi Get_ABI.json ABI {} | jq -r '.ABI_7z_hex' > LNIC_ABI_7z_hex.txt
     xxd -r -p LNIC_ABI_7z_hex.txt > LNIC_ABI.7z
-    $CALL_7Z x -y LNIC_ABI.7z 2>&1 > /dev/null
+    $CALL_7Z x -y LNIC_ABI.7z > /dev/null  2>&1
     if [[ ! -e "${ABI}" ]];then
         echoerr "###-ERROR(${FUNCNAME[0]} line $LINENO): Cannot get LNIC ABI from state."
         echo "${LNI_JSON}"
         return
     fi
 
-    LNI_JSON="$($CALL_TC -j run --boc ${LNIC_ADDRESS##*:}.boc --abi ${ABI} node_info {})"
-    rm -f ${LNIC_ADDRESS##*:}.boc Get_ABI.json LNIC_ABI_7z_hex.txt LNIC_ABI.7z LastNodeInfo.abi.json
+    LNI_JSON="$($CALL_TC -j run --boc "${LNIC_ADDRESS##*:}.boc" --abi ${ABI} node_info {})"
+    rm -f "${LNIC_ADDRESS##*:}.boc" Get_ABI.json LNIC_ABI_7z_hex.txt LNIC_ABI.7z LastNodeInfo.abi.json
 
     local LNI_Info="$(echo "$LNI_JSON"|jq -r '.node_info' 2>/dev/null)"
     if [[ -z "$LNI_Info" ]] || [[ "$LNI_Info" == "null" ]];then

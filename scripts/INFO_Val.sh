@@ -30,10 +30,10 @@ echo "+++INFO: $(basename "$0") BEGIN $(date +%s) / $(date  +'%F %T %Z')"
 # Get validator list from P36 during elections
 
 elector_addr="$(Get_Elector_Address)"
-declare -i elections_id=$(Get_Current_Elections_ID)
 NetConfigP15="$(Get_NetConfig_P15)"
-declare -i EndBefore=$(echo $NetConfigP15|awk '{print $3}')
-declare -i CurrTime=$(date +%s)
+declare -i elections_id; elections_id=$(Get_Current_Elections_ID)
+declare -i EndBefore; EndBefore=$(echo $NetConfigP15|awk '{print $3}')
+declare -i CurrTime; CurrTime=$(date +%s)
 
 while true; do
 

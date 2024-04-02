@@ -59,34 +59,8 @@ sed -i.bak "s|export RUST_VERSION=.*|export RUST_VERSION=\"1.76.0\"|; \
 source "${SCRIPT_DIR}/env.sh"
 
 if [[ -z "$DAPP_Project_id" ]];then
-    "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_Exclaim_sign $(cat ${SCRIPT_DIR}/Update_Info.txt) $Tg_Exclaim_sign" 2>&1 > /dev/null
+    "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_Exclaim_sign $(cat "${SCRIPT_DIR}/Update_Info.txt") $Tg_Exclaim_sign" > /dev/null 2>&1
 fi
-
-#################################################################
-# Fix binaries names for new release 7-zip and old p7zip
-# if [[ -z "$(cat env.sh|grep 'CALL_7Z')" ]];then
-#     echo "+++INFO: Fix binaries names for new release 7-zip and old p7zip"
-#     cp -f env.sh env.sh.bak
-#     awk '{
-#         if ($0 == "    export\ CALL_BC=\"bc\ -l\"") {
-#             print $0;
-#             getline;
-#             print $0;
-#             print "\n# =====================================================";
-#             print "# Set binary for 7-zip";
-#             print "export CALL_7Z=\"7z\"";
-#             print "Distro_Name=\"$(cat /etc/os-release | grep \"PRETTY_NAME=\"|awk -F\x27[\" ]\x27 \x27{print $2}\x27)\"";
-#             print "if [[ \"$Distro_Name\" == \"CentOS\" ]] || [[ \"$Distro_Name\" == \"Fedora\" ]] || [[ \"$Distro_Name\" == \"Oracle\" ]];then"
-#             print "    export CALL_7Z=\"7za\"";
-#             print "fi";
-#             next;
-#         } else {
-#             print $0;
-#         }
-#     }' env.sh.bak > env.sh
-# fi
-
-##########################################################
 
 echo "+++INFO: $(basename "$0") FINISHED $(date +%s) / $(date  +'%F %T %Z')"
 echo "================================================================================================"

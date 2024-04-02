@@ -18,7 +18,7 @@
 # Author(s) retain the right to alter this disclaimer at any time.
 ##################################################################################################################
 
-SCRIPT_DIR=`cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P`
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)
 source "${SCRIPT_DIR}/env.sh"
 source "${SCRIPT_DIR}/functions.shinc"
 
@@ -45,10 +45,10 @@ RST_CFG_DIR="$CONFIGS_DIR/rustnet.ton.dev"
 
 [[ ! -d $HOME/logs ]] && mkdir -p $HOME/logs
 
-declare -a net_list=($MAIN_CFG_DIR $NET_CFG_DIR $FLD_CFG_DIR $RFLD_CFG_DIR $RST_CFG_DIR)
-declare -a g_url_list=($MAIN_GLB_URL $NET_GLB_URL $FLD_GLB_URL $RFLD_GLB_URL $RST_GLB_URL)
-declare -a t_url_list=($MAIN_TLC_URL $NET_TLC_URL $FLD_TLC_URL $RFLD_TLC_URL $RST_TLC_URL)
-declare -a dir_list=($MAIN_CFG_DIR $NET_CFG_DIR $FLD_CFG_DIR $RFLD_CFG_DIR $RST_CFG_DIR)
+declare -a net_list=("$MAIN_CFG_DIR" "$NET_CFG_DIR" "$FLD_CFG_DIR" "$RFLD_CFG_DIR" "$RST_CFG_DIR")
+declare -a g_url_list=("$MAIN_GLB_URL" "$NET_GLB_URL" "$FLD_GLB_URL" "$RFLD_GLB_URL" "$RST_GLB_URL")
+declare -a t_url_list=("$MAIN_TLC_URL" "$NET_TLC_URL" "$FLD_TLC_URL" "$RFLD_TLC_URL" "$RST_TLC_URL")
+declare -a dir_list=("$MAIN_CFG_DIR" "$NET_CFG_DIR" "$FLD_CFG_DIR" "$RFLD_CFG_DIR" "$RST_CFG_DIR")
 
 for i in $(seq 0 $((${#g_url_list[@]} - 1)) )
 do
