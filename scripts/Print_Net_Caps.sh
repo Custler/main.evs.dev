@@ -62,7 +62,7 @@ else
 fi
 
 #=================================================
-# from https://github.com/tonlabs/ever-block/blob/593fdf5b1935b57400e1b72deb79c32e630f975c/src/config_params.rs#L354
+# from https://github.com/tonlabs/ever-block/blob/c4b2b6a1b8469a52da1276231d93f9f6c11f77bc/src/config_params.rs#L354
 #            0 constant CapNone                    = 0x000000000000,
 #            1 constant CapIhrEnabled              = 0x000000000001,
 #            2 constant CapCreateStatsEnabled      = 0x000000000002,
@@ -100,6 +100,7 @@ fi
 #   8589934592 constant CapTvmV19                  = 0x000200000000, // TVM v1.9.x improvemements
 #  17179869184 constant CapSmft                    = 0x000400000000, // is SMFT enabled
 #  34359738368 constant CapNoSplitOutQueue         = 0x000800000000, // Don't split out queue on shard splitting
+#  68719476736 constant CapUndeletableAccounts     = 0x001000000000, // Don't delete frozen accounts
 
 #=================================================
 # List of all capabilities with their decimal and hex values
@@ -140,6 +141,7 @@ CapFastFinality            \
 CapTvmV19                  \
 CapSmft                    \
 CapNoSplitOutQueue         \
+CapUndeletableAccounts     \
 )
 
 # echo ${CapsList[@]}
@@ -181,6 +183,7 @@ declare -A DecCaps=(
 [CapTvmV19]=8589934592                  \
 [CapSmft]=17179869184                   \
 [CapNoSplitOutQueue]=34359738368        \
+[CapUndeletableAccounts]=68719476736    \
 )
 
 declare -A CapsHEX=(
@@ -221,6 +224,7 @@ declare -A CapsHEX=(
 [CapTvmV19]="0x0200000000"
 [CapSmft]="0x0400000000"
 [CapNoSplitOutQueue]="0x0800000000"
+[CapUndeletableAccounts]="0x1000000000"
 )
 # echo ${DecCaps[@]}
 
