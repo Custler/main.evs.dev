@@ -62,7 +62,7 @@ else
 fi
 
 #=================================================
-# from https://github.com/tonlabs/ever-block/blob/c4b2b6a1b8469a52da1276231d93f9f6c11f77bc/src/config_params.rs#L354
+# from https://github.com/everx-labs/ever-block/blob/c4b2b6a1b8469a52da1276231d93f9f6c11f77bc/src/config_params.rs#L354
 #            0 constant CapNone                    = 0x000000000000,
 #            1 constant CapIhrEnabled              = 0x000000000001,
 #            2 constant CapCreateStatsEnabled      = 0x000000000002,

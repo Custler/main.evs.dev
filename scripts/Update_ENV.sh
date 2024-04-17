@@ -34,8 +34,11 @@ sed -i.bak "s|export RUST_VERSION=.*|export RUST_VERSION=\"1.76.0\"|; \
             s|export DevNet_DApp_List=.*|export DevNet_DApp_List=\"https://net.evercloud.dev,https://eri01.net.everos.dev,https://gra01.net.everos.dev\"|; \
             s|export MIN_RC_VERSION=.*|export MIN_RC_VERSION=\"0.1.318\"|; \
             s|export MIN_TC_VERSION=.*|export MIN_TC_VERSION=\"0.36.5\"|; \
-            s|export RNODE_GIT_REPO=.*|export RNODE_GIT_REPO=\"https://github.com/tonlabs/ever-node.git\"|g; \
-            s|export TONOS_CLI_GIT_REPO=.*|export TONOS_CLI_GIT_REPO=\"https://github.com/tonlabs/ever-cli.git\"|; \
+            s|export RNODE_GIT_REPO=.*|export RNODE_GIT_REPO=\"https://github.com/everx-labs/ever-node.git\"|g; \
+            s|export TONOS_CLI_GIT_REPO=.*|export TONOS_CLI_GIT_REPO=\"https://github.com/everx-labs/ever-cli.git\"|; \
+            s|export TVM_LINKER_GIT_REPO=.*|export TVM_LINKER_GIT_REPO=\"https://github.com/everx-labs/TVM-linker.git\"|; \
+            s|export SOLC_GIT_REPO=.*|export SOLC_GIT_REPO=\"https://github.com/everx-labs/TON-Solidity-Compiler.git\"|; \
+            s|export CONTRACTS_GIT_REPO=.*|export CONTRACTS_GIT_REPO=\"https://github.com/everx-labs/ton-labs-contracts.git\"|; \
             s|export Node_Blk_Min_Ver=.*|export Node_Blk_Min_Ver=50|" "${SCRIPT_DIR}/env.sh"
 
 #################################################################

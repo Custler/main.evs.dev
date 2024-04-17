@@ -75,15 +75,15 @@ done
 exit 0
 
 #==========================================
-# https://github.com/tonlabs/ever-node/blob/e1c321bf3aef765554c3caa43e0bd417bb4ba14d/src/network/control.rs#L183
-match sync_status {
-    Engine::SYNC_STATUS_START_BOOT => "start_boot".to_string(),
-    Engine::SYNC_STATUS_LOAD_MASTER_STATE => "load_master_state".to_string(),
-    Engine::SYNC_STATUS_LOAD_SHARD_STATES => "load_shard_states".to_string(),
-    Engine::SYNC_STATUS_FINISH_BOOT => "finish_boot".to_string(),
-    Engine::SYNC_STATUS_SYNC_BLOCKS => "synchronization_by_blocks".to_string(),
-    Engine::SYNC_STATUS_FINISH_SYNC => "synchronization_finished".to_string(),
-    Engine::SYNC_STATUS_CHECKING_DB => "checking_db".to_string(),
-    Engine::SYNC_STATUS_DB_BROKEN => "db_broken".to_string(),
-    _ => "no_set_status".to_string()
-}
+# https://github.com/everx-labs/ever-node/blob/e1c321bf3aef765554c3caa43e0bd417bb4ba14d/src/network/control.rs#L183
+# match sync_status {
+#     Engine::SYNC_STATUS_START_BOOT => "start_boot".to_string(),
+#     Engine::SYNC_STATUS_LOAD_MASTER_STATE => "load_master_state".to_string(),
+#     Engine::SYNC_STATUS_LOAD_SHARD_STATES => "load_shard_states".to_string(),
+#     Engine::SYNC_STATUS_FINISH_BOOT => "finish_boot".to_string(),
+#     Engine::SYNC_STATUS_SYNC_BLOCKS => "synchronization_by_blocks".to_string(),
+#     Engine::SYNC_STATUS_FINISH_SYNC => "synchronization_finished".to_string(),
+#     Engine::SYNC_STATUS_CHECKING_DB => "checking_db".to_string(),
+#     Engine::SYNC_STATUS_DB_BROKEN => "db_broken".to_string(),
+#     _ => "no_set_status".to_string()
+# }

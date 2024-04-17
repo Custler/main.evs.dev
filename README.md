@@ -250,7 +250,7 @@ $CALL_TC depool --addr $(cat ${KEYS_DIR}/depool.addr) withdraw on --wallet $(cat
 ./Sign_Trans.sh
 ```
 **$CALL_TC** - variable for invoke tonos-cli utility with parameters, predefined in `env.sh`
-Full documentations for **tonos-cli** can be found here - <a href="https://github.com/tonlabs/tonos-cli#readme" target="_blank"> tonos-cli on github </a>
+Full documentations for **tonos-cli** can be found here - <a href="https://github.com/everx-labs/tonos-cli#readme" target="_blank"> tonos-cli on github </a>
 
 ## 7. Validations
 ### 7.1 Prepare for elections

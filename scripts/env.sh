@@ -135,24 +135,24 @@ export RUST_VERSION="1.76.0"
 export MIN_TC_VERSION="0.36.5"
 export MIN_RC_VERSION="0.1.318"
 
-export RNODE_GIT_REPO="https://github.com/tonlabs/ever-node.git"
+export RNODE_GIT_REPO="https://github.com/everx-labs/ever-node.git"
 export RNODE_GIT_COMMIT="master"
 export RNODE_FEATURES=""
 
-export RCONS_GIT_REPO="https://github.com/tonlabs/ever-node-tools.git"
+export RCONS_GIT_REPO="https://github.com/everx-labs/ever-node-tools.git"
 export RCONS_GIT_COMMIT="master"
 export RTOOLS_FEATURES=""
 
-export TONOS_CLI_GIT_REPO="https://github.com/tonlabs/ever-cli.git"
+export TONOS_CLI_GIT_REPO="https://github.com/everx-labs/ever-cli.git"
 export TONOS_CLI_GIT_COMMIT="master"
 
-export TVM_LINKER_GIT_REPO="https://github.com/tonlabs/TVM-linker.git"
+export TVM_LINKER_GIT_REPO="https://github.com/everx-labs/TVM-linker.git"
 export TVM_LINKER_GIT_COMMIT="master"
 
-export SOLC_GIT_REPO="https://github.com/tonlabs/TON-Solidity-Compiler.git"
+export SOLC_GIT_REPO="https://github.com/everx-labs/TON-Solidity-Compiler.git"
 export SOLC_GIT_COMMIT="master"
 
-export CONTRACTS_GIT_REPO="https://github.com/tonlabs/ton-labs-contracts.git"
+export CONTRACTS_GIT_REPO="https://github.com/everx-labs/ton-labs-contracts.git"
 export CONTRACTS_GIT_COMMIT="master"
 
 export Surf_GIT_Commit="multisig-surf-v2"

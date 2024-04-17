@@ -22,7 +22,7 @@
 #   'jq'
 #   'bc' for Linux
 #   'dc' for FreeBSD
-#   'tvm_linker' compiled binary from https://github.com/tonlabs/TVM-linker.git to $HOME/bin (must be in $PATH)
+#   'tvm_linker' compiled binary from https://github.com/everx-labs/TVM-linker.git to $HOME/bin (must be in $PATH)
 #   'lite-client'                                               
 # ------------------------------------------------------------------------
 # Script assumes that: 

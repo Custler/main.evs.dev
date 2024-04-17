@@ -117,7 +117,7 @@ echo "INFO: Node going to update from $Node_bin_commit to new commit $Node_remot
 
 #===========================================================
 # Get recommended Rust version from node repo
-Node_Build_Rust_Version="$(curl curl https://raw.githubusercontent.com/tonlabs/ever-node/$Node_remote_commit/recomended_rust 2>/dev/null)"
+Node_Build_Rust_Version="$(curl curl https://raw.githubusercontent.com/everx-labs/ever-node/$Node_remote_commit/recomended_rust 2>/dev/null)"
 V1=$(echo $Node_Build_Rust_Version|awk -F'.' '{print $1}')
 V2=$(echo $Node_Build_Rust_Version|awk -F'.' '{print $2}')
 V3=$(echo $Node_Build_Rust_Version|awk -F'.' '{print $3}')

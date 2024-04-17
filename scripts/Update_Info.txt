@@ -1,1 +1,1 @@
----INFO: Update to Node Version: 0.57.00, block version 50. Shadow SMFT
+---INFO: Update Change node git repo from tonlabs to everx-labs
