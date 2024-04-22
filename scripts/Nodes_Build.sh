@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eE
 
-# (C) Sergey Tyurin  2024-02-29 21:00:00
+# (C) Sergey Tyurin  2024-04-22 18:00:00
 
 # Disclaimer
 ##################################################################################################################
@@ -221,24 +221,24 @@ if ${RUST_NODE_BUILD};then
     printf '\n[profile.release]\nopt-level = 3\nlto = "fat"\ncodegen-units = 1\npanic = "abort"\n' >> Cargo.toml
 
     # node git commit
-    GC_TON_NODE="$(git --git-dir="${RNODE_SRC_DIR}/.git" rev-parse HEAD 2>/dev/null)"
-    export GC_TON_NODE
+    GC_EVER_NODE="$(git --git-dir="${RNODE_SRC_DIR}/.git" rev-parse HEAD 2>/dev/null)"
+    export GC_EVER_NODE
     # block version
     NODE_BLK_VER=$(cat ${RNODE_SRC_DIR}/src/validating_utils.rs |grep -A1 'supported_version'|tail -1|tr -d ' ')
     export NODE_BLK_VER
 
-    echo -e "${BoldText}${BlueBack}---INFO: RNODE build flags: ${RNODE_FEATURES} commit: ${GC_TON_NODE} Block version: ${NODE_BLK_VER}${NormText}"
+    echo -e "${BoldText}${BlueBack}---INFO: RNODE build flags: ${RNODE_FEATURES} commit: ${GC_EVER_NODE} Block version: ${NODE_BLK_VER}${NormText}"
     RUSTFLAGS="-C target-cpu=native" cargo build --release --features "${RNODE_FEATURES}"
 
     find ${RNODE_SRC_DIR}/target/release/ -maxdepth 1 -type f ${FEXEC_FLG} -exec cp -f {} ${NODE_BIN_DIR}/ \;
 
     if $DAPP_NODE_BUILD;then
-        mv -f ${NODE_BIN_DIR}/ton_node ${NODE_BIN_DIR}/ton_node_kafka
-        cp -f ${NODE_BIN_DIR}/ton_node_kafka ${NODE_BIN_DIR}/ton_node_kafka-${GC_TON_NODE}_${BackUP_Time}|cat
-        ls -1t ${NODE_BIN_DIR}/ton_node_kafka-* | tail -n +5 | xargs rm -f
+        mv -f ${NODE_BIN_DIR}/ever-node ${NODE_BIN_DIR}/ever-node_kafka
+        cp -f ${NODE_BIN_DIR}/ever-node_kafka ${NODE_BIN_DIR}/ever-node_kafka-${GC_EVER_NODE}_${BackUP_Time}|cat
+        ls -1t ${NODE_BIN_DIR}/ever-node_kafka-* | tail -n +5 | xargs rm -f
     else
-        mv -f ${NODE_BIN_DIR}/ton_node ${NODE_BIN_DIR}/rnode
-        cp -f ${NODE_BIN_DIR}/rnode ${NODE_BIN_DIR}/rnode-${GC_TON_NODE}_${BackUP_Time}|cat
+        mv -f ${NODE_BIN_DIR}/ever-node ${NODE_BIN_DIR}/rnode
+        cp -f ${NODE_BIN_DIR}/rnode ${NODE_BIN_DIR}/rnode-${GC_EVER_NODE}_${BackUP_Time}|cat
         ls -1t ${NODE_BIN_DIR}/rnode-* | tail -n +5 | xargs rm -f
     fi
 
@@ -258,44 +258,10 @@ if [[ "$1" == "nodeonly" ]] || [[ "$2" == "nodeonly" ]];then
     exit 0
 fi
 #=====================================================
-# Build TON Solidity Compiler (solc)
-# echo "---INFO: build TON Solidity Compiler ..."
-# [[ ! -z ${SOLC_SRC_DIR} ]] && rm -rf "${SOLC_SRC_DIR}"
-# git clone --recurse-submodules "${SOLC_GIT_REPO}" "${SOLC_SRC_DIR}"
-# cd "${SOLC_SRC_DIR}"
-# git checkout "${SOLC_GIT_COMMIT}"
-# mkdir ${SOLC_SRC_DIR}/build
-# cd "${SOLC_SRC_DIR}/build"
-# cmake ../compiler/ -DCMAKE_BUILD_TYPE=Release
-# if [[ "$(uname)" == "Linux" ]];then
-#     V_CPU=`nproc`
-# else
-#     V_CPU=`sysctl -n hw.ncpu`
-# fi
-# cmake --build . -- -j $V_CPU
-# cp -f "${SOLC_SRC_DIR}/build/solc/solc" $NODE_BIN_DIR/
-# cp -f "${SOLC_SRC_DIR}/lib/stdlib_sol.tvm" $NODE_BIN_DIR/
-# echo "---INFO: build TON Solidity Compiler ... DONE."
-
-#=====================================================
-# Build TVM-linker
-# echo
-# echo '################################################'
-# echo "---INFO: build TVM-linker ..."
-# [[ ! -z ${TVM_LINKER_SRC_DIR} ]] && rm -rf "${TVM_LINKER_SRC_DIR}"
-# git clone --recurse-submodules "${TVM_LINKER_GIT_REPO}" "${TVM_LINKER_SRC_DIR}"
-# cd "${TVM_LINKER_SRC_DIR}"
-# git checkout "${TVM_LINKER_GIT_COMMIT}"
-# cd "${TVM_LINKER_SRC_DIR}/tvm_linker"
-# RUSTFLAGS="-C target-cpu=native" cargo build --release
-# cp -f "${TVM_LINKER_SRC_DIR}/tvm_linker/target/release/tvm_linker" $NODE_BIN_DIR/
-# echo "---INFO: build TVM-linker ... DONE."
-
-#=====================================================
-# Build tonos-cli
+# Build ever-cli
 echo
 echo '################################################'
-echo "---INFO: build tonos-cli ... "
+echo "---INFO: build ever-cli ... "
 echo -e "${BoldText}${BlueBack}---INFO: TONOS git repo:   ${TONOS_CLI_GIT_REPO} ${NormText}"
 echo -e "${BoldText}${BlueBack}---INFO: TONOS git commit: ${TONOS_CLI_GIT_COMMIT} ${NormText}"
 
@@ -322,30 +288,7 @@ git checkout $CONTRACTS_GIT_COMMIT
 cd "${NODE_TOP_DIR}"
 git clone --single-branch --branch ${Surf_GIT_Commit} ${CONTRACTS_GIT_REPO} "${ContractsDIR}/Surf-contracts"
 
-# curl -o ${Elector_ABI} ${RustCup_El_ABI_URL} &>/dev/null
 
-#=====================================================
-# Check reboot required after update
-# case "$OS_SYSTEM" in
-#     FreeBSD)
-#         if [[ "$(freebsd-version -k)" != "$(uname -r)" ]]; then
-#             echo -e "${RedBack}${BoldText}###-ATTENTION!!! - Reboot required !!${NormText}"
-#             echo -e "${RedBack}${BoldText}Kernel was updated but system boot from old${NormText}"
-#             echo "Reboot and then run `sudo freebsd-update install` then `sudo pkg update -f && sudo pkg upgrade -y`"
-#         fi
-#         ;;
-#     Oracle|CentOS)
-#             needs-restarting -r
-#         ;;
-#     Ubuntu|Debian)
-#         if [ -f /var/run/reboot-required ]; then
-#             echo -e "${RedBack}${BoldText}###-ATTENTION!!! - Reboot required !!${NormText}"
-#             cat /var/run/reboot-required.pkgs
-#         fi
-#         ;;
-#     *)
-#         ;;
-# esac
 rm -f wget-log*
 echo 
 echo '################################################'

@@ -146,12 +146,6 @@ export RTOOLS_FEATURES=""
 export TONOS_CLI_GIT_REPO="https://github.com/everx-labs/ever-cli.git"
 export TONOS_CLI_GIT_COMMIT="master"
 
-export TVM_LINKER_GIT_REPO="https://github.com/everx-labs/TVM-linker.git"
-export TVM_LINKER_GIT_COMMIT="master"
-
-export SOLC_GIT_REPO="https://github.com/everx-labs/TON-Solidity-Compiler.git"
-export SOLC_GIT_COMMIT="master"
-
 export CONTRACTS_GIT_REPO="https://github.com/everx-labs/ton-labs-contracts.git"
 export CONTRACTS_GIT_COMMIT="master"
 
