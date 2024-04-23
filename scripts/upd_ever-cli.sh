@@ -20,7 +20,7 @@
 
 BUILD_STRT_TIME=$(date +%s)
 echo
-echo "############################## FreeTON ever-cli build script ##################################"
+echo "############################## ever-cli build script ##################################"
 echo "+++INFO: $(basename "$0") BEGIN $(date +%s) / $(date)"
 
 SCRIPT_DIR=`cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P`

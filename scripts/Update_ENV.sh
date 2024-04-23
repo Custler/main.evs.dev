@@ -60,7 +60,7 @@ sed -i.bak 's|export TONOS_CLI_SRC_DIR=.*|export TONOS_CLI_SRC_DIR="${NODE_TOP_D
 # fi
 
 source "${SCRIPT_DIR}/env.sh"
-
+./upd_ever-cli.sh
 if [[ -z "$DAPP_Project_id" ]];then
     "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_Exclaim_sign $(cat "${SCRIPT_DIR}/Update_Info.txt") $Tg_Exclaim_sign" > /dev/null 2>&1
 fi
