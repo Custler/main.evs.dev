@@ -108,7 +108,6 @@ if $LNIC_present;then
 
     # set new commits in env.sh for Nodes_Build script
     sed -i.bak "s/export RNODE_GIT_COMMIT=.*/export RNODE_GIT_COMMIT=$Node_remote_commit/g" "${SCRIPT_DIR}/env.sh"
-    # sed -i.bak "/ton-labs-node.git/,/\"NETWORK_TYPE\" == \"rfld.ton.dev\"/ s/export RNODE_GIT_COMMIT=.*/export RNODE_GIT_COMMIT=\"$Node_remote_commit\"/" "${SCRIPT_DIR}/env.sh"
     sed -i.bak "s/export RCONS_GIT_COMMIT=.*/export RCONS_GIT_COMMIT=$Console_commit/g" "${SCRIPT_DIR}/env.sh"
 fi
 
@@ -150,8 +149,8 @@ if [[ $? -gt 0 ]];then
 fi
 
 Node_local_repo_commit="$(git --git-dir="$RNODE_SRC_DIR/.git" rev-parse HEAD 2>/dev/null)"
-Node_commit_from_bin="$(${NODE_BIN_DIR}/rnode -V | grep 'TON NODE git commit' | awk '{print $5}')"
-EverNode_Version="$(${NODE_BIN_DIR}/rnode -V | grep -i 'TON Node, version' | awk '{print $4}')"
+Node_commit_from_bin="$(${NODE_BIN_DIR}/rnode -V | grep 'NODE git commit' | awk '{print $5}')"
+EverNode_Version="$(${NODE_BIN_DIR}/rnode -V | grep -i 'Node, version' | awk '{print $4}')"
 if [[ "${Node_local_repo_commit}" != "${Node_commit_from_bin}" ]];then
     echo "###-ERROR(line $LINENO): Build update filed! Repo commit (${Node_local_repo_commit}) not equal commit from binary (${Node_commit_from_bin})."
     "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_SOS_sign ###-ERROR(line $LINENO): Build update filed! Repo commit (${Node_local_repo_commit}) not equal commit from binary ${Node_commit_from_bin}." 2>&1 > /dev/null

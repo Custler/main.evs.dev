@@ -112,7 +112,7 @@ if [[ $Node_bin_ver_NUM -ge $Chng_Config_ver ]] && \
     #===========================================================
     # Check and show the Node version
     Node_bin_commit="$(${NODE_BIN_DIR}/rnode -V | grep 'NODE git commit:' | awk '{print $5}')"
-    EverNode_Version="$(${NODE_BIN_DIR}/rnode -V | grep -i 'TON Node, version' | awk '{print $4}')"
+    EverNode_Version="$(${NODE_BIN_DIR}/rnode -V | grep -i 'Node, version' | awk '{print $4}')"
     NodeSupBlkVer="$(${NODE_BIN_DIR}/rnode -V | grep 'BLOCK_VERSION:' | awk '{print $2}')"
     Console_Version="$(${NODE_BIN_DIR}/console -V | awk '{print $2}')"
     TonosCLI_Version="$(${NODE_BIN_DIR}/tonos-cli -V | grep -i 'tonos_cli' | awk '{print $2}')"
