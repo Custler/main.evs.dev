@@ -104,6 +104,7 @@ if ${Enable_Scripts_Autoupdate};then
             # update env.sh to satisfy new changes in scripts
             ${SCRIPT_DIR}/Update_ENV.sh
             #################################################################
+            source "${SCRIPT_DIR}/env.sh"
 
             cat ${SCRIPT_DIR}/Update_Info.txt
             echo
