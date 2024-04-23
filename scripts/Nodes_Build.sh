@@ -218,7 +218,7 @@ if ${RUST_NODE_BUILD};then
 
     # Set Link Time Optimization (LTO) for release build
     sed -i.bak '/\[profile\]/,/^$/d' Cargo.toml
-    printf '\n[profile.release]\nopt-level = 3\nlto = "fat"\ncodegen-units = 1\npanic = "abort"\n' >> Cargo.toml
+    printf '\n[profile.release]\nopt-level = 3\nlto = "thin"\ncodegen-units = 1\npanic = "abort"\n' >> Cargo.toml
 
     # node git commit
     GC_EVER_NODE="$(git --git-dir="${RNODE_SRC_DIR}/.git" rev-parse HEAD 2>/dev/null)"
