@@ -56,7 +56,7 @@
 # =====================================================
 # Check components installed
 [[ ! -d "${ContractsDIR}" ]] && echo -e "###-ERROR(${FUNCNAME[1]}-${FUNCNAME[0]} line $LINENO): ${BoldText}${RedBack}Can not find Contracts dir! Use upd_contracts.sh to download or update it!!${NormText}" && exit 1
-[[ ! -x "$NODE_BIN_DIR/ever-cli" ]] && echo -e "###-ERROR(${FUNCNAME[1]}-${FUNCNAME[0]} line $LINENO): ${BoldText}${RedBack}Can not find \"ever-cli\"! Use upd_ever-cli.sh to download or update it or build all binaries by Nodes_Build.sh!!${NormText}" && exit 1
+[[ ! -x "$NODE_BIN_DIR/ever-cli" ]] && echo -e "###-ERROR(${FUNCNAME[1]}-${FUNCNAME[0]} line $LINENO): ${BoldText}${RedBack}Can not find \"ever-cli\"! Use upd_ever-cli.sh to download or update it or build all binaries by Nodes_Build.sh!!${NormText}" # && exit 1
 
 # =====================================================
 # check ever-cli version
