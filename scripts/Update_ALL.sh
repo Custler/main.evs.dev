@@ -122,7 +122,7 @@ if ${Enable_Scripts_Autoupdate};then
     fi
 fi
 source "${SCRIPT_DIR}/env.sh"
-${SCRIPT_DIR}/upd_ever-cli.sh
+./upd_ever-cli.sh
 
 if ${Enable_Node_Autoupdate};then
     #===========================================================
