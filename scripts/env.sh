@@ -214,7 +214,7 @@ export Elector_ABI="${CONFIGS_DIR}/Elector.abi.json"
 # Executables
 export CALL_RN="${NODE_BIN_DIR}/rnode --configs ${R_CFG_DIR}"
 export CALL_RC="${NODE_BIN_DIR}/console -C ${R_CFG_DIR}/console.json"
-export CALL_TC="${NODE_BIN_DIR}/ever-cli -c $SCRIPT_DIR/tonos-cli.conf.json"
+export CALL_TC="${NODE_BIN_DIR}/ever-cli -c $SCRIPT_DIR/ever-cli.conf.json"
 export CALL_FIFT="${NODE_BIN_DIR}/fift -I ${FIFT_LIB}:${FSCs_DIR}"
 # export CALL_TL="$NODE_BIN_DIR/tvm_linker"
 
