@@ -103,7 +103,6 @@ if ${Enable_Scripts_Autoupdate};then
             #################################################################
             # update env.sh to satisfy new changes in scripts
             ${SCRIPT_DIR}/Update_ENV.sh
-            ${SCRIPT_DIR}/upd_ever-cli.sh
             #################################################################
 
             cat ${SCRIPT_DIR}/Update_Info.txt
@@ -120,6 +119,7 @@ if ${Enable_Scripts_Autoupdate};then
             fi
         fi
     fi
+    ${SCRIPT_DIR}/upd_ever-cli.sh
 fi
 
 if ${Enable_Node_Autoupdate};then
