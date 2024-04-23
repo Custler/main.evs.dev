@@ -160,7 +160,7 @@ do
     for (( Attempts_to_send=1;  Attempts_to_send <= ${SEND_ATTEMPTS};  Attempts_to_send++ ))
     do
         #======================================================================
-        # Send confirmations signature by tonos-cli
+        # Send confirmations signature by ever-cli
         echo "Try #${Attempts_to_send} to send confirmations signature #${i} from file ${KeyFileName}_${i}.keys.json"
 
         # TC_OUTPUT="$(

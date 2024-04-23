@@ -32,7 +32,7 @@ export newReleaseSndMsg=true
 
 #=====================================================
 # SECURITY updates
-export Enable_Node_Autoupdate=true             # will automatically update rnode, rconsole, tonos-cli etc..
+export Enable_Node_Autoupdate=true             # will automatically update rnode, rconsole, ever-cli etc..
 export Enable_Scripts_Autoupdate=false         # Updating scripts. NB! Change it to true if you fully trust me ONLY!!
 # Last Node Info Contract for safe node update
 export LNIC_ADDRESS="0:bdcefecaae5d07d926f1fa881ea5b61d81ea748bd02136c0dbe76604323fc347"
@@ -214,7 +214,7 @@ export Elector_ABI="${CONFIGS_DIR}/Elector.abi.json"
 # Executables
 export CALL_RN="${NODE_BIN_DIR}/rnode --configs ${R_CFG_DIR}"
 export CALL_RC="${NODE_BIN_DIR}/console -C ${R_CFG_DIR}/console.json"
-export CALL_TC="${NODE_BIN_DIR}/tonos-cli -c $SCRIPT_DIR/tonos-cli.conf.json"
+export CALL_TC="${NODE_BIN_DIR}/ever-cli -c $SCRIPT_DIR/tonos-cli.conf.json"
 export CALL_FIFT="${NODE_BIN_DIR}/fift -I ${FIFT_LIB}:${FSCs_DIR}"
 # export CALL_TL="$NODE_BIN_DIR/tvm_linker"
 

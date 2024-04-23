@@ -385,7 +385,7 @@ function Make_transaction_BOC() {
         | grep -i 'Message saved to file')"
 
     if [[ -z ${TC_OUTPUT} ]];then
-        echo "###-ERROR(line $LINENO): tonos-cli CANNOT create boc file!!! Can't continue."
+        echo "###-ERROR(line $LINENO): ever-cli CANNOT create boc file!!! Can't continue."
         exit 3
     fi
     mv -f ${elections_id}_vaidator-query-msg.boc ${ELECTIONS_WORK_DIR}/

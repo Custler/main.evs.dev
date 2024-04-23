@@ -56,18 +56,18 @@
 # =====================================================
 # Check components installed
 [[ ! -d "${ContractsDIR}" ]] && echo -e "###-ERROR(${FUNCNAME[1]}-${FUNCNAME[0]} line $LINENO): ${BoldText}${RedBack}Can not find Contracts dir! Use upd_contracts.sh to download or update it!!${NormText}" && exit 1
-[[ ! -x "$NODE_BIN_DIR/tonos-cli" ]] && echo -e "###-ERROR(${FUNCNAME[1]}-${FUNCNAME[0]} line $LINENO): ${BoldText}${RedBack}Can not find \"tonos-cli\"! Use upd_tonos-cli.sh to download or update it or build all binaries by Nodes_Build.sh!!${NormText}" && exit 1
+[[ ! -x "$NODE_BIN_DIR/ever-cli" ]] && echo -e "###-ERROR(${FUNCNAME[1]}-${FUNCNAME[0]} line $LINENO): ${BoldText}${RedBack}Can not find \"ever-cli\"! Use upd_ever-cli.sh to download or update it or build all binaries by Nodes_Build.sh!!${NormText}" && exit 1
 
 # =====================================================
-# check tonos-cli version
+# check ever-cli version
 # it should be not less MIN_TC_VERSION settled in env.sh
-Curr_TC_ver="$($NODE_BIN_DIR/tonos-cli -j version | jq -r '."tonos-cli"')"
+Curr_TC_ver="$($NODE_BIN_DIR/ever-cli -j version | jq -r '."ever-cli"')"
 declare -i Curr_TC_Ver_NUM="1$(echo "$Curr_TC_ver" | awk -F'.' '{printf("%d%03d%03d%03d\n", $1,$2,$3,$4)}')"
 declare -i MIN_TC_Ver_NUM="1$(echo "$MIN_TC_VERSION" | awk -F'.' '{printf("%d%03d%03d%03d\n", $1,$2,$3,$4)}')"
 if [[ ${Curr_TC_Ver_NUM} -ge ${MIN_TC_Ver_NUM#0} ]];then
     echo "TC Version OK"
 else
-    echo -e "###-ERROR(${FUNCNAME[1]}-${FUNCNAME[0]} line $LINENO): ${BoldText}${RedBack}TONOS-CLI version $Curr_TC_ver is too old! It has to be updated to $MIN_TC_VERSION at least (use upd_tonos-cli.sh)!!!${NormText}"
+    echo -e "###-ERROR(${FUNCNAME[1]}-${FUNCNAME[0]} line $LINENO): ${BoldText}${RedBack}TONOS-CLI version $Curr_TC_ver is too old! It has to be updated to $MIN_TC_VERSION at least (use upd_ever-cli.sh)!!!${NormText}"
 fi
 # =====================================================
 # check rnode console version
@@ -87,41 +87,41 @@ NetName="${NETWORK_TYPE%%.*}"
 case "$NetName" in
     main | mainnet)
         export DApp_URL=${Main_DApp_URL}/$DAPP_Project_id
-        $NODE_BIN_DIR/tonos-cli config endpoint reset &>/dev/null
-        $NODE_BIN_DIR/tonos-cli config endpoint add $NETWORK_TYPE $MainNet_DApp_List &>/dev/null
-        $NODE_BIN_DIR/tonos-cli config --url $NETWORK_TYPE &>/dev/null
-        [[ -n "$DAPP_Project_id" ]] && $NODE_BIN_DIR/tonos-cli config --project_id $DAPP_Project_id  &>/dev/null
-        [[ -n "$DAPP_access_key" ]] && $NODE_BIN_DIR/tonos-cli config --access_key $DAPP_access_key  &>/dev/null
+        $NODE_BIN_DIR/ever-cli config endpoint reset &>/dev/null
+        $NODE_BIN_DIR/ever-cli config endpoint add $NETWORK_TYPE $MainNet_DApp_List &>/dev/null
+        $NODE_BIN_DIR/ever-cli config --url $NETWORK_TYPE &>/dev/null
+        [[ -n "$DAPP_Project_id" ]] && $NODE_BIN_DIR/ever-cli config --project_id $DAPP_Project_id  &>/dev/null
+        [[ -n "$DAPP_access_key" ]] && $NODE_BIN_DIR/ever-cli config --access_key $DAPP_access_key  &>/dev/null
         export ELECTOR_TYPE="${ELECTOR_TYPE:=fift}"                          # can be 'solidity' or 'fift'
         ;;
     net | devnet)
         export DApp_URL=${DevNet_DApp_URL}/$DAPP_Project_id
-        $NODE_BIN_DIR/tonos-cli config endpoint reset &>/dev/null
-        $NODE_BIN_DIR/tonos-cli config endpoint add $NETWORK_TYPE $DevNet_DApp_List &>/dev/null
-        $NODE_BIN_DIR/tonos-cli config --url $NETWORK_TYPE &>/dev/null
-        [[ -n "$DAPP_Project_id" ]] && $NODE_BIN_DIR/tonos-cli config --project_id $DAPP_Project_id  &>/dev/null
-        [[ -n "$DAPP_access_key" ]] && $NODE_BIN_DIR/tonos-cli config --access_key $DAPP_access_key  &>/dev/null
+        $NODE_BIN_DIR/ever-cli config endpoint reset &>/dev/null
+        $NODE_BIN_DIR/ever-cli config endpoint add $NETWORK_TYPE $DevNet_DApp_List &>/dev/null
+        $NODE_BIN_DIR/ever-cli config --url $NETWORK_TYPE &>/dev/null
+        [[ -n "$DAPP_Project_id" ]] && $NODE_BIN_DIR/ever-cli config --project_id $DAPP_Project_id  &>/dev/null
+        [[ -n "$DAPP_access_key" ]] && $NODE_BIN_DIR/ever-cli config --access_key $DAPP_access_key  &>/dev/null
         export ELECTOR_TYPE="${ELECTOR_TYPE:=fift}"                          # can be 'solidity' or 'fift'
         ;;
     fld)
         export DApp_URL=${FLD_DApp_URL}
-        $NODE_BIN_DIR/tonos-cli config endpoint reset &>/dev/null
-        $NODE_BIN_DIR/tonos-cli config endpoint add $NETWORK_TYPE $FLD_DApp_List &>/dev/null
-        $NODE_BIN_DIR/tonos-cli config --url $NETWORK_TYPE &>/dev/null
+        $NODE_BIN_DIR/ever-cli config endpoint reset &>/dev/null
+        $NODE_BIN_DIR/ever-cli config endpoint add $NETWORK_TYPE $FLD_DApp_List &>/dev/null
+        $NODE_BIN_DIR/ever-cli config --url $NETWORK_TYPE &>/dev/null
         export ELECTOR_TYPE="${ELECTOR_TYPE:=fift}"                          # can be 'solidity' or 'fift'
         ;;
     rfld)
         export DApp_URL=${RFLD_DApp_URL}
-        $NODE_BIN_DIR/tonos-cli config endpoint reset &>/dev/null
-        $NODE_BIN_DIR/tonos-cli config endpoint add $NETWORK_TYPE $RFLD_DApp_List &>/dev/null
-        $NODE_BIN_DIR/tonos-cli config --url $NETWORK_TYPE &>/dev/null
+        $NODE_BIN_DIR/ever-cli config endpoint reset &>/dev/null
+        $NODE_BIN_DIR/ever-cli config endpoint add $NETWORK_TYPE $RFLD_DApp_List &>/dev/null
+        $NODE_BIN_DIR/ever-cli config --url $NETWORK_TYPE &>/dev/null
         export ELECTOR_TYPE="${ELECTOR_TYPE:=fift}"                          # can be 'solidity' or 'fift'
         ;;
     smft)                                                                                                 
         export DApp_URL=${SMFT_DApp_URL}                                                                  
-        $NODE_BIN_DIR/tonos-cli config endpoint reset &>/dev/null                                         
-        $NODE_BIN_DIR/tonos-cli config endpoint add $NETWORK_TYPE $SMFT_DApp_List &>/dev/null             
-        $NODE_BIN_DIR/tonos-cli config --url $NETWORK_TYPE &>/dev/null                                    
+        $NODE_BIN_DIR/ever-cli config endpoint reset &>/dev/null                                         
+        $NODE_BIN_DIR/ever-cli config endpoint add $NETWORK_TYPE $SMFT_DApp_List &>/dev/null             
+        $NODE_BIN_DIR/ever-cli config --url $NETWORK_TYPE &>/dev/null                                    
         export ELECTOR_TYPE="${ELECTOR_TYPE:=solidity}"                      # can be 'solidity' or 'fift'
         ;;
     *)
@@ -246,14 +246,14 @@ function TD_unix2human() {
     fi
 }
 #=================================================
-# Check DApp URL in tonos-cli.conf.json correspond to NetworkType
+# Check DApp URL in ever-cli.conf.json correspond to NetworkType
 #   Output:
 #      fine
 #      does not match
 #      unreachable
 function Check_DApp_URL() {
     local result="does not match"
-    local url_in_tccj="$(cat ./tonos-cli.conf.json | jq -r .url | cut -d '/' -f 3)"
+    local url_in_tccj="$(cat ./ever-cli.conf.json | jq -r .url | cut -d '/' -f 3)"
     local net_in_env=${NETWORK_TYPE}
     if [[ "${NETWORK_TYPE}" == "fld.ton.dev" ]] && [[ "${url_in_tccj}" != "gql.custler.net"  ]];then
         echo "${result}"
@@ -305,7 +305,7 @@ function Get_SC_current_state() {
                 sleep 3
             done
         else
-            # node cannot get acc status from WC other than where it is and master, so use tonos-cli
+            # node cannot get acc status from WC other than where it is and master, so use ever-cli
             for (( Try=0; Try <= 5; Try++ ))
             do
                 rm -f ${s_acc}.boc

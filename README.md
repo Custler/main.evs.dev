@@ -88,7 +88,7 @@ This script will build all binaries needed and has 3 options:
 ./Nodes_Build.sh rust   # build Rust node and tools and all it utilites
 ./Nodes_Build.sh dapp   # build Rust node for use in DApp server
 ```  
-This script will build node, node console, utilites, tonos-cli, from the respective repositories from branches defined in `env.sh`. You can set repo & commit number in "# GIT addresses & commits " section in 'env.sh'
+This script will build node, node console, utilites, ever-cli, from the respective repositories from branches defined in `env.sh`. You can set repo & commit number in "# GIT addresses & commits " section in 'env.sh'
 
 After successful build, all executable files will be placed to bin directory defined in **NODE_BIN_DIR** variable in 'env.sh'
 The script also download smartcontracts and place it to folder defined in **ContractsDIR** variable in 'env.sh'. 
@@ -97,7 +97,7 @@ The script also download smartcontracts and place it to folder defined in **Cont
 All you needs to setup your node - run **./Setup.sh** script from $HOME/main.evs.dev/scripts/ folder. This script has no options and does the follow:
 * remove old databases and logs if any
 * create all needed dirs
-* set proper url and endpoints in tonos-cli config file
+* set proper url and endpoints in ever-cli config file
 * setup logrotate service
 * setup new keys for node
 * setup service **tonnode** to run node as service (you can change name in env.sh)
@@ -249,8 +249,8 @@ $CALL_TC depool --addr $(cat ${KEYS_DIR}/depool.addr) stake lock --wallet $(cat 
 $CALL_TC depool --addr $(cat ${KEYS_DIR}/depool.addr) withdraw on --wallet $(cat ${KEYS_DIR}/${VALIDATOR_NAME}.addr) --sign ${KEYS_DIR}/${VALIDATOR_NAME}.keys.json
 ./Sign_Trans.sh
 ```
-**$CALL_TC** - variable for invoke tonos-cli utility with parameters, predefined in `env.sh`
-Full documentations for **tonos-cli** can be found here - <a href="https://github.com/everx-labs/tonos-cli#readme" target="_blank"> tonos-cli on github </a>
+**$CALL_TC** - variable for invoke ever-cli utility with parameters, predefined in `env.sh`
+Full documentations for **ever-cli** can be found here - <a href="https://github.com/everx-labs/ever-cli#readme" target="_blank"> ever-cli on github </a>
 
 ## 7. Validations
 ### 7.1 Prepare for elections

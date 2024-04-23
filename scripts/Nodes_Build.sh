@@ -271,9 +271,8 @@ cd "${TONOS_CLI_SRC_DIR}"
 git checkout "${TONOS_CLI_GIT_COMMIT}"
 cargo update
 RUSTFLAGS="-C target-cpu=native" cargo build --release
-# cp $NODE_BIN_DIR/tonos-cli $NODE_BIN_DIR/tonos-cli_${BackUP_Time}|cat
-cp "${TONOS_CLI_SRC_DIR}/target/release/tonos-cli" "$NODE_BIN_DIR/"
-echo "---INFO: build tonos-cli ... DONE"
+cp "${TONOS_CLI_SRC_DIR}/target/release/ever-cli" "$NODE_BIN_DIR/"
+echo "---INFO: buil ever-cli ... DONE"
 
 #=====================================================
 # download contracts

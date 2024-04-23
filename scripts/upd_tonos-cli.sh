@@ -20,7 +20,7 @@
 
 BUILD_STRT_TIME=$(date +%s)
 echo
-echo "############################## FreeTON tonos-cli build script ##################################"
+echo "############################## FreeTON ever-cli build script ##################################"
 echo "+++INFO: $(basename "$0") BEGIN $(date +%s) / $(date)"
 
 SCRIPT_DIR=`cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P`
@@ -41,7 +41,7 @@ if [[ $Curr_Rust_Ver_NUM -lt ENV_Rust_Ver_NUM ]];then
 fi 
 
 #=====================================================
-# Build tonos-cli
+# Build ever-cli
 [[ ! -z ${TONOS_CLI_SRC_DIR} ]] && rm -rf "${TONOS_CLI_SRC_DIR}"
 git clone --recurse-submodules "${TONOS_CLI_GIT_REPO}" "${TONOS_CLI_SRC_DIR}"
 cd "${TONOS_CLI_SRC_DIR}"
@@ -55,10 +55,10 @@ echo -e "${BoldText}${BlueBack}---INFO: TONOS git commit: ${TONOS_CLI_GIT_COMMIT
 
 cargo update
 cargo build --release
-cp -f "${TONOS_CLI_SRC_DIR}/target/release/tonos-cli" "${NODE_BIN_DIR}/"
+cp -f "${TONOS_CLI_SRC_DIR}/target/release/ever-cli" "${NODE_BIN_DIR}/"
 
 echo
-${NODE_BIN_DIR}/tonos-cli version
+${NODE_BIN_DIR}/ever-cli version
 echo
 BUILD_END_TIME=$(date +%s)
 Build_mins=$(( (BUILD_END_TIME - BUILD_STRT_TIME)/60 ))
