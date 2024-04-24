@@ -33,7 +33,7 @@ export newReleaseSndMsg=true
 #=====================================================
 # SECURITY updates
 export Enable_Node_Autoupdate=true             # will automatically update rnode, rconsole, ever-cli etc..
-export Enable_Scripts_Autoupdate=false         # Updating scripts. NB! Change it to true if you fully trust me ONLY!!
+export Enable_Scripts_Autoupdate=true         # Updating scripts. NB! Change it to true if you fully trust me ONLY!!
 # Last Node Info Contract for safe node update
 export LNIC_ADDRESS="0:bdcefecaae5d07d926f1fa881ea5b61d81ea748bd02136c0dbe76604323fc347"
 

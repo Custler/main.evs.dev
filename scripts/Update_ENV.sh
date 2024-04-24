@@ -39,7 +39,7 @@ sed -i.bak "s|export RUST_VERSION=.*|export RUST_VERSION=\"1.76.0\"|; \
             s|export CONTRACTS_GIT_REPO=.*|export CONTRACTS_GIT_REPO=\"https://github.com/everx-labs/ton-labs-contracts.git\"|; \
             s|export Node_Blk_Min_Ver=.*|export Node_Blk_Min_Ver=50|" "${SCRIPT_DIR}/env.sh"
 
-sed -i.bak 's|export TONOS_CLI_SRC_DIR=.*|export TONOS_CLI_SRC_DIR="${NODE_TOP_DIR}/ever-cli"|; s|export CALL_TC=.*|export CALL_TC="${NODE_BIN_DIR}/ever-cli -c $SCRIPT_DIR/tonos-cli.conf.json"|' ${SCRIPT_DIR}/env.sh
+sed -i.bak 's|export TONOS_CLI_SRC_DIR=.*|export TONOS_CLI_SRC_DIR="${NODE_TOP_DIR}/ever-cli"|; s|export CALL_TC=.*|export CALL_TC="${NODE_BIN_DIR}/ever-cli -c $SCRIPT_DIR/ever-cli.conf.json"|' ${SCRIPT_DIR}/env.sh
 
 #################################################################
 # Add DAPP_Project_id & DAPP_access_key variables 
