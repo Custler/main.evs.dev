@@ -1,1 +1,1 @@
----INFO: Update Change node git repo from tonlabs to everx-labs
+---INFO: Stability patches for SMFT. Added support for mesh networks.
