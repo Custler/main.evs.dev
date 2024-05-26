@@ -157,10 +157,10 @@ if [[ "${Node_local_repo_commit}" != "${Node_commit_from_bin}" ]];then
     exit 1
 fi
 Console_Version="$(${NODE_BIN_DIR}/console -V | awk '{print $2}')"
-TonosCLI_Version="$(${NODE_BIN_DIR}/ever-cli -V | grep -i 'tonos_cli' | awk '{print $2}')"
+CLI_Version="$(${NODE_BIN_DIR}/ever-cli -V | grep -i 'ever_cli' | awk '{print $2}')"
 
-echo "INFO: All builded. Current versions: node ver: ${EverNode_Version} SupBlock: ${NodeSupBlkVer} node commit: ${Node_commit_from_bin}, console - ${Console_Version}, ever-cli - ${TonosCLI_Version}"
-"${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_CheckMark INFO: All builded. Current versions: node ver: ${EverNode_Version} node commit: ${Node_commit_from_bin}, console - ${Console_Version}, ever-cli - ${TonosCLI_Version}" 2>&1 > /dev/null
+echo "INFO: All builded. Current versions: node ver: ${EverNode_Version} SupBlock: ${NodeSupBlkVer} node commit: ${Node_commit_from_bin}, console - ${Console_Version}, ever-cli - ${CLI_Version}"
+"${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_CheckMark INFO: All builded. Current versions: node ver: ${EverNode_Version} node commit: ${Node_commit_from_bin}, console - ${Console_Version}, ever-cli - ${CLI_Version}" 2>&1 > /dev/null
 
 
 echo "+++INFO: $(basename "$0") FINISHED $(date +%s) / $(date  +'%F %T %Z')"

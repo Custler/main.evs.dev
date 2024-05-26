@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2031
 set -eE
 
 # (C) Sergey Tyurin  2024-01-26 10:00:00
@@ -19,6 +20,7 @@ set -eE
 # Author(s) retain the right to alter this disclaimer at any time.
 ##################################################################################################################
 
+
 echo
 echo "############################### Print net capabilities script ##################################"
 echo "INFO: $(basename "$0") BEGIN $(date +%s) / $(date  +'%F %T %Z')"
@@ -27,6 +29,21 @@ echo "INFO: $(basename "$0") BEGIN $(date +%s) / $(date  +'%F %T %Z')"
 # Initialize script directory and source environment and function scripts
 SCRIPT_DIR=`cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P`
 source "${SCRIPT_DIR}/env.sh"
+
+#=================================================
+# Check binaries
+if ! $FORCE_USE_DAPP;then
+    if ! command -v $CALL_RC &>/dev/null; then
+        echo "###-ERROR: $CALL_RC is not installed!"
+        exit 1
+    fi
+else
+    if ! command -v $CALL_TC &>/dev/null; then
+        echo "###-ERROR: $CALL_TC is not installed!"
+        exit 1
+    fi
+fi
+
 source "${SCRIPT_DIR}/functions.shinc"
 
 #=================================================
@@ -62,7 +79,7 @@ else
 fi
 
 #=================================================
-# from https://github.com/everx-labs/ever-block/blob/c4b2b6a1b8469a52da1276231d93f9f6c11f77bc/src/config_params.rs#L354
+# from https://github.com/everx-labs/ever-block/blob/15522b2caf9eccae8b06e099eafabe3fdf252b49/src/config_params.rs#L364
 #            0 constant CapNone                    = 0x000000000000,
 #            1 constant CapIhrEnabled              = 0x000000000001,
 #            2 constant CapCreateStatsEnabled      = 0x000000000002,
@@ -98,9 +115,12 @@ fi
 #   2147483648 constant CapSuspendedList           = 0x000080000000,
 #   4294967296 constant CapFastFinality            = 0x000100000000
 #   8589934592 constant CapTvmV19                  = 0x000200000000, // TVM v1.9.x improvemements
-#  17179869184 constant CapSmft                    = 0x000400000000, // is SMFT enabled
+#  17179869184 constant CapSmft                    = 0x000400000000,
 #  34359738368 constant CapNoSplitOutQueue         = 0x000800000000, // Don't split out queue on shard splitting
 #  68719476736 constant CapUndeletableAccounts     = 0x001000000000, // Don't delete frozen accounts
+# 137438953472 constant CapTvmV20                  = 0x002000000000, // BLS instructions
+# 274877906944 constant CapDuePaymentFix           = 0x004000000000, // No due payments on credit phase and add payed dues to storage fee in TVM
+# 549755813888 constant CapCommonMessage           = 0x008000000000,
 
 #=================================================
 # List of all capabilities with their decimal and hex values
@@ -142,6 +162,9 @@ CapTvmV19                  \
 CapSmft                    \
 CapNoSplitOutQueue         \
 CapUndeletableAccounts     \
+CapTvmV20                  \
+CapDuePaymentFix           \
+CapCommonMessage           \
 )
 
 # echo ${CapsList[@]}
@@ -184,6 +207,9 @@ declare -A DecCaps=(
 [CapSmft]=17179869184                   \
 [CapNoSplitOutQueue]=34359738368        \
 [CapUndeletableAccounts]=68719476736    \
+[CapTvmV20]=137438953472                \
+[CapDuePaymentFix]=274877906944         \
+[CapCommonMessage]=549755813888         \
 )
 
 declare -A CapsHEX=(
@@ -225,6 +251,9 @@ declare -A CapsHEX=(
 [CapSmft]="0x0400000000"
 [CapNoSplitOutQueue]="0x0800000000"
 [CapUndeletableAccounts]="0x1000000000"
+[CapTvmV20]="0x2000000000"
+[CapDuePaymentFix]="0x4000000000"
+[CapCommonMessage]="0x8000000000"
 )
 # echo ${DecCaps[@]}
 

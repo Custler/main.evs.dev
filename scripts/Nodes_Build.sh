@@ -262,8 +262,8 @@ fi
 echo
 echo '################################################'
 echo "---INFO: build ever-cli ... "
-echo -e "${BoldText}${BlueBack}---INFO: TONOS git repo:   ${TONOS_CLI_GIT_REPO} ${NormText}"
-echo -e "${BoldText}${BlueBack}---INFO: TONOS git commit: ${TONOS_CLI_GIT_COMMIT} ${NormText}"
+echo -e "${BoldText}${BlueBack}---INFO: CLI git repo:   ${TONOS_CLI_GIT_REPO} ${NormText}"
+echo -e "${BoldText}${BlueBack}---INFO: CLI git commit: ${TONOS_CLI_GIT_COMMIT} ${NormText}"
 
 [[ -d ${TONOS_CLI_SRC_DIR} ]] && rm -rf "${TONOS_CLI_SRC_DIR}"
 git clone --recurse-submodules "${TONOS_CLI_GIT_REPO}" "${TONOS_CLI_SRC_DIR}"
