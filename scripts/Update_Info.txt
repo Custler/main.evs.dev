@@ -1,1 +1,1 @@
----INFO: Stability patches for SMFT. Added support for mesh networks.
+---INFO: REMP performance and stability improvements.
