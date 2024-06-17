@@ -137,7 +137,7 @@ case "$OS_SYSTEM" in
         [[ -n $YQ_LATEST_URL ]] && sudo wget "$YQ_LATEST_URL" -O /usr/local/bin/yq && sudo chmod +x /usr/local/bin/yq
         sudo systemctl daemon-reload
         ;;
-    Fedora)
+    Fedora|Red)
         export ZSTD_LIB_DIR=/usr/lib64
         PKGs_SET=$PKGS_CentOS
         PKG_MNGR=$PKG_MNGR_CentOS

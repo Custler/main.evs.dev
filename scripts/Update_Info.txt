@@ -1,1 +1,1 @@
----INFO: REMP performance and stability improvements.
+---INFO: SMFT stability patches.
