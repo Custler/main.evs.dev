@@ -1,1 +1,1 @@
----INFO: SMFT stability patches.
+---INFO: External messages proxy using node console.

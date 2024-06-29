@@ -127,12 +127,12 @@ export ADNL_PORT="49999"
 export NODE_ADDRESS="${NODE_IP_ADDR}:${ADNL_PORT}"
 export RCONSOLE_PORT="5031"
 export STATSD_DOMAIN=localhost
-export STATSD_PORT=9125        
+export STATSD_PORT=9125
 
 #=====================================================
 # GIT addresses & commits
 export RUST_VERSION="1.76.0"
-export MIN_TC_VERSION="0.36.5"
+export MIN_TC_VERSION="0.37.0"
 export MIN_RC_VERSION="0.1.318"
 
 export RNODE_GIT_REPO="https://github.com/everx-labs/ever-node.git"
