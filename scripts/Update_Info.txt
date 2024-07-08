@@ -1,1 +1,1 @@
----INFO: External messages proxy using node console.
+---INFO: Fixes agains high CPU load with SMFT.
