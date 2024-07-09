@@ -38,8 +38,7 @@ Node_SVC_ver="$($CALL_RC -jc getstats 2>/dev/null|cat|jq -r '.node_version' 2>/d
 [[ "${RNODE_GIT_COMMIT}" != "master" ]] && Node_remote_commit="${RNODE_GIT_COMMIT}"
 
 if [[ -z $Node_local_commit ]];then
-    echo "###-ERROR(line $LINENO): Cannot get LOCAL node commit!"
-    exit 1
+    echo "###-WARNING(line $LINENO): Cannot get LOCAL node commit!"
 fi
 if [[ -z $Node_remote_commit ]];then
     echo "###-ERROR(line $LINENO): Cannot get REMOTE node commit!"
