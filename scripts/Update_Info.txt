@@ -1,1 +1,1 @@
----INFO: Fixes agains high CPU load with SMFT.
+---INFO: SMFT fixes, added CapUndeletableAccounts

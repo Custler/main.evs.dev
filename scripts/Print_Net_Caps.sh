@@ -79,7 +79,7 @@ else
 fi
 
 #=================================================
-# from https://github.com/everx-labs/ever-block/blob/15522b2caf9eccae8b06e099eafabe3fdf252b49/src/config_params.rs#L364
+# from https://github.com/everx-labs/ever-block/blob/master/src/config_params.rs#L370
 #            0 constant CapNone                    = 0x000000000000,
 #            1 constant CapIhrEnabled              = 0x000000000001,
 #            2 constant CapCreateStatsEnabled      = 0x000000000002,
@@ -96,31 +96,31 @@ fi
 #         4096 constant CapFixTupleIndexBug        = 0x000000001000,
 #         8192 constant CapRemp                    = 0x000000002000,
 #        16384 constant CapDelections              = 0x000000004000,
-#                       CapReserved
 #        65536 constant CapFullBodyInBounced       = 0x000000010000,
 #       131072 constant CapStorageFeeToTvm         = 0x000000020000,
 #       262144 constant CapCopyleft                = 0x000000040000,
 #       524288 constant CapIndexAccounts           = 0x000000080000,
-#      1048576 constant CapDiff                    = 0x000000100000, // for GOSH
-#      2097152 constant CapsTvmBugfixes2022        = 0x000000200000, // popsave, exception handler, loops
+#      1048576 constant CapDiff                    = 0x000000100000, # for GOSH
+#      2097152 constant CapsTvmBugfixes2022        = 0x000000200000, # popsave, exception handler, loops
 #      4194304 constant CapWorkchains              = 0x000000400000,
-#      8388608 constant CapStcontNewFormat         = 0x000000800000, // support old format continuation serialization
-#     16777216 constant CapFastStorageStatBugfix   = 0x000001000000, // calc cell datasize using fast storage stat
+#      8388608 constant CapStcontNewFormat         = 0x000000800000, # support old format continuation serialization
+#     16777216 constant CapFastStorageStatBugfix   = 0x000001000000, # calc cell datasize using fast storage stat
 #     33554432 constant CapResolveMerkleCell       = 0x000002000000,
-#     67108864 constant CapSignatureWithId         = 0x000004000000, // use some predefined id during signature check
+#     67108864 constant CapSignatureWithId         = 0x000004000000, # use some predefined id during signature check
 #    134217728 constant CapBounceAfterFailedAction = 0x000008000000,
 #    268435456 constant CapGroth16                 = 0x000010000000,
-#    536870912 constant CapFeeInGasUnits           = 0x000020000000, // all fees in config are in gas units
+#    536870912 constant CapFeeInGasUnits           = 0x000020000000, # all fees in config are in gas units
 #   1073741824 constant CapBigCells                = 0x000040000000,
 #   2147483648 constant CapSuspendedList           = 0x000080000000,
-#   4294967296 constant CapFastFinality            = 0x000100000000
-#   8589934592 constant CapTvmV19                  = 0x000200000000, // TVM v1.9.x improvemements
+#   4294967296 constant CapFastFinality            = 0x000100000000,
+#   8589934592 constant CapTvmV19                  = 0x000200000000, # TVM v1.9.x improvemements
 #  17179869184 constant CapSmft                    = 0x000400000000,
-#  34359738368 constant CapNoSplitOutQueue         = 0x000800000000, // Don't split out queue on shard splitting
-#  68719476736 constant CapUndeletableAccounts     = 0x001000000000, // Don't delete frozen accounts
-# 137438953472 constant CapTvmV20                  = 0x002000000000, // BLS instructions
-# 274877906944 constant CapDuePaymentFix           = 0x004000000000, // No due payments on credit phase and add payed dues to storage fee in TVM
+#  34359738368 constant CapNoSplitOutQueue         = 0x000800000000, # Don't split out queue on shard splitting
+#  68719476736 constant CapUndeletableAccounts     = 0x001000000000, # Don't delete frozen accounts
+# 137438953472 constant CapTvmV20                  = 0x002000000000, # BLS instructions
+# 274877906944 constant CapDuePaymentFix           = 0x004000000000, # No due payments on credit phase and add payed dues to storage fee in TVM 
 # 549755813888 constant CapCommonMessage           = 0x008000000000,
+# 1099511627776 constant CapPipeline               = 0x010000000000,
 
 #=================================================
 # List of all capabilities with their decimal and hex values
@@ -165,6 +165,7 @@ CapUndeletableAccounts     \
 CapTvmV20                  \
 CapDuePaymentFix           \
 CapCommonMessage           \
+CapPipeline                \
 )
 
 # echo ${CapsList[@]}
@@ -210,6 +211,7 @@ declare -A DecCaps=(
 [CapTvmV20]=137438953472                \
 [CapDuePaymentFix]=274877906944         \
 [CapCommonMessage]=549755813888         \
+[CapPipeline]=1099511627776            \
 )
 
 declare -A CapsHEX=(
@@ -254,6 +256,7 @@ declare -A CapsHEX=(
 [CapTvmV20]="0x2000000000"
 [CapDuePaymentFix]="0x4000000000"
 [CapCommonMessage]="0x8000000000"
+[CapPipeline]="0x10000000000"
 )
 # echo ${DecCaps[@]}
 
