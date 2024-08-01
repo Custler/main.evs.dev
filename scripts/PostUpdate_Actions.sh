@@ -95,8 +95,8 @@ if [[ $Node_bin_ver_NUM -ge $Chng_Config_ver ]] && \
     sed -i 's|ton_|ever_|g' ${R_CFG_DIR}/log_cfg.yml
 
     # Info messages
-    echo "${Tg_Warn_sign} ATTENTION: The node going to restart and may be out of sync for a few hours if DB needs repair! "
-    "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "${Tg_Warn_sign} ATTENTION: The node going to restart and may be out of sync for a few hours if DB needs repair!" > /dev/null 2>&1
+    echo "${Tg_Warn_sign} ATTENTION: The node will restart and may be out of sync temporarily! "
+    "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "${Tg_Warn_sign} ATTENTION: The node will restart and may be out of sync temporarily!" > /dev/null 2>&1
 
     # Clean catchain's garbage files
     Catchains_Dir="${R_DB_DIR}/catchains"
