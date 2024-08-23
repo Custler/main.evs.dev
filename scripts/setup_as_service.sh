@@ -78,6 +78,10 @@ Lunux_Distrib="$(hostnamectl |grep 'Operating System'|awk '{print $3}')"
 if [[ "${Lunux_Distrib}" == "CentOS" ]] || [[ "${Lunux_Distrib}" == "Oracle" ]];then
     # ll -Z /etc/systemd/system
     sudo chcon system_u:object_r:rnode_exec_t:s0 ${SERVICE_FILE}
+    elif [[ "${Linux_Distrib}" == "Ubuntu" ]]; then
+        if [[ ! -f /etc/needrestart/conf.d/evernode.conf ]]; then
+            echo '$nrconf{override_rc}{qr(^tonnode\.service$)} = 0;' | sudo tee /etc/needrestart/conf.d/tonnode.conf
+        fi
 fi
 sudo systemctl daemon-reload
 sudo systemctl enable ${ServiceName}

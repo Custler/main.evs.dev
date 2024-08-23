@@ -131,8 +131,8 @@ export STATSD_PORT=9125
 
 #=====================================================
 # GIT addresses & commits
-export RUST_VERSION="1.76.0"
-export MIN_TC_VERSION="0.37.0"
+export RUST_VERSION="1.80.0"
+export MIN_TC_VERSION="0.38.3"
 export MIN_RC_VERSION="0.1.318"
 
 export RNODE_GIT_REPO="https://github.com/everx-labs/ever-node.git"
