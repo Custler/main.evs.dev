@@ -27,16 +27,16 @@ source "${SCRIPT_DIR}/env.sh"
 
 #################################################################
 # Set new environment variables in env.sh
-sed -i.bak "s|export RUST_VERSION=.*|export RUST_VERSION=\"1.80.0\"|; \
+sed -i.bak "s|export RUST_VERSION=.*|export RUST_VERSION=\"1.80.1\"|; \
             s|export Main_DApp_URL=.*|export Main_DApp_URL=\"https://mainnet.evercloud.dev\"|; \
             s|export MainNet_DApp_List=.*|export MainNet_DApp_List=\"https://mainnet.evercloud.dev,https://gra01.main.everos.dev,https://lim01.main.everos.dev\"|; \
-            s|export DevNet_DApp_URL=.*|export DevNet_DApp_URL=\"https://net.evercloud.dev\"|; \
-            s|export DevNet_DApp_List=.*|export DevNet_DApp_List=\"https://net.evercloud.dev,https://eri01.net.everos.dev,https://gra01.net.everos.dev\"|; \
-            s|export MIN_TC_VERSION=.*|export MIN_TC_VERSION=\"0.38.3\"|; \
+            s|export DevNet_DApp_URL=.*|export DevNet_DApp_URL=\"https://devnet.evercloud.dev\"|; \
+            s|export DevNet_DApp_List=.*|export DevNet_DApp_List=\"https://devnet.evercloud.dev,https://eri01.net.everos.dev,https://gra01.net.everos.dev\"|; \
+            s|export MIN_TC_VERSION=.*|export MIN_TC_VERSION=\"0.40.0\"|; \
             s|export RNODE_GIT_REPO=.*|export RNODE_GIT_REPO=\"https://github.com/everx-labs/ever-node.git\"|g; \
             s|export TONOS_CLI_GIT_REPO=.*|export TONOS_CLI_GIT_REPO=\"https://github.com/everx-labs/ever-cli.git\"|; \
             s|export CONTRACTS_GIT_REPO=.*|export CONTRACTS_GIT_REPO=\"https://github.com/everx-labs/ton-labs-contracts.git\"|; \
-            s|export Node_Blk_Min_Ver=.*|export Node_Blk_Min_Ver=57|" "${SCRIPT_DIR}/env.sh"
+            s|export Node_Blk_Min_Ver=.*|export Node_Blk_Min_Ver=58|" "${SCRIPT_DIR}/env.sh"
 
 sed -i.bak "s|export TONOS_CLI_SRC_DIR=.*|export TONOS_CLI_SRC_DIR=\"${NODE_TOP_DIR}/ever-cli\"|; \
             s|export CALL_TC=.*|export CALL_TC=\"${NODE_BIN_DIR}/ever-cli -c $SCRIPT_DIR/ever-cli.conf.json\"|" \

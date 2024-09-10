@@ -40,7 +40,7 @@ export LNIC_ADDRESS="0:bdcefecaae5d07d926f1fa881ea5b61d81ea748bd02136c0dbe766043
 #=====================================================
 # Network related variables
 export NETWORK_TYPE="main.ton.dev"      # can be main.* / net.* / fld.* / rfld.* / Not implemented: smft.*
-export Node_Blk_Min_Ver=52
+export Node_Blk_Min_Ver=58
 export ELECTOR_TYPE="fift"
 export NODE_WC=0                        # Node WorkChain 
 
@@ -58,8 +58,8 @@ export ipi_token=""                     # token for ipinfo.io
 export Main_DApp_URL="https://mainnet.evercloud.dev"
 export MainNet_DApp_List="https://mainnet.evercloud.dev,https://gra01.main.everos.dev,https://lim01.main.everos.dev"
 
-export DevNet_DApp_URL="https://net.evercloud.dev"
-export DevNet_DApp_List="https://net.evercloud.dev,https://eri01.net.everos.dev,https://gra01.net.everos.dev"
+export DevNet_DApp_URL="https://devnet.evercloud.dev"
+export DevNet_DApp_List="https://devnet.evercloud.dev,https://eri01.net.everos.dev,https://gra01.net.everos.dev"
 
 export FLD_DApp_URL="https://gql.custler.net"
 export FLD_DApp_List="https://gql.custler.net"
@@ -131,8 +131,8 @@ export STATSD_PORT=9125
 
 #=====================================================
 # GIT addresses & commits
-export RUST_VERSION="1.80.0"
-export MIN_TC_VERSION="0.38.3"
+export RUST_VERSION="1.80.1"
+export MIN_TC_VERSION="0.40.0"
 export MIN_RC_VERSION="0.1.318"
 
 export RNODE_GIT_REPO="https://github.com/everx-labs/ever-node.git"

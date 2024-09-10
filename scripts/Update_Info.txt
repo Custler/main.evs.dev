@@ -1,1 +1,1 @@
----INFO: SMFT fixes, added CapUndeletableAccounts
+---INFO: SMFT updated, added SMFT netconfig 62

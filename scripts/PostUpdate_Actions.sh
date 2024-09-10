@@ -71,7 +71,8 @@ if [[ $Node_bin_ver_NUM -ge $Chng_Config_ver ]] && \
         "remp_client_pool": null,
         "service_enabled": true,
         "message_queue_max_len": 10000,
-        "max_incoming_broadcast_delay_millis": 0
+        "max_incoming_broadcast_delay_millis": 0,
+        "forcedly_disable_remp_cap": false
     }'
     Cells_DB_Config='{
         "states_db_queue_len": 1000,
@@ -88,7 +89,8 @@ if [[ $Node_bin_ver_NUM -ge $Chng_Config_ver ]] && \
          .states_cache_mode = \"Moderate\" | \
          .states_cache_cleanup_diff = 1000 | \
          .skip_saving_persistent_states =  false | \
-         .restore_db = true | \
+         .restore_db = false | \
+         .sync_by_archives = true | \
          .low_memory_mode = true" \
         ${R_CFG_DIR}/config.json
 
