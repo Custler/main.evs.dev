@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# (C) Sergey Tyurin  2024-06-05 13:00:00
+# (C) Sergey Tyurin  2024-09-02 13:00:00
 
 # Disclaimer
 ##################################################################################################################
@@ -27,7 +27,7 @@ source "${SCRIPT_DIR}/env.sh"
 
 #################################################################
 # Set new environment variables in env.sh
-sed -i.bak "s|export RUST_VERSION=.*|export RUST_VERSION=\"1.80.1\"|; \
+sed -i.bak "s|export RUST_VERSION=.*|export RUST_VERSION=\"1.81.0\"|; \
             s|export Main_DApp_URL=.*|export Main_DApp_URL=\"https://mainnet.evercloud.dev\"|; \
             s|export MainNet_DApp_List=.*|export MainNet_DApp_List=\"https://mainnet.evercloud.dev,https://gra01.main.everos.dev,https://lim01.main.everos.dev\"|; \
             s|export DevNet_DApp_URL=.*|export DevNet_DApp_URL=\"https://devnet.evercloud.dev\"|; \

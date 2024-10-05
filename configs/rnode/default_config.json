@@ -209,5 +209,6 @@
   },
   "skip_saving_persistent_states": false,
   "states_cache_mode": "Moderate",
+  "sync_by_archives": true,
   "states_cache_cleanup_diff": 1000
 }
