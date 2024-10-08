@@ -1,1 +1,1 @@
----INFO: SMFT updated, added SMFT netconfig 62
+---INFO: DB cells improve

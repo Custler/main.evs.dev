@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# (C) Sergey Tyurin  2023-08-16 13:00:00
+# (C) Sergey Tyurin  2024-10-08 13:00:00
 
 # Disclaimer
 ##################################################################################################################
@@ -60,15 +60,6 @@ export MainNet_DApp_List="https://mainnet.evercloud.dev,https://gra01.main.evero
 
 export DevNet_DApp_URL="https://devnet.evercloud.dev"
 export DevNet_DApp_List="https://devnet.evercloud.dev,https://eri01.net.everos.dev,https://gra01.net.everos.dev"
-
-export FLD_DApp_URL="https://gql.custler.net"
-export FLD_DApp_List="https://gql.custler.net"
-
-export RFLD_DApp_URL="https://rfld-dapp.itgold.io"
-export RFLD_DApp_List="https://rfld-dapp.itgold.io"
-
-export SMFT_DApp_URL="https://dapp-test.itgold.io" 
-export SMFT_DApp_List="https://dapp-test.itgold.io"
 
 #=====================================================
 # Depool deploy defaults
@@ -131,7 +122,7 @@ export STATSD_PORT=9125
 
 #=====================================================
 # GIT addresses & commits
-export RUST_VERSION="1.80.1"
+export RUST_VERSION="1.81.0"
 export MIN_TC_VERSION="0.40.0"
 export MIN_RC_VERSION="0.1.318"
 
