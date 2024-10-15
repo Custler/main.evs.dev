@@ -224,11 +224,11 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:$NODE_BIN_DIR
 HOME=$USER_HOME
 $TlgStartAtReboot
 @reboot cd ${SCRIPT_DIR} && ./wait_for_sync.sh && ./prepare_elections.sh; ./take_part_in_elections.sh; ./part_check.sh; ./next_elect_set_time.sh
-$NXT_ELECT_1 * * *    cd ${SCRIPT_DIR} && ./prepare_elections.sh &>> ${TON_LOG_DIR}/validator.log
-$NXT_ELECT_2 * * *    cd ${SCRIPT_DIR} && ./take_part_in_elections.sh &>> ${TON_LOG_DIR}/validator.log
-$NXT_ELECT_3 * * *    cd ${SCRIPT_DIR} && ./next_elect_set_time.sh &>> ${TON_LOG_DIR}/validator.log && ./part_check.sh &>> ${TON_LOG_DIR}/validator.log
-$NODE_UPDATE_TIME * *    cd ${SCRIPT_DIR} && ./Update_ALL.sh &>> ${NODE_LOGS_ARCH}/NodeUpdate.log
-# $GPL_TIME_MH * * *    cd ${SCRIPT_DIR} && ./get_participant_list.sh > ${ELECTIONS_HISTORY_DIR}/${election_id}_parts.lst && chmod 444 ${ELECTIONS_HISTORY_DIR}/${election_id}_parts.lst
+$NXT_ELECT_1 * * *     cd ${SCRIPT_DIR} && ./wait_for_sync.sh && ./prepare_elections.sh &>> ${TON_LOG_DIR}/validator.log
+$NXT_ELECT_2 * * *     cd ${SCRIPT_DIR} && ./wait_for_sync.sh && ./take_part_in_elections.sh &>> ${TON_LOG_DIR}/validator.log
+$NXT_ELECT_3 * * *     cd ${SCRIPT_DIR} && ./wait_for_sync.sh && ./next_elect_set_time.sh &>> ${TON_LOG_DIR}/validator.log && ./part_check.sh &>> ${TON_LOG_DIR}/validator.log
+$NODE_UPDATE_TIME * *  cd ${SCRIPT_DIR} && ./wait_for_sync.sh && ./Update_ALL.sh &>> ${NODE_LOGS_ARCH}/NodeUpdate.log
+# $GPL_TIME_MH * * *   cd ${SCRIPT_DIR} && ./wait_for_sync.sh && ./get_participant_list.sh > ${ELECTIONS_HISTORY_DIR}/${election_id}_parts.lst && chmod 444 ${ELECTIONS_HISTORY_DIR}/${election_id}_parts.lst
 _ENDCRN_
 )
 
@@ -240,11 +240,11 @@ PATH=$NODE_BIN_DIR:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:
 HOME=$USER_HOME
 $TlgStartAtReboot
 @reboot cd ${SCRIPT_DIR} && ./wait_for_sync.sh && ./prepare_elections.sh; ./take_part_in_elections.sh; ./part_check.sh; ./next_elect_set_time.sh
-$NXT_ELECT_1 * * *    cd ${SCRIPT_DIR} && ./prepare_elections.sh &>> ${TON_LOG_DIR}/validator.log
-$NXT_ELECT_2 * * *    cd ${SCRIPT_DIR} && ./take_part_in_elections.sh &>> ${TON_LOG_DIR}/validator.log
-$NXT_ELECT_3 * * *    cd ${SCRIPT_DIR} && ./next_elect_set_time.sh &>> ${TON_LOG_DIR}/validator.log && ./part_check.sh &>> ${TON_LOG_DIR}/validator.log
-$NODE_UPDATE_TIME * *    cd ${SCRIPT_DIR} && ./Update_ALL.sh &>> ${NODE_LOGS_ARCH}/NodeUpdate.log
-# $GPL_TIME_MH * * *    script --return --quiet --append --command "cd ${SCRIPT_DIR} && ./get_participant_list.sh > ${ELECTIONS_HISTORY_DIR}/${election_id}_parts.lst && chmod 444 ${ELECTIONS_HISTORY_DIR}/${election_id}_parts.lst"
+$NXT_ELECT_1 * * *      cd ${SCRIPT_DIR} && ./wait_for_sync.sh && ./prepare_elections.sh &>> ${TON_LOG_DIR}/validator.log
+$NXT_ELECT_2 * * *      cd ${SCRIPT_DIR} && ./wait_for_sync.sh && ./take_part_in_elections.sh &>> ${TON_LOG_DIR}/validator.log
+$NXT_ELECT_3 * * *      cd ${SCRIPT_DIR} && ./wait_for_sync.sh && ./next_elect_set_time.sh &>> ${TON_LOG_DIR}/validator.log && ./part_check.sh &>> ${TON_LOG_DIR}/validator.log
+$NODE_UPDATE_TIME * *   cd ${SCRIPT_DIR} && ./wait_for_sync.sh && ./Update_ALL.sh &>> ${NODE_LOGS_ARCH}/NodeUpdate.log
+# $GPL_TIME_MH * * *    cd ${SCRIPT_DIR} && ./wait_for_sync.sh && ./get_participant_list.sh > ${ELECTIONS_HISTORY_DIR}/${election_id}_parts.lst && chmod 444 ${ELECTIONS_HISTORY_DIR}/${election_id}_parts.lst
 _ENDCRN_
 )
 

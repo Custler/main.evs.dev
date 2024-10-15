@@ -110,7 +110,7 @@ if $LNIC_present;then
     sed -i.bak "s/export RCONS_GIT_COMMIT=.*/export RCONS_GIT_COMMIT=$Console_commit/g" "${SCRIPT_DIR}/env.sh"
 fi
 
-echo "INFO: Node going to update from $Node_bin_commit to new commit $Node_remote_commit"
+echo "--- INFO: Node going to update from $Node_bin_commit to new commit $Node_remote_commit"
 "${SCRIPT_DIR}/Send_msg_toTelBot.sh" "$HOSTNAME Server" "$Tg_Warn_sign INFO: Node going to update from $Node_bin_commit to new commit $Node_remote_commit" 2>&1 > /dev/null
 
 #===========================================================
@@ -126,7 +126,7 @@ if [[ $V1 =~ ^[[:digit:]]+$ ]] && [[ $V2 =~ ^[[:digit:]]+$ ]] && [[ $V3 =~ ^[[:d
         source "${SCRIPT_DIR}/env.sh"
     fi
 fi
-
+echo "--- INFO: Node build rust version: $Node_Build_Rust_Version"
 #===========================================================
 # Update Node, node console, ever-cli and contracts
 
