@@ -30,9 +30,9 @@ OS_TYPE=$(uname -s)
 
 # Check node is not running
 if [[ "$OS_TYPE" == "Linux" ]]; then
-    NODE_ACTIVE=$(systemctl is-active tonnode)
+    NODE_ACTIVE=$(systemctl is-active $ServiceName)
 elif [[ "$OS_TYPE" == "FreeBSD" ]]; then
-    NODE_ACTIVE=$(service tonnode status 2>/dev/null | grep -c 'is running')
+    NODE_ACTIVE=$(service $ServiceName status 2>/dev/null | grep -c 'is running')
 else
     echo "Unsupported OS"
     exit 1
@@ -58,7 +58,7 @@ sudo chown $(id -un):$(id -gn) "$R_DB_DIR" -R
 
 # Copy db from remote node to local node
 for ((i=1; i <= 5; i++)); do
-    echo "---INFO Downloading db from $REMOTE_NODE attempt $i"
+    echo "---INFO Downloading db from $REMOTE_NODE stage $i"
     rsync -arz --ignore-errors --delete \
         $REMOTE_NODE:$R_DB_DIR/ \
         "$R_DB_DIR" \
@@ -67,9 +67,9 @@ done
 
 # Start node
 if [[ "$OS_TYPE" == "Linux" ]]; then
-    sudo systemctl start tonnode
+    sudo systemctl start $ServiceName
 elif [[ "$OS_TYPE" == "FreeBSD" ]]; then
-    sudo service tonnode start
+    sudo service $ServiceName start
 fi
 
 echo
