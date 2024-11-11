@@ -50,9 +50,6 @@ if ! grep -q "Host ${REMOTE_NODE}" ~/.ssh/config; then
     exit 1
 fi
 
-# Use rsync with sudo on the remote side
-RSYNC_CMD="sudo rsync"
-
 # Set the owner of the local node db to the current user
 sudo chown $(id -un):$(id -gn) "$R_DB_DIR" -R
 

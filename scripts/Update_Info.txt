@@ -1,1 +1,1 @@
----INFO: DB cells improve
+---INFO: Update SMFT: improvements, fixes, arbitrage
