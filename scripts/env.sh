@@ -122,7 +122,7 @@ export STATSD_PORT=9125
 
 #=====================================================
 # GIT addresses & commits
-export RUST_VERSION="1.81.0"
+export RUST_VERSION="1.87.0"
 export MIN_TC_VERSION="0.40.0"
 export MIN_RC_VERSION="0.1.318"
 

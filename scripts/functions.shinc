@@ -430,7 +430,7 @@ function get_LastNodeInfo {
             echo "${LNI_JSON}"
             return
     fi
-        
+
     local ABI="LastNodeInfo.abi.json"
     local GetABI='{"ABI version":2,"version":"2.2","header":["time","expire"],"functions":[{"name":"getABI","inputs":[],"outputs":[{"name":"ABI_7z_hex","type":"string"}]},{"name":"ABI","inputs":[],"outputs":[{"name":"ABI_7z_hex","type":"string"}]}],"data":[],"events":[],"fields":[{"name":"ABI_7z_hex","type":"string"}]}'
     echo "$GetABI "> Get_ABI.json
@@ -444,6 +444,7 @@ function get_LastNodeInfo {
     fi
 
     LNI_JSON="$($CALL_TC -j run --boc "${LNIC_ADDRESS##*:}.boc" --abi ${ABI} node_info {})"
+
     rm -f "${LNIC_ADDRESS##*:}.boc" Get_ABI.json LNIC_ABI_7z_hex.txt LNIC_ABI.7z LastNodeInfo.abi.json
 
     local LNI_Info="$(echo "$LNI_JSON"|jq -r '.node_info' 2>/dev/null)"

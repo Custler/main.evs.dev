@@ -210,7 +210,8 @@ if ${RUST_NODE_BUILD};then
     git submodule foreach 'git submodule update  --recursive'
 
     cd $RNODE_SRC_DIR
-
+    rm -f rust-toolchain.toml
+    
     rm -rf ~/.cargo/git/checkouts/ton-*
     rm -rf ~/.cargo/git/checkouts/ever-*
 

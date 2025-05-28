@@ -1,9 +1,14 @@
 # Universal scripts set 
 #### - Support both DePool and msig validations  
 #### - Support both fift and solidity electors
-#### - Tested on Ubuntu 22.04, CentOS Stream, Oracle Linux 9.x, FreeBSD 14 (for Linux - latest kernel preferable)
+#### - Tested on Ubuntu 24.04, CentOS Stream, Oracle Linux 9.x, FreeBSD 14 (for Linux - latest kernel preferable)
 
 ## Table of Contents
+- [Universal scripts set](#universal-scripts-set)
+      - [- Support both DePool and msig validations](#--support-both-depool-and-msig-validations)
+      - [- Support both fift and solidity electors](#--support-both-fift-and-solidity-electors)
+      - [- Tested on Ubuntu 24.04, CentOS Stream, Oracle Linux 9.x, FreeBSD 14 (for Linux - latest kernel preferable)](#--tested-on-ubuntu-2404-centos-stream-oracle-linux-9x-freebsd-14-for-linux---latest-kernel-preferable)
+  - [Table of Contents](#table-of-contents)
   - [0. System settings](#0-system-settings)
   - [1. Setting environment](#1-setting-environment)
   - [2. Build nodes](#2-build-nodes)
