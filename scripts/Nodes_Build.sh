@@ -215,7 +215,7 @@ if ${RUST_NODE_BUILD};then
     rm -rf ~/.cargo/git/checkouts/ton-*
     rm -rf ~/.cargo/git/checkouts/ever-*
 
-    cargo update
+    cargo +${RUST_VERSION} update
 
     # Set Link Time Optimization (LTO) for release build
     sed -i.bak '/\[profile\]/,/^$/d' Cargo.toml
@@ -229,7 +229,7 @@ if ${RUST_NODE_BUILD};then
     export NODE_BLK_VER
 
     echo -e "${BoldText}${BlueBack}---INFO: RNODE build flags: ${RNODE_FEATURES} commit: ${GC_EVER_NODE} Block version: ${NODE_BLK_VER}${NormText}"
-    RUSTFLAGS="-C target-cpu=native" cargo build --release --features "${RNODE_FEATURES}"
+    RUSTFLAGS="-C target-cpu=native" cargo +${RUST_VERSION} build --release --features "${RNODE_FEATURES}"
 
     find ${RNODE_SRC_DIR}/target/release/ -maxdepth 1 -type f ${FEXEC_FLG} -exec cp -f {} ${NODE_BIN_DIR}/ \;
 
@@ -270,8 +270,8 @@ echo -e "${BoldText}${BlueBack}---INFO: CLI git commit: ${TONOS_CLI_GIT_COMMIT} 
 git clone --recurse-submodules "${TONOS_CLI_GIT_REPO}" "${TONOS_CLI_SRC_DIR}"
 cd "${TONOS_CLI_SRC_DIR}"
 git checkout "${TONOS_CLI_GIT_COMMIT}"
-cargo update
-RUSTFLAGS="-C target-cpu=native" cargo build --release
+cargo +${RUST_VERSION} update
+RUSTFLAGS="-C target-cpu=native" cargo +${RUST_VERSION} build --release
 cp "${TONOS_CLI_SRC_DIR}/target/release/ever-cli" "$NODE_BIN_DIR/"
 echo "---INFO: buil ever-cli ... DONE"
 
